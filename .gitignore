@@ -1,0 +1,17 @@
+*~
+*.aux
+*.bbl
+*.blg
+*.eps
+*.log
+*.nav
+*.out
+*.pp1
+*.snm
+*.spl
+*.tag
+*.toc
+*.pdf
+*.ps
+*.zip
+.Rproj.user

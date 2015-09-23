@@ -1,0 +1,196 @@
+\documentclass[authoryear, 12pt, a4paper]{elsarticle}
+
+% ------------ packages -------------
+
+\usepackage[utf8]{inputenc}
+\usepackage[OT1]{fontenc}
+\usepackage{graphicx}
+\usepackage[english]{babel}
+
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{bm}
+
+\usepackage[usenames,dvipsnames]{xcolor}
+\usepackage{url}
+%\usepackage{tikz}
+%\usetikzlibrary{shapes.misc,fit}
+
+
+% ------------ custom defs -------------
+
+\newcommand{\reals}{\mathbb{R}}
+\newcommand{\posreals}{\reals_{>0}}
+\newcommand{\posrealszero}{\reals_{\ge 0}}
+\newcommand{\naturals}{\mathbb{N}}
+
+\newcommand{\mbf}[1]{\mathbf{#1}}
+\newcommand{\bs}[1]{\boldsymbol{#1}}
+\renewcommand{\vec}[1]{{\bm#1}}
+
+\newcommand{\uz}{^{(0)}} % upper zero
+\newcommand{\un}{^{(n)}} % upper n
+\newcommand{\ui}{^{(i)}} % upper i
+
+\newcommand{\ul}[1]{\underline{#1}}
+\newcommand{\ol}[1]{\overline{#1}}
+
+\newcommand{\Rsys}{R_\text{sys}}
+\newcommand{\lRsys}{\ul{R}_\text{sys}}
+\newcommand{\uRsys}{\ol{R}_\text{sys}}
+
+\newcommand{\Fsys}{F_\text{sys}}
+\newcommand{\lFsys}{\ul{F}_\text{sys}}
+\newcommand{\uFsys}{\ol{F}_\text{sys}}
+
+\def\Tsys{T_\text{sys}}
+
+\newcommand{\E}{\operatorname{E}}
+\newcommand{\V}{\operatorname{Var}}
+
+\newcommand{\indic}{\mathbb{I}}
+
+\newcommand{\ber}{\operatorname{Bernoulli}} 
+\newcommand{\bin}{\operatorname{Binomial}}
+\newcommand{\be}{\operatorname{Beta}} 
+\newcommand{\bebin}{\operatorname{Beta-binomial}} 
+
+\def\tmax{t_\text{max}}
+\def\tnow{t_\text{now}}
+\def\tpnow{t^+_\text{now}}
+
+\input{nydefs.tex}
+
+%\newcommand{\comments}[1]{{\small\color{gray} #1}}
+
+% ------------ options -------------
+
+\allowdisplaybreaks
+
+%\biboptions{longnamesfirst,angle,semicolon}
+
+
+\journal{IJAR}
+
+\begin{document}
+
+% ------------ frontmatter -------------
+
+\begin{frontmatter}
+\title{IJAR Bayesian Nonparametrics Special Issue Manuscript}
+
+\author[oxf]{Louis J.M. Ashlett}
+\ead{louis.aslett@stats.ox.ac.uk}
+\author[dur]{Frank P.A. Coolen}
+\ead{frank.coolen@durham.ac.uk}
+\author[ein]{Gero Walter}
+\ead{g.m.walter@tue.nl}
+
+\address[oxf]{Department of Statistics, University of Oxford, Oxford, UK}
+\address[dur]{Department of Mathematical Sciences, Durham University, Durham, UK}
+\address[ein]{School of Industrial Engineering, Eindhoven University of Technology, Eindhoven, NL}
+
+\begin{abstract}
+Imprecise Bayesian nonparametric approach to system reliability with multiple types of components,
+sets of priors through sets of canonical parameters,
+leading to sets of system reliability functions,
+reflection of prior-data conflict
+\end{abstract}
+
+\begin{keyword}
+System reliability \sep
+Survival signature \sep
+Imprecise probability \sep
+Bayesian Nonparametrics \sep
+Prior-data conflict
+\end{keyword}
+\end{frontmatter}
+
+
+% ------------ manuscript -------------
+
+(alphabetical author order, final order to be discussed of course)
+
+\section{Introduction}
+
+System with components of $k=1,\ldots,K$ different types.
+There are $m_k$ components of type $k$ in the system.
+Components of the same type are i.i.d.\ and independent of components of other types.
+Arbitrary system layout, i.e.\ any series / parallel combination, $k$ out of $n$ etc.
+
+
+\section{Survival Signature}
+
+Alternative to system signature that allows for
+straightforward computation of system relaibility $\Rsys(t) = P(\Tsys > t)$
+for multiple component types.
+It separates the (time-invariant) system structure from the time-dependent failure probabilities of components.
+
+Can be seen as applying the law of total probability by partitioning
+according to the number of components of type $k$ functioning at time $t$,
+denoted by $C^k_t \in \{0, 1, \ldots, l_k, \ldots, m_k\}$:
+\begin{align*}
+P(\Tsys > t)
+ &= \sum_{l_1=0}^{m_1} \cdots \sum_{l_K=0}^{m_K} P(\Tsys > t \mid C^1_t = l_1,\ldots, C^K_t = l_K)
+                                                 P\Big( \bigcap_{k=1}^K \{ C^k_t = l_k\} \Big) 
+\end{align*}
+
+
+\section{Nonparametric Bayesian Approach}
+
+The random failure time of component number $i$ of type $k$ is denoted by $T^k_i$, $i = 1, \ldots m_k$.
+For its distribution, written in terms of the cdf $F^k(t) = P(T^k_i \le t)$
+or in terms of the reliability function $R^k(t) = P(T^k > t) = 1 - F^k(t)$,
+we consider a set of time points $t$.
+
+For each time point $t$, the functioning of a single component of type $k$ at time $t$ (functioning: 1, failed: 0)
+is Bernoulli distributed with a suitable functioning probability (as, $1-$ failure probability) $p^k_t$,
+$\indic(T^k_i > t) \sim \ber(p^k_t)$, $i = 1, \ldots, m_k$.
+
+Then, the number of functioning components out of the $m_k$ components of type $k$
+is binomial distributed, $C^k_t = \sum_{i=1}^{m_k} \indic(T^k_i > t) \sim \bin(p^k_t, m_k)$.
+
+The set of functioning probabilities $p^k_t$
+corresponding to a choosen set of time points ($t \in \{t_1, \ldots, \tmax\}$)
+defines a discrete failure time distribution for components of type $k$,
+$R^k(t) = p^k_{t_j}$, $t \in [t_j, t_{j+1})$.
+
+***or say we don't know for times between time points, or lower and upper bound already here?***
+
+The $p^k_t$'s could be such that they reflect, e.g., a bathtub curve for the corresponding hazard rate.
+The only strict constraint is that $p^k_{t_j} \ge p^k_{t_{j+1}}$ must hold (assuming no repair).
+
+However, directly choosing $p^k_t$'s is hard,
+and fixing values for all $p^k_t$ would furthermore neglect any inherent uncertainty in the particular choice.  
+To account for this uncertainty, one can express knowledge on $p^k_t$'s though a prior distribution.
+A convenient and natural choice is $p^k_t \sim \be(\alpha^k_t, \beta^k_t)$.
+
+in terms of $\nz$, $\yz$
+
+posterior, posterior predictive for $C^k_t$
+
+***Illustration prior-data conflict?
+
+
+\section{Sets of Priors}
+
+***do we need to ensure $p^k_{t_j} \ge p^k_{t_{j+1}}$ via $\yzl_{t_j} \ge \yzu_{t_{j+1}}$?
+I would say no, and for relatively dense $t$ grids, neighbouring intervals should be overlapping.
+What about requiring $\yzu_{t_j} \ge \yzu_{t_{j+1}}$ and $\yzl_{t_j} \ge \yzl_{t_{j+1}}$?
+This might not hold for the case when we know, e.g., pretty much what's going on for low $t$
+but want to be much more cautious for high $t$.***
+
+
+\section{Computations}
+
+
+\section{Example}
+
+
+\section{Conclusions}
+
+
+\end{document}
+
