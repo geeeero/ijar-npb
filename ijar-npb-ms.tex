@@ -157,7 +157,7 @@ Then, the number of functioning components out of the $m_k$ components of type $
 is binomially distributed, $C^k_t = \sum_{i=1}^{m_k} \indic(T^k_i > t) \sim \bin(p^k_t, m_k)$.
 
 The set of functioning probabilities $p^k_t$
-corresponding to a choosen set of time points ($t \in \{t_1, \ldots, \tmax\}$)
+corresponding to a choosen set of time points ($t \in {\cal T} = \{t_1, \ldots, \tmax\}$)
 defines a discrete failure time distribution for components of type $k$,
 $R^k(t) = p^k_{t_j}$, $t \in [t_j, t_{j+1})$.
 
@@ -191,10 +191,60 @@ P(C^k_t = l_k \mid s^k_t) &= {m_k \choose l_k} \frac{B(l_k + \alpha^k_t + s^k_t,
 \end{align*}
 where $B(\cdot, \cdot)$ is the beta function.
 
-in terms of $\nz$, $\yz$
+For each component type $k$, we have to choose $2 \times |{\cal T}|$
+parameters to specify the prior distribution for the discrete survival function of $T^k_i$,
+so in total $2 \times |{\cal T}| \times K$ parameters.
 
+Let us drop the super- and subscript $k$ and $t$ for a while
+to discuss the role and interpretation of the parameters $\alpha$ and $\beta$
+for each $k$ and $t$.
+The Beta distribution is usually parametrized in terms of $\alpha$ and $\beta$ as used above, 
+but for our generalization to sets of priors,
+we suggest to use a different parametrization in terms of $\nz$, $\yz$:
+\begin{align*}
+\nz &= \alpha + \beta &
+\yz &= \frac{\alpha}{\alpha + \beta} \,,
+\end{align*}
+or vice versa, $\alpha = \nz\yz$ and $\beta = \nz(1-\yz)$.
+From the properties of the Beta distribution,
+we see that $\yz$ is the prior mean for the functioning probability $p$,
+and the higher $\nz$, the more probability weight will be concentrated around that mean.
+Furthermore, $\nz$ can be interpreted as a pseudocount or prior strength,
+this will be illustrated through revisting the posterior
+based on observed lifetimes $\vec{t} = (t_1, \ldots, t_{n})$:
 
-***Illustration prior-data conflict with $\bebin$?
+$p \mid s$ is Beta distributed with the updated parameters
+\begin{align*}
+\nn &= \nz + n &
+\yn &= \frac{\nz}{\nz + n} \cdot \yz + \frac{n}{\nz + n} \cdot \frac{s}{n}\,,
+\end{align*}
+so after seeing that $s$ out of $n$ components function (at time $t$),
+the posterior mean $\yn$ for $p$ is a weighted average of
+the prior mean $\yz$ and $s/n$ (the fraction of function components in the data),
+with the weights $\nz$ and $n$, respectively.
+We see that $\nz$ plays the same role for the prior mean $\yz$
+as the sample size $n$ for the observed mean $s/n$,
+thus the notion of pseudocount.
+Also, the higher $\nz$, the higher the weight for $\yz$
+in the weighted average calculation of $\yn$,
+so $\nz$ gives the strength of the prior as compared to the sample size $n$.
+%The parameters $\nz$ and $\yz$ have a more intuitive interprtation,
+
+The Beta-binomial distribution in terms of the updated parameters $\nn$ and $\yn$
+is therefore
+\begin{align*}
+P(C^k_t = l_k \mid s^k_t) &= {m_k \choose l_k} \frac{B(l_k + \nn\yn, m_k - l_k + \nn(1-\yn))}
+                                                    {B(\nn\yn, \nn(1-\yn))} \,.
+\end{align*}
+
+The reparametrization enables us to see that in the conjugate setting,
+learning from data amounts to averaging between prior and data.
+While this allows for the tractability of the model,
+it also comes with a serious drawback:
+When prior and data are
+
+***Illustration prior-data conflict with $\bebin$
+
 
 
 \section{Sets of Priors}
