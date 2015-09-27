@@ -120,11 +120,13 @@ There are $m_k$ components of type $k$ in the system.
 Components of the same type are i.i.d.\ and independent of components of other types.
 Arbitrary system layout, i.e.\ any series / parallel combination, $k$ out of $n$ etc.
 
+Based on expert assumptions and data for component failure distribution,
+we calculate the system reliability function $\Rsys(t) = P(\Tsys > t)$.
 
 \section{Survival Signature}
 
 Alternative to system signature that allows for
-straightforward computation of system relaibility $\Rsys(t) = P(\Tsys > t)$
+straightforward computation of system reliability
 for multiple component types.
 It separates the (time-invariant) system structure from the time-dependent failure probabilities of components.
 
@@ -134,7 +136,9 @@ denoted by $C^k_t \in \{0, 1, \ldots, l_k, \ldots, m_k\}$:
 \begin{align*}
 P(\Tsys > t)
  &= \sum_{l_1=0}^{m_1} \cdots \sum_{l_K=0}^{m_K} P(\Tsys > t \mid C^1_t = l_1,\ldots, C^K_t = l_K)
-                                                 P\Big( \bigcap_{k=1}^K \{ C^k_t = l_k\} \Big) 
+                                                 P\Big( \bigcap_{k=1}^K \{ C^k_t = l_k\} \Big) \\
+ &= \sum_{l_1=0}^{m_1} \cdots \sum_{l_K=0}^{m_K} \Phi(l_1, \ldots, l_K)
+                                                 \prod_{k=1}^K P(C^k_t = l_k) \,.
 \end{align*}
 
 
@@ -150,7 +154,7 @@ is Bernoulli distributed with a suitable functioning probability (as, $1-$ failu
 $\indic(T^k_i > t) \sim \ber(p^k_t)$, $i = 1, \ldots, m_k$.
 
 Then, the number of functioning components out of the $m_k$ components of type $k$
-is binomial distributed, $C^k_t = \sum_{i=1}^{m_k} \indic(T^k_i > t) \sim \bin(p^k_t, m_k)$.
+is binomially distributed, $C^k_t = \sum_{i=1}^{m_k} \indic(T^k_i > t) \sim \bin(p^k_t, m_k)$.
 
 The set of functioning probabilities $p^k_t$
 corresponding to a choosen set of time points ($t \in \{t_1, \ldots, \tmax\}$)
@@ -159,22 +163,43 @@ $R^k(t) = p^k_{t_j}$, $t \in [t_j, t_{j+1})$.
 
 ***or say we don't know for times between time points, or lower and upper bound already here?***
 
-The $p^k_t$'s could be such that they reflect, e.g., a bathtub curve for the corresponding hazard rate.
+(maybe not relevant for this manuscript, but would it make sense to take Kaplan-Meier estimates for the $p^k_t$'s,
+or the NPI bounds for Kaplan-Meier?)
+
+The $p^k_t$'s can be chosen such that they reflect, e.g., a bathtub curve for the corresponding hazard rate.
 The only strict constraint is that $p^k_{t_j} \ge p^k_{t_{j+1}}$ must hold (assuming no repair).
 
-However, directly choosing $p^k_t$'s is hard,
+However, directly choosing the $p^k_t$'s is hard,
 and fixing values for all $p^k_t$ would furthermore neglect any inherent uncertainty in the particular choice.  
-To account for this uncertainty, one can express knowledge on $p^k_t$'s though a prior distribution.
-A convenient and natural choice is $p^k_t \sim \be(\alpha^k_t, \beta^k_t)$.
+To account for this uncertainty, one can express knowledge on $p^k_t$ through a prior distribution.
+A convenient and natural choice is $p^k_t \sim \be(\alpha^k_t, \beta^k_t)$, a conjugate prior,
+leading to the posterior being again Beta:
+
+Having observed the lifetime data $\vec{t}^k = (t^k_1, \ldots, t^k_{n_k})$,
+at any fixed time $t$ this results in the observation from the Binomial model described above,
+$s^k_t = \sum_{i=1}^{n_k} \indic(t^k_i > t)$.
+The posterior is then $p^k_t \mid s^k_t \sim \be(\alpha^k_t + s^k_t, \beta^k_t + n_k - s^k_t)$.
+
+The posterior predictive distribution for the number of components surviving at time $t$
+of the $m_k$ components in the system, based on the tifetime data and the prior information,
+is then Beta-binomial distributed,
+$C^k_t \mid s^k_t \sim \bebin(m_k, \alpha^k_t + s^k_t, \beta^k_t + n_k - s^k_t)$.
+That is, we have
+\begin{align*}
+P(C^k_t = l_k \mid s^k_t) &= {m_k \choose l_k} \frac{B(l_k + \alpha^k_t + s^k_t, m_k - l_k + \beta^k_t + n_k - s^k_t)}
+                                                    {B(\alpha^k_t + s^k_t, \beta^k_t + n_k - s^k_t)} \,,
+\end{align*}
+where $B(\cdot, \cdot)$ is the beta function.
 
 in terms of $\nz$, $\yz$
 
-posterior, posterior predictive for $C^k_t$
 
-***Illustration prior-data conflict?
+***Illustration prior-data conflict with $\bebin$?
 
 
 \section{Sets of Priors}
+
+
 
 ***do we need to ensure $p^k_{t_j} \ge p^k_{t_{j+1}}$ via $\yzl_{t_j} \ge \yzu_{t_{j+1}}$?
 I would say no, and for relatively dense $t$ grids, neighbouring intervals should be overlapping.
