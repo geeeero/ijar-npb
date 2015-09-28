@@ -81,16 +81,16 @@
 \begin{frontmatter}
 \title{IJAR Bayesian Nonparametrics Special Issue Manuscript}
 
+\author[ein]{Gero Walter}
+\ead{g.m.walter@tue.nl}
 \author[oxf]{Louis J.M. Ashlett}
 \ead{louis.aslett@stats.ox.ac.uk}
 \author[dur]{Frank P.A. Coolen}
 \ead{frank.coolen@durham.ac.uk}
-\author[ein]{Gero Walter}
-\ead{g.m.walter@tue.nl}
 
+\address[ein]{School of Industrial Engineering, Eindhoven University of Technology, Eindhoven, NL}
 \address[oxf]{Department of Statistics, University of Oxford, Oxford, UK}
 \address[dur]{Department of Mathematical Sciences, Durham University, Durham, UK}
-\address[ein]{School of Industrial Engineering, Eindhoven University of Technology, Eindhoven, NL}
 
 \begin{abstract}
 Imprecise Bayesian nonparametric approach to system reliability with multiple types of components,
@@ -111,7 +111,7 @@ Prior-data conflict
 
 % ------------ manuscript -------------
 
-(alphabetical author order, final order to be discussed of course)
+(author order to be discussed of course)
 
 \section{Introduction}
 
@@ -166,23 +166,32 @@ $R^k(t) = p^k_{t_j}$, $t \in [t_j, t_{j+1})$.
 (maybe not relevant for this manuscript, but would it make sense to take Kaplan-Meier estimates for the $p^k_t$'s,
 or the NPI bounds for Kaplan-Meier?)
 
+***Right-censored observations maybe in a second step?
+Minimal assumption (component can fail immediately after censoring or live forever)
+will lead to high imprecision,
+assumption of exchangeability with other components at moment of censoring
+will be quite complex, maybe too much for this paper,
+and could be covered in a second paper with extensive use-case?***
+
 The $p^k_t$'s can be chosen such that they reflect, e.g., a bathtub curve for the corresponding hazard rate.
-The only strict constraint is that $p^k_{t_j} \ge p^k_{t_{j+1}}$ must hold (assuming no repair).
+
+***Constraint: $p^k_{t_j} \ge p^k_{t_{j+1}}$ must hold (assuming no repair).***
 
 However, directly choosing the $p^k_t$'s is hard,
 and fixing values for all $p^k_t$ would furthermore neglect any inherent uncertainty in the particular choice.  
 To account for this uncertainty, one can express knowledge on $p^k_t$ through a prior distribution.
 A convenient and natural choice is $p^k_t \sim \be(\alpha^k_t, \beta^k_t)$, a conjugate prior,
-leading to the posterior being again Beta:
+leading to the posterior being again Beta.
 
 Having observed the lifetime data $\vec{t}^k = (t^k_1, \ldots, t^k_{n_k})$,
 at any fixed time $t$ this results in the observation from the Binomial model described above,
 $s^k_t = \sum_{i=1}^{n_k} \indic(t^k_i > t)$.
 The posterior is then $p^k_t \mid s^k_t \sim \be(\alpha^k_t + s^k_t, \beta^k_t + n_k - s^k_t)$.
+The combination of a Binomial observation model with a Beta prior is often called Beta-binomial model.
 
 The posterior predictive distribution for the number of components surviving at time $t$
-of the $m_k$ components in the system, based on the tifetime data and the prior information,
-is then Beta-binomial distributed,
+of the $m_k$ components in the system, based on the lifetime data and the prior information,
+is then a so-called Beta-binomial distribution,
 $C^k_t \mid s^k_t \sim \bebin(m_k, \alpha^k_t + s^k_t, \beta^k_t + n_k - s^k_t)$.
 That is, we have
 \begin{align*}
@@ -191,26 +200,33 @@ P(C^k_t = l_k \mid s^k_t) &= {m_k \choose l_k} \frac{B(l_k + \alpha^k_t + s^k_t,
 \end{align*}
 where $B(\cdot, \cdot)$ is the beta function.
 
+The posterior predictive basically averages over $p^k_t \in [0,1]$,
+weighted with the posterior on $p^k_t$.
+
 For each component type $k$, we have to choose $2 \times |{\cal T}|$
 parameters to specify the prior distribution for the discrete survival function of $T^k_i$,
 so in total $2 \times |{\cal T}| \times K$ parameters.
+
+***main contribution of the paper besides the set of priors thing:
+guidelines on how to choose the parameters?***
 
 Let us drop the super- and subscript $k$ and $t$ for a while
 to discuss the role and interpretation of the parameters $\alpha$ and $\beta$
 for each $k$ and $t$.
 The Beta distribution is usually parametrized in terms of $\alpha$ and $\beta$ as used above, 
 but for our generalization to sets of priors,
-we suggest to use a different parametrization in terms of $\nz$, $\yz$:
+it is useful to consider a different parametrization in terms of $\nz$, $\yz$:
 \begin{align*}
 \nz &= \alpha + \beta &
 \yz &= \frac{\alpha}{\alpha + \beta} \,,
 \end{align*}
 or vice versa, $\alpha = \nz\yz$ and $\beta = \nz(1-\yz)$.
 From the properties of the Beta distribution,
-we see that $\yz$ is the prior mean for the functioning probability $p$,
-and the higher $\nz$, the more probability weight will be concentrated around that mean.
+we see that $\yz = \E[p]$ is the prior mean for the functioning probability $p$,
+and that the higher $\nz$, the more probability weight will be concentrated around that mean,
+as $\V(p) = \frac{\yz (1-\yz)}{\nz + 1}$.
 Furthermore, $\nz$ can be interpreted as a pseudocount or prior strength,
-this will be illustrated through revisting the posterior
+this will be illustrated through revisiting the posterior
 based on observed lifetimes $\vec{t} = (t_1, \ldots, t_{n})$:
 
 $p \mid s$ is Beta distributed with the updated parameters
@@ -230,35 +246,63 @@ in the weighted average calculation of $\yn$,
 so $\nz$ gives the strength of the prior as compared to the sample size $n$.
 %The parameters $\nz$ and $\yz$ have a more intuitive interprtation,
 
-The Beta-binomial distribution in terms of the updated parameters $\nn$ and $\yn$
+The Beta-binomial distribution in terms of the updated parameters $\nn$ and $\yn$,
+now again with indicators $t$ and $k$,
 is therefore
 \begin{align*}
-P(C^k_t = l_k \mid s^k_t) &= {m_k \choose l_k} \frac{B(l_k + \nn\yn, m_k - l_k + \nn(1-\yn))}
-                                                    {B(\nn\yn, \nn(1-\yn))} \,.
+P(C^k_t = l_k \mid s^k_t) &= {m_k \choose l_k} \frac{B(l_k + \nn_{k,t}\yn_{k,t}, m_k - l_k + \nn_{k,t}(1-\yn_{k,t}))}
+                                                    {B(\nn_{k,t}\yn_{k,t}, \nn_{k,t}(1-\yn_{k,t}))} \,.
 \end{align*}
 
 The reparametrization enables us to see that in the conjugate setting,
 learning from data amounts to averaging between prior and data.
 While this allows for the tractability of the model,
 it also comes with a serious drawback:
-When prior and data are
-
-***Illustration prior-data conflict with $\bebin$
+When observed data are very much different from what is assumed in the prior,
+this conflict is simply averaged out,
+and is not reflected in the posterior or the posterior predictive.
+ 
+***Illustration of such prior-data conflict with $\bebin$ distribution:
+different priors updated to same posterior,
+or same prior updated to different posteriors with same variance,
+show corresponding $C^k_t$ distribution.***
 
 
 
 \section{Sets of Priors}
 
+As shown in Walter \& Augustin (2009),
+we can have both tractability and meaningful reaction to prior-data conflict
+by using sets of priors $\MktZ$ produced by parameter set $\PktZ = [\nktzl, \nktzu] \times [\yktzl, \yktzu]$. 
+Then we will have wider intervals for $\Rsys(t)$ in case of prior-data conflict.
+
+Lower and upper bounds for $\Rsys(t)$ by min and max over $\PZ_{1,t}, \ldots, \PZ_{K,t}$.
+
+Monotonicity in $\yz_{k,t}$, so we get
+\begin{align*}
+\lRsys(t)
+ &= \min_{\nz_{1,t},\ldots,\nz_{K,t}} \Rsys(t) \\
+ &= \min_{\nz_{1,t},\ldots,\nz_{K,t}} 
+    \sum_{l_1=0}^{m_1} \cdots \sum_{l_K=0}^{m_K} \Phi(l_1, \ldots, l_K)
+                                                 \prod_{k=1}^K P(C^k_t = l_k \mid s^k_t) \\
+ &= \min_{\nz_{1,t},\ldots,\nz_{K,t}} 
+    \sum_{l_1=0}^{m_1} \cdots \sum_{l_K=0}^{m_K} \Phi(l_1, \ldots, l_K) \times \\ & \hspace*{12ex}
+    \prod_{k=1}^K {m_k \choose l_k} \frac{B(l_k + \nn_{k,t}\ynl_{k,t}, m_k - l_k + \nn_{k,t}(1-\ynl_{k,t}))}
+                                         {B(\nn_{k,t}\ynl_{k,t}, \nn_{k,t}(1-\ynl_{k,t}))} \,.
+\end{align*}
 
 
-***do we need to ensure $p^k_{t_j} \ge p^k_{t_{j+1}}$ via $\yzl_{t_j} \ge \yzu_{t_{j+1}}$?
-I would say no, and for relatively dense $t$ grids, neighbouring intervals should be overlapping.
-What about requiring $\yzu_{t_j} \ge \yzu_{t_{j+1}}$ and $\yzl_{t_j} \ge \yzl_{t_{j+1}}$?
+***do we need to ensure $p^k_{t_j} \ge p^k_{t_{j+1}}$ via $\yzl_{k,t_j} \ge \yzu_{k,t_{j+1}}$?
+I would say no, and for relatively dense $t$ grids, neighbouring intervals should be able to overlap after all.
+What about requiring $\yzu_{k,t_j} \ge \yzu_{k,t_{j+1}}$ and $\yzl_{k,t_j} \ge \yzl_{k,t_{j+1}}$?
 This might not hold for the case when we know, e.g., pretty much what's going on for low $t$
 but want to be much more cautious for high $t$.***
 
 
 \section{Computations}
+
+***publish code as seperate \textbf{R} package, or include in Louis' package \texttt{ReliabilityTheory}
+(which contains the function to calculate the survival signature)***
 
 
 \section{Example}
