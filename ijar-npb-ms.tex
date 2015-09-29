@@ -210,6 +210,10 @@ so in total $2 \times |{\cal T}| \times K$ parameters.
 ***main contribution of the paper besides the set of priors thing:
 guidelines on how to choose the parameters?***
 
+***e.g., what to do in extreme tail of component distributions?
+How sensitive is the method to choosing prior (lower, upper) mean zero for $p^k_t$ at high $t$'s?***
+
+
 Let us drop the super- and subscript $k$ and $t$ for a while
 to discuss the role and interpretation of the parameters $\alpha$ and $\beta$
 for each $k$ and $t$.
@@ -274,7 +278,18 @@ show corresponding $C^k_t$ distribution.***
 As shown in Walter \& Augustin (2009),
 we can have both tractability and meaningful reaction to prior-data conflict
 by using sets of priors $\MktZ$ produced by parameter set $\PktZ = [\nktzl, \nktzu] \times [\yktzl, \yktzu]$. 
-Then we will have wider intervals for $\Rsys(t)$ in case of prior-data conflict.
+For such a rectangular prior parameter set $\PktZ$,
+the posterior parameter set $\PktN$ is not rectangular anymore.
+
+In case of no prior-data conflict ($s^k_t/n^k_t \in [\yktzl, \yktzu]$),
+the set shrinks in the $\ykt$ dimension
+(how much it shrinks depends on $\nktz$, leading to the so-called spotlight shape),
+leading to smaller $\Rsys(t)$ intervals.
+
+In case of prior-data conflict ($s^k_t/n^k_t \not\in [\yktzl, \yktzu]$),
+$\PktN$ has the so-called banana shape,
+giving a wider $\yktn$ interval as compared to the non-conflict case. 
+As a consequence, we will have wider intervals for $\Rsys(t)$ in case of prior-data conflict.
 
 Lower and upper bounds for $\Rsys(t)$ by min and max over $\PZ_{1,t}, \ldots, \PZ_{K,t}$.
 
@@ -306,6 +321,16 @@ but want to be much more cautious for high $t$.***
 
 
 \section{Example}
+
+***Will ask Simme Douwe Flapper (Prof at TU Eindhoven) for real-world example,
+otherwise some toy example will do.***
+
+Show $\Rsys(t)$ intervals for prior-data conflict and non-conflict data
+to show effect of prior-data conflict.
+
+Show the effect of extra redundancy on $\Rsys(t)$ intervals like in Risk Analysis paper,
+or show effect of replacement of failed components in a system
+(replaced components constitute a new type with shifted component reliability function)
 
 
 \section{Conclusions}
