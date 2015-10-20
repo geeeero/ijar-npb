@@ -243,10 +243,11 @@ this will be illustrated through revisiting the posterior
 based on observed lifetimes $\vec{t} = (t_1, \ldots, t_{n})$:
 
 $p \mid s$ is Beta distributed with the updated parameters
-\begin{align*}
+\begin{align}
 \nn &= \nz + n\,, &
 \yn &= \frac{\nz}{\nz + n} \cdot \yz + \frac{n}{\nz + n} \cdot \frac{s}{n}\,,
-\end{align*}
+\label{eq:nyupdate}
+\end{align}
 so after seeing that $s$ out of $n$ components function (at time $t$),
 the posterior mean $\yn$ for $p$ is a weighted average of
 the prior mean $\yz$ and $s/n$ (the fraction of function components in the data),
@@ -284,37 +285,70 @@ show corresponding $C^k_t$ distribution.***
 
 \section{Sets of Priors}
 
-As shown in Walter \& Augustin (2009),
+As was shown in Walter \& Augustin (2009),
 we can have both tractability and meaningful reaction to prior-data conflict
-by using sets of priors $\MktZ$ produced by parameter set $\PktZ = [\nktzl, \nktzu] \times [\yktzl, \yktzu]$. 
-For such a rectangular prior parameter set $\PktZ$,
-the posterior parameter set $\PktN$ is not rectangular anymore.
+by using sets of priors $\MktZ$ produced by parameter sets $\PktZ = [\nktzl, \nktzu] \times [\yktzl, \yktzu]$. 
+In our model, each prior parameter pair $(\nktz, \yktz) \in \PktZ$
+corresponds to a Beta prior, thus $\MktZ$ is a set of Beta priors.
+The set of posteriors $\MktN$ is obtained by updating each prior in $\MktZ$ according to Bayes' Rule.
+Due to conjugacy, $\MktN$ is a set of Beta distributions with parameters $(\nktn, \yktn)$
+obtained from updating $(\nktz, \yktz) \in \PktZ$ according to \eqref{eq:nyupdate},
+and so can be described efficiently through the set of updated parameters
+\begin{align*}
+\PktN &= \Big\{ (\nktn, \yktn) \mid (\nktz, \yktz) \in \PktZ = [\nktzl, \nktzu] \times [\yktzl, \yktzu] \Big\}\,.
+\end{align*}
+Such rectangular prior parameter sets $\PktZ$ have been shown
+to balance desirable model properties and ease of elicitation quite well.
 
-In case of no prior-data conflict ($s^k_t/n^k_t \in [\yktzl, \yktzu]$),
-the set shrinks in the $\ykt$ dimension
-(how much it shrinks depends on $\nktz$, leading to the so-called spotlight shape),
-leading to smaller $\Rsys(t)$ intervals.
+For each component type $k$ and time point $t$,
+one has to choose only the four parameters $\nktzl, \nktzu, \yktzl, \yktzu$
+(so $4 \times |{\cal T}|$ parameters are needed to define the set of prior distributions characterizing
+prior knowledge on the survival function of components of type $k$);
+notwithstanding this, the model has favourable inference properties.
+
+Central to these inference properties is that
+while the prior parameter set $\PktZ$ is rectangular,
+the posterior parameter set $\PktN$ is not rectangular anymore;
+indeed, the shape of $\PktN$ depends on the presence of prior-data conflict,
+which is naturally operationalized as $s^k_t/n^k_t \not\in [\yktzl, \yktzu]$:
+prior-data conflict is present when the observed fraction of functioning components
+is outside its expected range.
+
+In absence of prior-data conflict, 
+$\PktN$ shrinks in the $\ykt$ dimension;
+how much it shrinks depends on $\nktz \in [\nktzl, \nktzu]$,
+leading to the so-called spotlight shape depicted in Figure***.
+As $\yktn$ gives the posterior expectation for the functioning probability $p_t^k$,
+shorter $\yktn$ intervals mean more precise knowledge about $p_t^k$.
+Also, the variance interval for $p_t^k$ will decrease
+as the Beta distributions in $\MktN$ will be more pointed
+due to the increase of $\nktz$ to $\nktn$.s
 
 In case of prior-data conflict ($s^k_t/n^k_t \not\in [\yktzl, \yktzu]$),
-$\PktN$ has the so-called banana shape,
-giving a wider $\yktn$ interval as compared to the non-conflict case. 
-As a consequence, we will have wider intervals for $\Rsys(t)$ in case of prior-data conflict.
+$\PktN$ has instead the so-called banana shape,
+arising from $\yktn$ intervals being shifted closer towards $s^k_t/n^k_t$
+for lower $\nktn$ values than for higher $\nktn$ values, see Figure***.
+Overall, this results in a wider $\yktn$ interval as compared to the non-conflict case, 
+reflecting the extra uncertainty due to prior-data conflict,
+thus making more cautious probability statements about $p_t^k$.
 
-Lower and upper bounds for $\Rsys(t)$ by min and max over $\PZ_{1,t}, \ldots, \PZ_{K,t}$.
+***Lower and upper bounds for $\Rsys(t)$ by min and max over $\PtZi{1}, \ldots, \PtZi{K}$.
 
-Monotonicity in $\yz_{k,t}$, so we get
+***Monotonicity in $\yz_{k,t}$, so we get, for each $t \in {\cal T}$,
 \begin{align*}
-\lRsys(t)
- &= \min_{\nz_{1,t},\ldots,\nz_{K,t}} \Rsys(t) \\
+\lefteqn{\lRsys(t \mid \vec{t}^1, \ldots, \vec{t}^K)}\\
+ &= \min_{\PtZi{1}, \ldots, \PtZi{K}} \Rsys(t \mid \PtZi{1}, \ldots, \PtZi{K}, \vec{t}^1, \ldots, \vec{t}^K) \\
  &= \min_{\nz_{1,t},\ldots,\nz_{K,t}} 
     \sum_{l_1=0}^{m_1} \cdots \sum_{l_K=0}^{m_K} \Phi(l_1, \ldots, l_K)
-                                                 \prod_{k=1}^K P(C^k_t = l_k \mid s^k_t) \\
+                                                 \prod_{k=1}^K P(C^k_t = l_k \mid \yktzl, \nktz, s^k_t) \\
  &= \min_{\nz_{1,t},\ldots,\nz_{K,t}} 
     \sum_{l_1=0}^{m_1} \cdots \sum_{l_K=0}^{m_K} \Phi(l_1, \ldots, l_K) \times \\ & \hspace*{12ex}
     \prod_{k=1}^K {m_k \choose l_k} \frac{B(l_k + \nn_{k,t}\ynl_{k,t}, m_k - l_k + \nn_{k,t}(1-\ynl_{k,t}))}
                                          {B(\nn_{k,t}\ynl_{k,t}, \nn_{k,t}(1-\ynl_{k,t}))} \,.
 \end{align*}
 
+***How to choose the sets of priors for the survival function of type $k$ components,
+i.e. how to choose $\PkZi{1}, \ldots \PkZi{\tmax}$?***
 
 ***do we need to ensure $p^k_{t_j} \ge p^k_{t_{j+1}}$ via $\yzl_{k,t_j} \ge \yzu_{k,t_{j+1}}$?
 I would say no, and for relatively dense $t$ grids, neighbouring intervals should be able to overlap after all.
@@ -329,35 +363,29 @@ guidelines on how to choose the parameters?***
 How sensitive is the method to choosing prior (lower, upper) mean zero for $p^k_t$ at high $t$'s?***
 
 
-\section{Computations}
+\section{Computations \& Toy Example}
 
-***publish code as seperate \textbf{R} package, or include in Louis' package \texttt{ReliabilityTheory}
+***publish code in Louis' package \texttt{ReliabilityTheory}
 (which contains the function to calculate the survival signature)***
 
+***Show $\Rsys(t)$ intervals for prior-data conflict and non-conflict data
+to show effect of prior-data conflict.***
 
-\section{Example}
+***Also calculate $\Rsys(t)$ intervals for vacuous prior ($[\yktzl, \yktzu] = [0,1]$ for some fixed $\nktz$)?***
 
-***Will ask Simme Douwe Flapper (Prof at TU Eindhoven) for real-world example,
-otherwise some toy example will do.***
-
-Show $\Rsys(t)$ intervals for prior-data conflict and non-conflict data
-to show effect of prior-data conflict.
-
-Also calculate $\Rsys(t)$ intervals for vacuous prior ($[\yktzl, \yktzu] = [0,1]$, some fixed $\nktz$)?***
-
-Show the effect of extra redundancy on $\Rsys(t)$ intervals like in Risk Analysis paper,
+***Show the effect of extra redundancy on $\Rsys(t)$ intervals like in Risk Analysis paper,
 or show effect of replacement of failed components in a system
-(replaced components constitute a new type with shifted component reliability function)
+(replaced components constitute a new type with shifted component reliability function)?***
 
 
 \section{Conclusions and Outlook}
 
 
-Extend the model to deal with right-censored observations which are common in realibility setting.
+***Extend the model to deal with right-censored observations which are common in the relaibility setting.
 We assume that a minimal assumption (component can fail immediately after censoring or live forever)
 will be simple to implememt but will lead to high imprecision,
-whereas assuming exchangeability with other components at moment of censoring
-will be more complex to accomodate but will lead to les imprecision.
+whereas assuming exchangeability with other surviving components at moment of censoring
+will be more complex to accomodate but will lead to less imprecision.
 
 \end{document}
 
