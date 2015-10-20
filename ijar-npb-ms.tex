@@ -115,19 +115,30 @@ Prior-data conflict
 
 \section{Introduction}
 
+(some sentences may be useful for the abstract)
+
 System with components of $k=1,\ldots,K$ different types.
 There are $m_k$ components of type $k$ in the system.
 Components of the same type are i.i.d.\ and independent of components of other types.
 Arbitrary system layout, i.e.\ any series / parallel combination, $k$ out of $n$ etc.
 
 Based on expert assumptions and data for component failure distribution,
-we calculate the system reliability function $\Rsys(t) = P(\Tsys > t)$.
+the goal is to calculate the system reliability function $\Rsys(t) = P(\Tsys > t)$.
+Considering a discrete grid of time points $\{t_1, \ldots, \tmax\}$,
+naturally a Bayesian model for the functioning probability at each time point arises.
+To account for uncertainty in the choice of prior and due to the inherent issue with prior-data conflict,
+we propose an impürecise or interval probability approach
+based on sets of prior distributions defined through sets of canonical parameters.
+
+Our method produces a set of discrete system reliability functions,
+or, for each time point $t$, an interval for the system survival probability
+that appropriately reflects uncertainty due to vague prior information, the amount of data, and prior-data conflict.
+
 
 \section{Survival Signature}
 
-Alternative to system signature that allows for
-straightforward computation of system reliability
-for multiple component types.
+The survival signature allows for straightforward computation of system reliability
+for systems with complex layouts and multiple component types.
 It separates the (time-invariant) system structure from the time-dependent failure probabilities of components.
 
 Can be seen as applying the law of total probability by partitioning
@@ -147,13 +158,18 @@ P(\Tsys > t)
 The random failure time of component number $i$ of type $k$ is denoted by $T^k_i$, $i = 1, \ldots m_k$.
 For its distribution, written in terms of the cdf $F^k(t) = P(T^k_i \le t)$
 or in terms of the reliability function $R^k(t) = P(T^k > t) = 1 - F^k(t)$,
-we consider a set of time points $t$.
+we consider a set of time points $t$, $t \in {\cal T} = \{t_1, \ldots, \tmax\}$.
 
 For each time point $t$, the functioning of a single component of type $k$ at time $t$ (functioning: 1, failed: 0)
-is Bernoulli distributed with a suitable functioning probability (as, $1-$ failure probability) $p^k_t$,
-$\indic(T^k_i > t) \sim \ber(p^k_t)$, $i = 1, \ldots, m_k$.
+is Bernoulli distributed with a suitable functioning probability (as, $1-$failure probability) $p^k_t$, so
+\begin{align*}
+P\big(\indic(T^k_i > t) = 1\big) &= p^k_t\,, \\
+P\big(\indic(T^k_i > t) = 0\big) &= 1 - p^k_t\,,
+\end{align*}
+in short, $\indic(T^k_i > t) \sim \ber(p^k_t)$, $i = 1, \ldots, m_k$.
 
-Then, the number of functioning components out of the $m_k$ components of type $k$
+Then, due to the assumption of independence of components of the same type, 
+the number of functioning components out of the $m_k$ components of type $k$
 is binomially distributed, $C^k_t = \sum_{i=1}^{m_k} \indic(T^k_i > t) \sim \bin(p^k_t, m_k)$.
 
 The set of functioning probabilities $p^k_t$
@@ -162,20 +178,14 @@ defines a discrete failure time distribution for components of type $k$,
 $R^k(t) = p^k_{t_j}$, $t \in [t_j, t_{j+1})$.
 
 ***or say we don't know for times between time points, or lower and upper bound already here?***
+***illustrate with a graph?***
 
-(maybe not relevant for this manuscript, but would it make sense to take Kaplan-Meier estimates for the $p^k_t$'s,
-or the NPI bounds for Kaplan-Meier?)
+%(maybe not relevant for this manuscript, but would it make sense to take Kaplan-Meier estimates for the $p^k_t$'s,
+%or the NPI bounds for Kaplan-Meier?)
+%
 
-***Right-censored observations maybe in a second step?
-Minimal assumption (component can fail immediately after censoring or live forever)
-will lead to high imprecision,
-assumption of exchangeability with other components at moment of censoring
-will be quite complex, maybe too much for this paper,
-and could be covered in a second paper with extensive use-case?***
-
-The $p^k_t$'s can be chosen such that they reflect, e.g., a bathtub curve for the corresponding hazard rate.
-
-***Constraint: $p^k_{t_j} \ge p^k_{t_{j+1}}$ must hold (assuming no repair).***
+The $p^k_t$'s can be taken such that they reflect, e.g., a bathtub curve for the corresponding hazard rate.
+Naturally, $p^k_{t_j} \ge p^k_{t_{j+1}}$ should hold (assuming no repair).***
 
 However, directly choosing the $p^k_t$'s is hard,
 and fixing values for all $p^k_t$ would furthermore neglect any inherent uncertainty in the particular choice.  
@@ -184,7 +194,7 @@ A convenient and natural choice is $p^k_t \sim \be(\alpha^k_t, \beta^k_t)$, a co
 leading to the posterior being again Beta.
 
 Having observed the lifetime data $\vec{t}^k = (t^k_1, \ldots, t^k_{n_k})$,
-at any fixed time $t$ this results in the observation from the Binomial model described above,
+at any fixed time $t \in {\cal T}$ this results in the observation from the Binomial model described above,
 $s^k_t = \sum_{i=1}^{n_k} \indic(t^k_i > t)$.
 The posterior is then $p^k_t \mid s^k_t \sim \be(\alpha^k_t + s^k_t, \beta^k_t + n_k - s^k_t)$.
 The combination of a Binomial observation model with a Beta prior is often called Beta-binomial model.
@@ -207,26 +217,25 @@ For each component type $k$, we have to choose $2 \times |{\cal T}|$
 parameters to specify the prior distribution for the discrete survival function of $T^k_i$,
 so in total $2 \times |{\cal T}| \times K$ parameters.
 
-***main contribution of the paper besides the set of priors thing:
-guidelines on how to choose the parameters?***
-
-***e.g., what to do in extreme tail of component distributions?
-How sensitive is the method to choosing prior (lower, upper) mean zero for $p^k_t$ at high $t$'s?***
-
 
 Let us drop the super- and subscript $k$ and $t$ for a while
 to discuss the role and interpretation of the parameters $\alpha$ and $\beta$
 for each $k$ and $t$.
 The Beta distribution is usually parametrized in terms of $\alpha$ and $\beta$ as used above, 
 but for our generalization to sets of priors,
-it is useful to consider a different parametrization in terms of $\nz$, $\yz$:
+it is useful to consider a different parametrization in terms of $\nz$ and $\yz$, where
 \begin{align*}
 \nz &= \alpha + \beta &
+&\text{and} &
 \yz &= \frac{\alpha}{\alpha + \beta} \,,
 \end{align*}
 or vice versa, $\alpha = \nz\yz$ and $\beta = \nz(1-\yz)$.
+$\nz$ and $\yz$ are sometimes known as the \emph{canonical} parameters,
+identified from rewriting the density in a canonical form.
+(This canonical form gives a joint structure to all conjugate priors.)
+
 From the properties of the Beta distribution,
-we see that $\yz = \E[p]$ is the prior mean for the functioning probability $p$,
+we see that $\yz = \E[p]$ is the prior expectation for the functioning probability $p$,
 and that the higher $\nz$, the more probability weight will be concentrated around that mean,
 as $\V(p) = \frac{\yz (1-\yz)}{\nz + 1}$.
 Furthermore, $\nz$ can be interpreted as a pseudocount or prior strength,
@@ -235,7 +244,7 @@ based on observed lifetimes $\vec{t} = (t_1, \ldots, t_{n})$:
 
 $p \mid s$ is Beta distributed with the updated parameters
 \begin{align*}
-\nn &= \nz + n &
+\nn &= \nz + n\,, &
 \yn &= \frac{\nz}{\nz + n} \cdot \yz + \frac{n}{\nz + n} \cdot \frac{s}{n}\,,
 \end{align*}
 so after seeing that $s$ out of $n$ components function (at time $t$),
@@ -313,6 +322,12 @@ What about requiring $\yzu_{k,t_j} \ge \yzu_{k,t_{j+1}}$ and $\yzl_{k,t_j} \ge \
 This might not hold for the case when we know, e.g., pretty much what's going on for low $t$
 but want to be much more cautious for high $t$.***
 
+***main contribution of the paper besides the set of priors thing:
+guidelines on how to choose the parameters?***
+
+***e.g., what to do in extreme tail of component distributions?
+How sensitive is the method to choosing prior (lower, upper) mean zero for $p^k_t$ at high $t$'s?***
+
 
 \section{Computations}
 
@@ -328,13 +343,21 @@ otherwise some toy example will do.***
 Show $\Rsys(t)$ intervals for prior-data conflict and non-conflict data
 to show effect of prior-data conflict.
 
+Also calculate $\Rsys(t)$ intervals for vacuous prior ($[\yktzl, \yktzu] = [0,1]$, some fixed $\nktz$)?***
+
 Show the effect of extra redundancy on $\Rsys(t)$ intervals like in Risk Analysis paper,
 or show effect of replacement of failed components in a system
 (replaced components constitute a new type with shifted component reliability function)
 
 
-\section{Conclusions}
+\section{Conclusions and Outlook}
 
+
+Extend the model to deal with right-censored observations which are common in realibility setting.
+We assume that a minimal assumption (component can fail immediately after censoring or live forever)
+will be simple to implememt but will lead to high imprecision,
+whereas assuming exchangeability with other components at moment of censoring
+will be more complex to accomodate but will lead to les imprecision.
 
 \end{document}
 
