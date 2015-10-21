@@ -138,6 +138,8 @@ Our method produces a set of discrete system reliability functions,
 or, for each time point $t$, an interval for the system survival probability
 that appropriately reflects uncertainty due to vague prior information, the amount of test data, and prior-data conflict.
 
+This paper implements the nonparametric approach described in Section~4 of ***Risk Analysis paper***
+and extends it to sets of priors.
 
 \section{Survival Signature}
 
@@ -369,7 +371,7 @@ How sensitive is the method to choosing prior (lower, upper) mean zero for $p^k_
 
 \section{Computations \& Examples}
 
-***publish code in Louis' \textbf{R} spackage \texttt{ReliabilityTheory}
+***publish code in Louis' \textbf{R} package \texttt{ReliabilityTheory}
 (which contains the function to calculate the survival signature)***
 
 
@@ -382,13 +384,13 @@ to show effect of precision of prior knowledge / amount of data / (degree of) pr
 ***Vacuous prior sets: $[\yktzl, \yktzu] = [0,1]$ combined with both fixed $\nktz$ and interval $[\nktzl, \nktzu]$)?***
 
 ***Some extra illustrations? E.g. the effect of extra redundancy on $\Rsys(t)$ intervals like in Risk Analysis paper?
-(could nicely illustrate decision making with intervals:
+(could nicely illustrate challenges in decision making with intervals:
 do I prefer adding redundancy such that there is a chance for a large effect, but high uncertainty for it,
 or do I rather add redundancy such that effect is smaller but more certain?***
 
 ***Other interesting extra illustration:
-show effect of replacement of components in a system at certain time points
-(failed component or preventive replacement),
+show effect of replacement of components in system at certain time points
+(could be corrective (component failed) or preventive replacement),
 replaced components constitute a new type with shifted component reliability function***
 
 
