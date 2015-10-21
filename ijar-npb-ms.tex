@@ -125,17 +125,18 @@ There are $m_k$ components of type $k$ in the system.
 Components of the same type are i.i.d.\ and independent of components of other types.
 Arbitrary system layout, i.e.\ any series / parallel combination, $k$ out of $n$ etc.
 
-Based on expert assumptions and data for component failure distribution,
-the goal is to calculate the system reliability function $\Rsys(t) = P(\Tsys > t)$.
+Based on expert assumptions for component failure distribution and component test data,
+we make predictive inference for a system with components that are exchangeable
+with the test components by calculating the system reliability function $\Rsys(t) = P(\Tsys > t)$.
 Considering a discrete grid of time points $\{t_1, \ldots, \tmax\}$,
 naturally a Bayesian model for the functioning probability at each time point arises.
 To account for uncertainty in the choice of prior and due to the inherent issue with prior-data conflict,
-we propose an impürecise or interval probability approach
+we propose an imprecise or interval probability approach
 based on sets of prior distributions defined through sets of canonical parameters.
 
 Our method produces a set of discrete system reliability functions,
 or, for each time point $t$, an interval for the system survival probability
-that appropriately reflects uncertainty due to vague prior information, the amount of data, and prior-data conflict.
+that appropriately reflects uncertainty due to vague prior information, the amount of test data, and prior-data conflict.
 
 
 \section{Survival Signature}
@@ -366,25 +367,34 @@ guidelines on how to choose the parameters?***
 How sensitive is the method to choosing prior (lower, upper) mean zero for $p^k_t$ at high $t$'s?***
 
 
-\section{Computations \& Toy Example}
+\section{Computations \& Examples}
 
-***publish code in Louis' package \texttt{ReliabilityTheory}
+***publish code in Louis' \textbf{R} spackage \texttt{ReliabilityTheory}
 (which contains the function to calculate the survival signature)***
 
-***Show $\Rsys(t)$ intervals for prior-data conflict and non-conflict data
-to show effect of prior-data conflict.***
 
-***Also calculate $\Rsys(t)$ intervals for vacuous prior
-($[\yktzl, \yktzu] = [0,1]$ for both fixed $\nktz$ and interval $[\nktzl, \nktzu]$)?***
+***calculate and show $\Rsys(t)$ plots for a range of examples (keep system layout fixed?):
+informative prior set for some component types, different degree of imprecision,
+noninformative prior set for other components (make clear that precise `noninformative' prior actually contains info), 
+combine with prior-data conflict and non-conflict test data,
+to show effect of precision of prior knowledge / amount of data / (degree of) prior-data conflict on $\Rsys(t)$.***
 
-***Show the effect of extra redundancy on $\Rsys(t)$ intervals like in Risk Analysis paper,
-or show effect of replacement of failed components in a system
-(replaced components constitute a new type with shifted component reliability function)?***
+***Vacuous prior sets: $[\yktzl, \yktzu] = [0,1]$ combined with both fixed $\nktz$ and interval $[\nktzl, \nktzu]$)?***
+
+***Some extra illustrations? E.g. the effect of extra redundancy on $\Rsys(t)$ intervals like in Risk Analysis paper?
+(could nicely illustrate decision making with intervals:
+do I prefer adding redundancy such that there is a chance for a large effect, but high uncertainty for it,
+or do I rather add redundancy such that effect is smaller but more certain?***
+
+***Other interesting extra illustration:
+show effect of replacement of components in a system at certain time points
+(failed component or preventive replacement),
+replaced components constitute a new type with shifted component reliability function***
 
 
 \section{Conclusions and Outlook}
 
-***Extend the model to deal with right-censored observations which are common in the relaibility setting.
+***Extend the model to deal with right-censored observations which are common in the reliability setting.
 We assume that a minimal assumption (component can fail immediately after censoring or live forever)
 will be simple to implememt but will lead to high imprecision,
 whereas assuming exchangeability with other surviving components at moment of censoring
