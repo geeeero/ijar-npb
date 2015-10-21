@@ -81,7 +81,7 @@
 \begin{frontmatter}
 \title{IJAR Bayesian Nonparametrics Special Issue Manuscript}
 
-\author[ein]{Gero Walter}
+\author[ein]{Gero Walter\fnref{fn1}}
 \ead{g.m.walter@tue.nl}
 \author[oxf]{Louis J.M. Ashlett}
 \ead{louis.aslett@stats.ox.ac.uk}
@@ -91,6 +91,9 @@
 \address[ein]{School of Industrial Engineering, Eindhoven University of Technology, Eindhoven, NL}
 \address[oxf]{Department of Statistics, University of Oxford, Oxford, UK}
 \address[dur]{Department of Mathematical Sciences, Durham University, Durham, UK}
+
+\fntext[fn1]{Gero Walter was supported by the Dinalog project
+``Coordinated Advanced Maintenance and Logistics Planning for the Process Industries'' (CAMPI).}
 
 \begin{abstract}
 Imprecise Bayesian nonparametric approach to system reliability with multiple types of components,
@@ -371,7 +374,8 @@ How sensitive is the method to choosing prior (lower, upper) mean zero for $p^k_
 ***Show $\Rsys(t)$ intervals for prior-data conflict and non-conflict data
 to show effect of prior-data conflict.***
 
-***Also calculate $\Rsys(t)$ intervals for vacuous prior ($[\yktzl, \yktzu] = [0,1]$ for some fixed $\nktz$)?***
+***Also calculate $\Rsys(t)$ intervals for vacuous prior
+($[\yktzl, \yktzu] = [0,1]$ for both fixed $\nktz$ and interval $[\nktzl, \nktzu]$)?***
 
 ***Show the effect of extra redundancy on $\Rsys(t)$ intervals like in Risk Analysis paper,
 or show effect of replacement of failed components in a system
@@ -379,7 +383,6 @@ or show effect of replacement of failed components in a system
 
 
 \section{Conclusions and Outlook}
-
 
 ***Extend the model to deal with right-censored observations which are common in the relaibility setting.
 We assume that a minimal assumption (component can fail immediately after censoring or live forever)
