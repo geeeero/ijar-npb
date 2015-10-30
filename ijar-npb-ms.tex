@@ -18,6 +18,7 @@
 %\usepackage{tikz}
 %\usetikzlibrary{shapes.misc,fit}
 
+\usepackage[bookmarks]{hyperref}
 
 % ------------ custom defs -------------
 
@@ -138,7 +139,7 @@ Our method produces a set of discrete system reliability functions,
 or, for each time point $t$, an interval for the system survival probability
 that appropriately reflects uncertainty due to vague prior information, the amount of test data, and prior-data conflict.
 
-This paper implements the nonparametric approach described in Section~4 of ***Risk Analysis paper***
+This paper implements the nonparametric approach described in Section~4 of \citet{2015:bayessurvsign}
 and extends it to sets of priors.
 
 \section{Survival Signature}
@@ -291,9 +292,10 @@ show corresponding $C^k_t$ distribution.***
 
 \section{Sets of Priors}
 
-As was shown in Walter \& Augustin (2009),
+As was shown in \citet{2009:WalterAugustin}, %Walter \& Augustin (2009),
 we can have both tractability and meaningful reaction to prior-data conflict
 by using sets of priors $\MktZ$ produced by parameter sets $\PktZ = [\nktzl, \nktzu] \times [\yktzl, \yktzu]$. 
+(A detailed discussion of different choices for $\PktZ$ is given in \citet[\S 3.1]{2013:diss-gw}.)
 In our model, each prior parameter pair $(\nktz, \yktz) \in \PktZ$
 corresponds to a Beta prior, thus $\MktZ$ is a set of Beta priors.
 The set of posteriors $\MktN$ is obtained by updating each prior in $\MktZ$ according to Bayes' Rule.
@@ -401,6 +403,14 @@ We assume that a minimal assumption (component can fail immediately after censor
 will be simple to implememt but will lead to high imprecision,
 whereas assuming exchangeability with other surviving components at moment of censoring
 will be more complex to accomodate but will lead to less imprecision.
+
+
+% ------------ bibliography -------------
+
+\section*{References}
+
+\bibliographystyle{elsarticle-harv}
+\bibliography{ijar-npb-refs}
 
 \end{document}
 
