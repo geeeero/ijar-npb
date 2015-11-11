@@ -62,7 +62,7 @@ yS <- nonParBayesSystemInference(t, sig, test.data)
 pplot <- function() {
   p <- ggplot(data.frame(Time=t, Prior=s0, Posterior=yS))
   p <- p + geom_line(aes(x=Time, y=Prior)) + geom_line(aes(x=Time, y=Posterior))
-  p <- p + xlab("Time") + ylab("Survival Probability") + coord_cartesian(ylim=c(0,1))
+  p <- p + xlab("Time") + ylab("Survival Probability") + coord_cartesian(ylim=c(-0.05,1.05))
   p
 }
 pplot()
@@ -83,6 +83,72 @@ bvec <- c(rep(5:1, each=2), 1)
 s0 <- nonParBayesSystemInference(t, sig, no.test.data, avec, bvec)
 yS <- nonParBayesSystemInference(t, sig, test.data, avec, bvec)
 pplot()
+
+# ----------------------------------------------
+
+# converts n, y parameters to Beta parameters alpha, beta
+ny2ab <- function(n,y){
+  a <- n*y
+  b <- n*(1-y)
+  data.frame(a=a, b=b)
+}
+
+# produces survival signature matrix for one component of type "name",
+# for use in nonParBayesSystemInference()
+oneCompSurvSign <- function(name){
+  res <- data.frame(name=c(0,1), Probability=c(0,1))
+  names(res)[1] <- name
+  res
+}
+
+# produces data frame with prior and posterior component survival function
+# for component of type "name" based on nonParBayesSystemInference() inputs
+# for all components (except survival signature; alpha and beta must be data frames)
+oneCompPriorPost <- function(name, at.times, test.data, alpha, beta){
+  sig <- oneCompSurvSign(name)
+  nodata <- list(name=NULL)
+  names(nodata) <- name
+  avec <- alpha[, match(name, names(alpha))]
+  bvec <- beta[, match(name, names(beta))]
+  data <- test.data[match(name, names(test.data))]
+  prio <- nonParBayesSystemInference(at.times, sig, nodata, avec, bvec)
+  post <- nonParBayesSystemInference(at.times, sig, data, avec, bvec)
+  data.frame(Time=at.times, Prior=prio, Posterior=post)
+}
+
+
+
+# ----------------------------------------------
+
+g2p <- graph.formula(s -- 1:2 -- t)
+V(g2p)$compType <- NA
+V(g2p)$compType[match(c("1"), V(g2p)$name)] <- "T1"
+V(g2p)$compType[match(c("2"), V(g2p)$name)] <- "T2"
+g2pnulldata <- list("T1"=NULL, "T2"=NULL)
+g2ptestdata <- list("T1"=1:4, "T2"=1:4)
+g2psig <- computeSystemSurvivalSignature(g2p)
+g2pt <- seq(0, 5, length.out=11)
+g2T1ab <- ny2ab(rep(1,11), seq(0.99, 0.01, length.out=11))
+g2adf <- data.frame("T1"=g2T1ab$a, "T2"=rep(1,11))
+g2bdf <- data.frame("T1"=g2T1ab$b, "T2"=rep(1,11))
+
+g2pprio <- nonParBayesSystemInference(g2pt, g2psig, g2pnulldata, g2adf, g2bdf)
+g2ppost <- nonParBayesSystemInference(g2pt, g2psig, g2ptestdata, g2adf, g2bdf)
+
+g2 <- ggplot(data.frame(Time=rep(g2pt, 2), Surv=c(g2pprio, g2ppost),
+                        What=rep(c("Prior", "Posterior"), each=length(g2pt))))
+g2 <- g2 + geom_line(aes(x=Time, y=Surv, linetype=What))
+g2 <- g2 + ylab("Survival Probability") + coord_cartesian(ylim=c(-0.05,1.05))
+g2
+
+# look at component priors and posteriors
+g2T1 <- oneCompPriorPost("T1", g2pt, g2ptestdata, g2adf, g2bdf)
+ggplot(g2T1) + geom_line(aes(x=Time, y=Prior)) + geom_line(aes(x=Time, y=Posterior))
+g2T2 <- oneCompPriorPost("T2", g2pt, g2ptestdata, g2adf, g2bdf)
+ggplot(g2T2) + geom_line(aes(x=Time, y=Prior)) + geom_line(aes(x=Time, y=Posterior))
+
+g2df <- data.frame(Time=g2pt, SysPrior=g2pprio, SysPosterior=g2ppost)
+
 
 
 #
