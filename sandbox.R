@@ -3,6 +3,7 @@
 setwd("../ijar-npb")
 library("ReliabilityTheory")
 library(ggplot2)
+library(reshape2)
 
 # Risk Analysis paper example
 g <- graph.formula(s -- 1 -- 2:4:5, 2 -- 3 -- t, 4:5 -- 6 -- t,
@@ -147,8 +148,25 @@ ggplot(g2T1) + geom_line(aes(x=Time, y=Prior)) + geom_line(aes(x=Time, y=Posteri
 g2T2 <- oneCompPriorPost("T2", g2pt, g2ptestdata, g2adf, g2bdf)
 ggplot(g2T2) + geom_line(aes(x=Time, y=Prior)) + geom_line(aes(x=Time, y=Posterior))
 
-g2df <- data.frame(Time=g2pt, SysPrior=g2pprio, SysPosterior=g2ppost)
+g2df <- data.frame(Time=g2pt, SysPrior=g2pprio, SysPosterior=g2ppost,
+                   T1Prior=g2T1$Prior, T1Posterior=g2T1$Posterior,
+                   T2Prior=g2T2$Prior, T2Posterior=g2T2$Posterior)
+g2df <- melt(g2df, "Time")
+g2 <- ggplot(g2df) + geom_line(aes(x=Time, y=value, color=variable))
+g2 <- g2 + ylab("Survival Probability") + coord_cartesian(ylim=c(-0.05,1.05))
+g2
 
+g2df <- rbind(cbind(melt(g2T1, "Time"), Part="T1"), cbind(melt(g2T2, "Time"), Part="T2"),
+              cbind(melt(data.frame(Time=g2pt, Prior=g2pprio, Posterior=g2ppost), "Time"), Part="System"))
+g2 <- ggplot(g2df) + geom_line(aes(x=Time, y=value, color=Part, linetype=variable))
+g2 <- g2 + ylab("Survival Probability") + coord_cartesian(ylim=c(-0.05,1.05))
+g2
+
+g2 <- ggplot(g2df) + geom_line(aes(x=Time, y=value, linetype=variable)) + facet_grid(Part ~ .)
+g2 <- g2 + ylab("Survival Probability") #+ coord_cartesian(ylim=c(-0.05,1.05))
+g2
+
+# ----------------------------------------------
 
 
 #
