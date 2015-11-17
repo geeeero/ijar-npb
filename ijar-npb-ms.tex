@@ -420,27 +420,34 @@ benavoli zaffalon papers***}
                                          {B(\nn_{k,t}\ynl_{k,t}, \nn_{k,t}(1-\ynl_{k,t}))} \,.
 \end{align*}
 
+***main contribution of the paper:
+set of priors thing,
+guidelines on how to choose the parameters;
+this is easier in terms of $(\nz, \yz)$ than in terms of $(\alpha, \beta)$***
+
 ***How to choose the sets of priors for the survival function of type $k$ components,
 i.e. how to choose $\PkZi{1}, \ldots \PkZi{\tmax}$?***
 
-***do we need to ensure $p^k_{t_j} \ge p^k_{t_{j+1}}$ via $\yzl_{k,t_j} \ge \yzu_{k,t_{j+1}}$?
-I would say no, and for relatively dense $t$ grids, neighbouring intervals should be able to overlap after all.
-What about requiring $\yzu_{k,t_j} \ge \yzu_{k,t_{j+1}}$ and $\yzl_{k,t_j} \ge \yzl_{k,t_{j+1}}$?
-This might not hold for the case when we know, e.g., pretty much what's going on for low $t$
-but want to be much more cautious for high $t$.***
+***not necessary to ensure $p^k_{t_j} \ge p^k_{t_{j+1}}$ via $\yzl_{k,t_j} \ge \yzu_{k,t_{j+1}}$
+as for relatively dense $t$ grids, neighbouring intervals should be able to overlap***
 
-***main contribution of the paper besides the set of priors thing:
-guidelines on how to choose the parameters?***
-
-***e.g., what to do in extreme tail of component distributions?
-How sensitive is the method to choosing prior (lower, upper) mean near-zero for $p^k_t$ at high $t$'s?***
+***Require $\yzu_{k,t_j} \ge \yzu_{k,t_{j+1}}$ and $\yzl_{k,t_j} \ge \yzl_{k,t_{j+1}}$?
+What if we know, e.g., pretty much what's going on for low $t$
+but want to be much more cautious for high $t$?
+$\yktzl$ can then drop to 0, but are we ok that $\yktzu$ cannot increase?
+(Prior guess for $p^k_t$ interpretation would say that $\yktz$ cannot increase,
+but does this need to hold for the prior guess range bound $\yktzu$?)***
 
 ***generally require $\yktzl > 0$ and $\yktzu < 1$ for all $t \not\in \big(\min(\vec{t}^k), \max(\vec{t}^k)\big)$
 to get proper posteriors!?!***
 
+***what to do in extreme tail of component distributions?
+How sensitive is the method to choosing prior (lower, upper) mean near-zero (how near?) for $p^k_t$ at high $t$'s?***
+
+
 \section{Computations \& Examples}
 
-***publish code in Louis' \textbf{R} package \texttt{ReliabilityTheory}
+***code published in Louis' \textbf{R} package \texttt{ReliabilityTheory}
 (which contains the function to calculate the survival signature)***
 
 
@@ -450,7 +457,8 @@ noninformative prior set for other components (make clear that precise `noninfor
 combine with prior-data conflict and non-conflict test data,
 to show effect of precision of prior knowledge / amount of data / (degree of) prior-data conflict on $\Rsys(t)$.***
 
-***Vacuous prior sets: $[\yktzl, \yktzu] = (0,1)$ combined with interval $[\nktzl, \nktzu]$)***
+***Vacuous prior sets $[\yktzl, \yktzu] = (0,1)$ for some component types,
+informative prior sets for others. $[\nktzl, \nktzu]$ interval for all component types.***
 
 ***Some extra illustrations? E.g. the effect of extra redundancy on $\Rsys(t)$ intervals like in Risk Analysis paper?
 (could nicely illustrate challenges in decision making with intervals:
@@ -466,10 +474,14 @@ replaced components constitute a new type with shifted component reliability fun
 \section{Conclusions and Outlook}
 
 ***Extend the model to deal with right-censored observations which are common in the reliability setting.
-We assume that a minimal assumption (component can fail immediately after censoring or live forever)
+We believe that a minimal assumption (component can fail immediately after censoring or live forever)
 will be simple to implememt but will lead to high imprecision,
 whereas assuming exchangeability with other surviving components at moment of censoring
 will be more complex to accomodate but will lead to less imprecision.
+
+***right-censoring will also allow to use data from running system,
+to calculate its remaining useful life (RUL).
+
 
 
 % ------------ bibliography -------------
