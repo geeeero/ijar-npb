@@ -11,7 +11,6 @@
 \usepackage{amsfonts}
 \usepackage{amssymb}
 \usepackage{amsthm}
-\usepackage{bm}
 
 \usepackage[usenames,dvipsnames]{xcolor}
 \usepackage{todonotes}
@@ -31,7 +30,7 @@
 
 \newcommand{\mbf}[1]{\mathbf{#1}}
 \newcommand{\bs}[1]{\boldsymbol{#1}}
-\renewcommand{\vec}[1]{{\bm#1}}
+\renewcommand{\vec}[1]{{\bs#1}}
 
 \newcommand{\uz}{^{(0)}} % upper zero
 \newcommand{\un}{^{(n)}} % upper n
@@ -249,7 +248,7 @@ to specify the prior distribution for the discrete survival function of $T^k_i$.
 In total, values for $2 \times |{\cal T}| \times K$ parameters must be chosen.
 
 
-\section{Reparametrisation of the Beta}
+\section{Reparametrisation of the Beta Distribution}
 
 The parametrisation of the Beta distribution used above is common,
 and allows to interpret $\alpha^k_t$ and $\beta^k_t$ as
@@ -304,10 +303,11 @@ so $\nz$ gives the strength of the prior as compared to the sample size $n$.
 The Beta-binomial distribution in terms of the updated parameters $\nn$ and $\yn$,
 now again with indicators $t$ and $k$,
 is therefore
-\begin{align*}
+\begin{align}
 P(C^k_t = l_k \mid s^k_t) &= {m_k \choose l_k} \frac{B(l_k + \nn_{k,t}\yn_{k,t}, m_k - l_k + \nn_{k,t}(1-\yn_{k,t}))}
                                                     {B(\nn_{k,t}\yn_{k,t}, \nn_{k,t}(1-\yn_{k,t}))} \,.
-\end{align*}
+\label{eq:postpredCny}
+\end{align}
 \td{leave this equation out???}
 
 The parametrization in terms of prior mean and prior strength
@@ -319,14 +319,14 @@ When observed data are very much different from what is assumed in the prior,
 this conflict is simply averaged out,
 and is not reflected in the posterior or the posterior predictive.
  
-***Illustration of such prior-data conflict with $\bebin$ distribution:
+\td{***Illustration of such prior-data conflict with $\bebin$ distribution:
 different priors updated to same posterior,
 or same prior updated to different posteriors with same variance,
-show corresponding $C^k_t$ distribution.***
+show corresponding $C^k_t$ distribution.***}
 
 
 
-\section{Sets of Priors}
+\section{Sets of Beta Priors}
 
 As was shown in \citet{2009:WalterAugustin}, %Walter \& Augustin (2009),
 we can have both tractability and meaningful reaction to prior-data conflict
@@ -343,7 +343,7 @@ and so can be described efficiently through the set of updated parameters
 \end{align*}
 Such rectangular prior parameter sets $\PktZ$ have been shown
 to balance desirable model properties and ease of elicitation quite well.
-
+%
 For each component type $k$ and time point $t$,
 one has to choose only the four parameters $\nktzl, \nktzu, \yktzl, \yktzu$
 (so $4 \times |{\cal T}|$ parameters are needed to define the set of prior distributions characterizing
@@ -376,6 +376,35 @@ Overall, this results in a wider $\yktn$ interval as compared to the non-conflic
 reflecting the extra uncertainty due to prior-data conflict,
 thus making more cautious probability statements about $p_t^k$.
 
+Furthermore, with sets of Beta priors it is also possible
+to express prior ignorance in a more adequate way,
+by letting $\yktzl \to 0$ and $\yktzu \to 1$
+for some or all $t \in {\cal T}$.
+(It is not advisable to choose $\yktzl = 0$ and $\yktzu = 1$,
+as this can lead to improper posterior predictive distributions.
+E.g., for any $t < \min(\vec{t}^k)$,
+we would get $\yktnu = 1$, leading to one argument of the Beta function
+in the denominator of \eqref{eq:postpredCny} being zero.)
+Choosing these limits for $\yktz$ means that we are prepared to give trivial bounds for the functioning probability only,
+and do not wish to make any commitments about $p^k_t$ a priori.
+Compare this to the uniform prior over $[0,1]$, a usual choice of `noninformative' prior,
+being a Beta prior with $\alpha^k_t = \beta^k_t = 1$, i.e., $\nktz = 2$, $\yktz = 0.5$.
+Taking this for all $t \in {\cal T}$ means that we expect the component reliability function
+to be on average 1/2 for all $t$, a very peculiar assumption,
+and, in our view, quite incompatible with the notion of prior ignorance.
+
+In this near-noninformative setting, the choice of $\nktzl$ not relevant,
+as both $\yktnl$ and $\yktnu$ are obtained with $\nktzu$;
+indeed $\yktzl > 0$ and $\yktzu < 1$ can be chosen such that
+$\frac{s^k_t}{n_k} \in [\yktzl, \yktzu]$ for all $t \in \big(\min(\vec{t}^k), \max(\vec{t}^k)\big)$.
+Logically, one cannot have prior-data conflict in case of prior near ignorance.
+
+\td{***called near-noninformative, for near-noninformative sets when $\yz$ is not bounded see
+benavoli zaffalon papers***}
+
+
+\section{Sets of System Reliability Functions}
+
 ***Lower and upper bounds for $\Rsys(t)$ by min and max over $\PtZi{1}, \ldots, \PtZi{K}$.
 
 ***Monotonicity in $\yz_{k,t}$, so we get, for each $t \in {\cal T}$,
@@ -404,8 +433,10 @@ but want to be much more cautious for high $t$.***
 guidelines on how to choose the parameters?***
 
 ***e.g., what to do in extreme tail of component distributions?
-How sensitive is the method to choosing prior (lower, upper) mean zero for $p^k_t$ at high $t$'s?***
+How sensitive is the method to choosing prior (lower, upper) mean near-zero for $p^k_t$ at high $t$'s?***
 
+***generally require $\yktzl > 0$ and $\yktzu < 1$ for all $t \not\in \big(\min(\vec{t}^k), \max(\vec{t}^k)\big)$
+to get proper posteriors!?!***
 
 \section{Computations \& Examples}
 
@@ -419,7 +450,7 @@ noninformative prior set for other components (make clear that precise `noninfor
 combine with prior-data conflict and non-conflict test data,
 to show effect of precision of prior knowledge / amount of data / (degree of) prior-data conflict on $\Rsys(t)$.***
 
-***Vacuous prior sets: $[\yktzl, \yktzu] = [0,1]$ combined with both fixed $\nktz$ and interval $[\nktzl, \nktzu]$)?***
+***Vacuous prior sets: $[\yktzl, \yktzu] = (0,1)$ combined with interval $[\nktzl, \nktzu]$)***
 
 ***Some extra illustrations? E.g. the effect of extra redundancy on $\Rsys(t)$ intervals like in Risk Analysis paper?
 (could nicely illustrate challenges in decision making with intervals:
