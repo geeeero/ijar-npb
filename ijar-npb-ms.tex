@@ -73,7 +73,6 @@
   }{}%
 }
 
-
 % ------------ options -------------
 
 \allowdisplaybreaks
@@ -191,12 +190,12 @@ in short, $\indic(T^k_i > t) \sim \ber(p^k_t)$, $i = 1, \ldots, m_k$, $t \in {\c
 The set of functioning probabilities $\{ p^k_t, t \in {\cal T}\}$
 defines a discrete failure time distribution for components of type $k$ through
 \begin{align*}
-R^k(t_j) &= p^k_{t_j},\ t \in {\cal T} = \{t_1, \ldots, \tmax\}\,.
+R^k(t_j) &= P(T^k > t_j) = p^k_{t_j},\ t_j = t_1, \ldots, \tmax\,.
 \end{align*}
 We can express this failure time distribution also through the probability mass function (pmf) and the discrete hazard function,
 \begin{align*}
-q_k(t_j) &= P(T^k = t_j) = p^k_{t_j} - p^k_{t_{j+1}}\,,\\ 
-h_k(t_j) &= P(T^k = t_j \mid T^k \ge t_j) = \frac{q_k(t_j)}{R(t_j)}\,.
+q^k(t_j) &= P\big(T^k \in (t_j,t_{j+1}]\big) = p^k_{t_j} - p^k_{t_{j+1}}\,,\\ 
+h^k(t_j) &= P\big(T^k \in (t_j,t_{j+1}]\mid T^k > t_j\big) = \frac{q^k(t_j)}{R^k(t_j)}\,. % or R^k(t_{j-1}) ???
 \end{align*}
 We assume the time grid $\cal T$ is dense enough for the application at hand,
 otherwise it would be possible to assume, e.g.,
