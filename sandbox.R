@@ -156,14 +156,24 @@ g2 <- ggplot(g2df) + geom_line(aes(x=Time, y=value, color=variable))
 g2 <- g2 + ylab("Survival Probability") + coord_cartesian(ylim=c(-0.05,1.05))
 g2
 
+bottomlegend <- theme(legend.position = 'bottom', legend.direction = 'horizontal', legend.title = element_blank())
+rightlegend <- theme(legend.title = element_blank())
+
 g2df <- rbind(cbind(melt(g2T1, "Time"), Part="T1"), cbind(melt(g2T2, "Time"), Part="T2"),
               cbind(melt(data.frame(Time=g2pt, Prior=g2pprio, Posterior=g2ppost), "Time"), Part="System"))
-g2 <- ggplot(g2df) + geom_line(aes(x=Time, y=value, color=Part, linetype=variable))
-g2 <- g2 + ylab("Survival Probability") + coord_cartesian(ylim=c(-0.05,1.05))
+g2 <- ggplot(g2df) + geom_line(aes(x=Time, y=value, color=Part, linetype=variable), size=1)
+g2 <- g2 + ylab("Survival Probability") + # coord_cartesian(ylim=c(-0.05,1.05)) +
+  rightlegend + # theme_minimal() +
+#  scale_colour_manual(values=c("red", "orange", "yellow"))
+#  scale_colour_brewer(palette="Set1")
+  #  scale_colour_manual(values=rainbow(3))
+  scale_colour_manual(values=heat.colors(3))
 g2
 
-g2 <- ggplot(g2df) + geom_line(aes(x=Time, y=value, linetype=variable)) + facet_grid(Part ~ .)
-g2 <- g2 + ylab("Survival Probability") #+ coord_cartesian(ylim=c(-0.05,1.05))
+g2 <- ggplot(g2df) + geom_line(aes(x=Time, y=value, linetype=variable)) + 
+  facet_grid(Part ~ .)
+#  facet_wrap(Part ~) # for, e.g., 3 component types, this will arrange the 4 facets in 2x2 
+g2 <- g2 + ylab("Survival Probability") + bottomlegend
 g2
 
 # ----------------------------------------------

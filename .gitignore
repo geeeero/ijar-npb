@@ -14,5 +14,6 @@
 *.pdf
 *.ps
 *.zip
+*.Rproj
 .Rproj.user
 .texpadtmp
