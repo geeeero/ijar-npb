@@ -171,8 +171,8 @@ g2 <- g2 + ylab("Survival Probability") + # coord_cartesian(ylim=c(-0.05,1.05)) 
 g2
 
 g2 <- ggplot(g2df) + geom_line(aes(x=Time, y=value, linetype=variable)) + 
-  facet_grid(Part ~ .)
-#  facet_wrap(Part ~) # for, e.g., 3 component types, this will arrange the 4 facets in 2x2 
+#  facet_grid(Part ~ .) # arranges facets in a column
+  facet_wrap(~ Part, ncol=2) # for, e.g., 3 component types, this will arrange the 4 facets in 2x2 
 g2 <- g2 + ylab("Survival Probability") + bottomlegend
 g2
 
