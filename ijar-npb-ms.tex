@@ -63,6 +63,8 @@
 \def\tnow{t_\text{now}}
 \def\tpnow{t^+_\text{now}}
 
+\newcommand{\ptk}{p^k_t}
+
 \input{nydefs.tex}
 
 %\newcommand{\comments}[1]{{\small\color{gray} #1}}
@@ -180,14 +182,14 @@ For a nonparametric description of $R^k(t)$,
 we consider a set of time points $t$, $t \in {\cal T} = \{t_1, \ldots, \tmax\}$.
 
 For each time point $t$, the functioning of a single component of type $k$ at time $t$ (functioning: 1, failed: 0)
-is Bernoulli distributed with a suitable functioning probability (as, $1-$failure probability) $p^k_t$, so
+is Bernoulli distributed with a suitable functioning probability (as, $1-$failure probability) $\ptk$, so
 \begin{align*}
-P\big(\indic(T^k_i > t) = 1\big) &= p^k_t\,, \\
-P\big(\indic(T^k_i > t) = 0\big) &= 1 - p^k_t\,,
+P\big(\indic(T^k_i > t) = 1\big) &= \ptk\,, \\
+P\big(\indic(T^k_i > t) = 0\big) &= 1 - \ptk\,,
 \end{align*}
-in short, $\indic(T^k_i > t) \sim \ber(p^k_t)$, $i = 1, \ldots, m_k$, $t \in {\cal T}$.
+in short, $\indic(T^k_i > t) \sim \ber(\ptk)$, $i = 1, \ldots, m_k$, $t \in {\cal T}$.
 
-The set of functioning probabilities $\{ p^k_t, t \in {\cal T}\}$
+The set of functioning probabilities $\{ \ptk, t \in {\cal T}\}$
 defines a discrete failure time distribution for components of type $k$ through
 \begin{align*}
 R^k(t_j) &= P(T^k > t_j) = p^k_{t_j},\ t_j = t_1, \ldots, \tmax\,.
@@ -206,23 +208,23 @@ or taking $p^k_{t_j}$ and $p^k_{t_{j+1}}$ as upper and lower bounds for $R^k(t)$
 
 Due to the independence assumption for components of the same type, 
 the number of functioning components out of the $m_k$ components of type $k$
-is binomially distributed, $C^k_t = \sum_{i=1}^{m_k} \indic(T^k_i > t) \sim \bin(p^k_t, m_k)$.
+is binomially distributed, $C^k_t = \sum_{i=1}^{m_k} \indic(T^k_i > t) \sim \bin(\ptk, m_k)$.
 %(maybe not relevant for this manuscript, but would it make sense to take Kaplan-Meier estimates for the $p^k_t$'s,
 %or the NPI bounds for Kaplan-Meier?)
 
-The $p^k_t$'s can be taken such that they reflect, e.g., a bathtub curve for the corresponding hazard rate $h_k(t)$.
+The $\ptk$'s can be taken such that they reflect, e.g., a bathtub curve for the corresponding hazard rate $h^k(t_j)$.
 Naturally, $p^k_{t_j} \ge p^k_{t_{j+1}}$ should hold (assuming no repair).
 
-However, directly choosing the $p^k_t$'s is hard,
+However, directly choosing the $\ptk$'s is hard,
 and fixing values for all $p^k_t$ would furthermore neglect any inherent uncertainty in the particular choice.  
-To account for this uncertainty, one can express knowledge on $p^k_t$ through a prior distribution.
-A convenient and natural choice is $p^k_t \sim \be(\alpha^k_t, \beta^k_t)$, a conjugate prior,
+To account for this uncertainty, one can express knowledge on $\ptk$ through a prior distribution.
+A convenient and natural choice is $\ptk \sim \be(\alpha^k_t, \beta^k_t)$, a conjugate prior,
 leading to the posterior being again Beta.
 
 Having observed the lifetime data $\vec{t}^k = (t^k_1, \ldots, t^k_{n_k})$,
 at any fixed time $t \in {\cal T}$ this results in the observation from the Binomial model described above,
 $s^k_t = \sum_{i=1}^{n_k} \indic(t^k_i > t)$.
-The posterior is then $p^k_t \mid s^k_t \sim \be(\alpha^k_t + s^k_t, \beta^k_t + n_k - s^k_t)$.
+The posterior is then $\ptk \mid s^k_t \sim \be(\alpha^k_t + s^k_t, \beta^k_t + n_k - s^k_t)$.
 The combination of a Binomial observation model with a Beta prior is often called Beta-binomial model.
 
 The posterior predictive distribution for the number of components surviving at time $t$
@@ -236,8 +238,8 @@ P(C^k_t = l_k \mid s^k_t) &= {m_k \choose l_k} \frac{B(l_k + \alpha^k_t + s^k_t,
 \end{align*}
 where $B(\cdot, \cdot)$ is the Beta function.
 This posterior predictive distribution is basically a Binomial distribution
-where the functioning probability $p^k_t$ takes values in $[0,1]$
-with the probability given by the posterior on $p^k_t$.
+where the functioning probability $\ptk$ takes values in $[0,1]$
+with the probability given by the posterior on $\ptk$.
 
 To wrap up, to calculate the system reliability according to ***eqnumber***,
 for each component type $k$,
@@ -273,7 +275,7 @@ see, e.g., \citet[pp.~202 and 272f]{2000:bernardosmith}.
 This canonical form gives a joint structure to all conjugate priors in exponential families.
 
 From the properties of the Beta distribution,
-we see that $\yz = \E[p]$ is the prior expectation for the functioning probability $p$,
+it follows that $\yz = \E[p]$ is the prior expectation for the functioning probability $p$,
 and that the higher $\nz$, the more probability weight will be concentrated around $\yz$,
 as $\V(p) = \frac{\yz (1-\yz)}{\nz + 1}$.
 Furthermore, $\nz$ can be interpreted as a pseudocount or prior strength,
@@ -307,7 +309,7 @@ P(C^k_t = l_k \mid s^k_t) &= {m_k \choose l_k} \frac{B(l_k + \nn_{k,t}\yn_{k,t},
                                                     {B(\nn_{k,t}\yn_{k,t}, \nn_{k,t}(1-\yn_{k,t}))} \,.
 \label{eq:postpredCny}
 \end{align}
-\td{leave this equation out???}
+%\td{leave this equation out???}
 
 The parametrization in terms of prior mean and prior strength
 enables us to see that in this conjugate setting,
@@ -318,8 +320,38 @@ When observed data are very much different from what is assumed in the prior,
 this conflict is simply averaged out,
 and is not reflected in the posterior or the posterior predictive.
 
-As a simple example, see Figure~\ref{fig:singleprior-pdc} ***
-giving a false sense of certainty***
+As a simple example, assume that we expect $\ptk$ to be about $0.75$ for a certain $k$ and $t$,
+so we choose $\yktz = 0.75$,
+and that we value this choice of mean functioning probability with $\nktz = 8$,
+i.e., like having seen $8$ observations with a mean $0.75$.
+Assume further that there are $n^k = 16$ components of type $k$ in the test data.
+When we observe $s^k_t = 12$ components functioning at time $t$,
+so $s^k_t/n^k = 0.75$ as we expect,
+then the updated parameters are $\nktn = 24, \yktn=0.75$.
+Unexpectedly observing that no component functions at time $t$ instead
+leads to parameters $\nktn = 24, \yktn=0.25$.
+The prior and the posteriors based on these two observation scenarios
+are depicted in Figure~\ref{fig:singleprior-pdc}
+through their Beta densities (left)
+and corresponding Beta-binomial probabilities $P(C^k_t = l_k\mid s^k_t)$
+for the case of $m_k = 5$ (right).
+
+Due to symmetry, we see that both posteriors have the same variance or spread,
+although arising from two fundamentally different scenarios.
+Posterior 1 is based on data exactly according to prior expectations;
+the increase in confidence on $\ptk \approx 0.75$
+is reflected in a more pointed posterior density,
+and the posterior predictive is changed only slightly.
+It is quite disturbing to see the same degree of confidence in Posterior 2,
+being based on data in sharp conflict with prior expectations.
+Posterior 2 places most probability weight around $0.25$,
+averaging between prior expectation and data,
+with the same variance or spread as Posterior 1.
+Instead of acknowledging the conflict between observed functioning probability zero
+and expected functioning probability $0.75$ by increased variance,
+Posterior 2 gives a false sense of certainty,
+also reflected in the posterior predictive,
+where both Posterior 1 and 2 have the same variance as well.
 
 \begin{figure}
 \includegraphics[width=\textwidth]{singleprior-pdc}
@@ -334,12 +366,9 @@ such that Posterior 2 gives a false sense of certainty despite the massive confl
 \label{fig:singleprior-pdc}
 \end{figure}
 
- 
-\td{***Illustration of such prior-data conflict with $\bebin$ distribution:
-different priors updated to same posterior,
-or same prior updated to different posteriors with same variance,
-show corresponding $C^k_t$ distribution.***}
-
+To counter this unwanted behaviour,
+we propose to use an imprecise probability approach
+based on sets of Beta priors, described next.
 
 
 \section{Sets of Beta Priors}
