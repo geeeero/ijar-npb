@@ -319,15 +319,18 @@ this conflict is simply averaged out,
 and is not reflected in the posterior or the posterior predictive.
 
 As a simple example, see Figure~\ref{fig:singleprior-pdc} ***
+giving a false sense of certainty***
 
 \begin{figure}
 \includegraphics[width=\textwidth]{singleprior-pdc}
 \caption{Beta densities (left) and corresponding Beta-binomial probability mass functions (right)
 for a prior with $\nktz = 8, \yktz = 0.75$,
-and posteriors based on $n^k_t=16$ observations with $s^k_t=12$ (Posterior 1) and $s^k_t=0$ (Posterior 2), respectively.
-For Posterior 2, the conflict between prior assumptions and data is averaged out;
-both posterior density and posterior predictive have the same spread as Posterior 1 for which there is no conflict,
-giving a false sense of certainty.}
+and posteriors based on $n^k_t=16$ observations with $s^k_t=12$ (Posterior~1) and $s^k_t=0$ (Posterior~2), respectively.
+Data for Posterior~1 confirm prior assumptions,
+while data for Posterior~2 are in conflict with the prior.
+However, this conflict is averaged out,
+and Posterior 1 and Posterior 2 have the same spread, both in the posterior pdf and the posterior predictive pmf,
+such that Posterior 2 gives a false sense of certainty despite the massive conflict between prior and data.}
 \label{fig:singleprior-pdc}
 \end{figure}
 
