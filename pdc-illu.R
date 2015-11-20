@@ -3,6 +3,8 @@
 
 library(ggplot2)
 library(reshape2)
+library(grid)
+library(gridExtra)
 
 updateLuckY <- function (n0, y0, tau, n){ (n0*y0+tau)/(n0+n) }
 updateLuckN <- function (n0, n){ n0+n }
@@ -39,32 +41,62 @@ bdsgpr <- dbetany(betavec, sgpr)
 bdpos1 <- dbetany(betavec, pos1)
 bdpos2 <- dbetany(betavec, pos2)
 
-bddf <- melt(data.frame(x=betavec, Prior=bdsgpr, "Posterior 1"=bdpos1, "Posterior 2"=bdpos2), "x")
+bottomlegend <- theme(legend.position = 'bottom', legend.direction = 'horizontal', legend.title = element_blank())
+rightlegend <- theme(legend.title = element_blank())
+
+bddf <- data.frame(x=betavec, Prior=bdsgpr, "Posterior1"=bdpos1, "Posterior2"=bdpos2)
+names(bddf)[c(3,4)] <- c("Posterior 1", "Posterior 2")
+bddf <- melt(bddf, "x")
 
 betadens <- ggplot(bddf, aes(x, value, group=variable, linetype=variable)) + geom_line() +
   bottomlegend + xlab(expression(p[t]^k)) + ylab(expression(f(p[t]^k)))
 betadens
 
+betadens2 <- ggplot(bddf, aes(x, value, group=variable, linetype=variable)) + geom_line() +
+  guides(linetype="none") + xlab(expression(p[t]^k)) + ylab(expression(f(p[t]^k)))
+betadens2
 
 # beta-binomial distributions
 #dbebinvec(pos1,2,1)
-m <- 4
+m <- 5
 bebinpr <- dbebinvec(sgpr, m)
 bebin1 <- dbebinvec(pos1, m)
 bebin2 <- dbebinvec(pos2, m)
 
-bottomlegend <- theme(legend.position = 'bottom', legend.direction = 'horizontal', legend.title = element_blank())
-rightlegend <- theme(legend.title = element_blank())
+pdcilludf <- data.frame(x=rep(0:m), Prior=bebinpr, "Posterior1"=bebin1, "Posterior2"=bebin2)
+names(pdcilludf)[c(3,4)] <- c("Posterior 1", "Posterior 2")
+pdcilludf$x <- ordered(pdcilludf$x)
+pdcilludf <- melt(pdcilludf, "x")
+pdcillu <- ggplot(pdcilludf, aes(x, value, group=variable, linetype=variable)) + geom_point() + geom_line() +
+  rightlegend + xlab(expression(l[k])) + ylab(expression(P(C[t]^k == l[k])))
+pdcillu
 
-pdcilludf <- data.frame(lk=rep(0:m, 2), plk=c(bebin1, bebin2), which=rep(c("Posterior 1", "Posterior 2"), each=m+1))
-
-pdcillu <- ggplot(pdcilludf, aes(lk, plk, group=which, linetype=which)) + geom_point() + geom_line() +
+pdcilludf2 <- data.frame(lk=rep(0:m, 3), plk=c(bebinpr, bebin1, bebin2),
+                        which=rep(c("Prior", "Posterior 1", "Posterior 2"), each=m+1))
+pdcilludf2$lk <- ordered(pdcilludf2$lk)
+pdcillu2 <- ggplot(pdcilludf2, aes(lk, plk, group=which, linetype=which)) + geom_point() + geom_line() +
   bottomlegend + xlab(expression(l[k])) + ylab(expression(P(C[t]^k == l[k])))
-pdcillu
+pdcillu2
 
-pdcillu <- ggplot(pdcilludf, aes(lk, plk)) + geom_point() + geom_line() + facet_grid(. ~ which) +
-  xlab(expression(l[k])) + ylab(expression(P(C[t]^k == l[k]))) + 
-  scale_x_discrete(breaks=0:m) + coord_cartesian(xlim=c(-0.5,m+0.5)) # axis tics at 0:m
+jointdf <- rbind(data.frame(bddf, which="Beta densities"),
+                 data.frame(pdcilludf, which="Beta-binomial pmfs"))
+joint <- ggplot(jointdf, aes(x, value, group=variable, linetype=variable)) + geom_point() + geom_line() +
+#  facet_grid(. ~ which, scales="free") + bottomlegend
+  facet_wrap(~which, scales="free") + rightlegend
+joint # todo: axis labels, for beta densities only line not points
+
+# better with grid.arrange:
+# margins t, r, b, l
+betadens2 <- betadens2 + theme(plot.margin = unit(c(0,0.5,0,0), "lines"))
+pdcillu   <- pdcillu   + theme(plot.margin = unit(c(0,0,0,0), "lines"),
+                               legend.margin = unit(-0.5, "cm"))
+pdf("singleprior-pdc.pdf", width=8, height=3)
+grid.arrange(betadens2, pdcillu, nrow=1, ncol=2, widths=c(1,1.2))
+dev.off()
+
+pdf("test.pdf")
+#betadens2
 pdcillu
+dev.off()
 
 #

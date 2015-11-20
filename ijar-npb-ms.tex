@@ -318,7 +318,18 @@ When observed data are very much different from what is assumed in the prior,
 this conflict is simply averaged out,
 and is not reflected in the posterior or the posterior predictive.
 
-As a simple example, 
+As a simple example, see Figure~\ref{fig:singleprior-pdc} ***
+
+\begin{figure}
+\includegraphics[width=\textwidth]{singleprior-pdc}
+\caption{Beta densities (left) and corresponding Beta-binomial probability mass functions (right)
+for a prior with $\nktz = 8, \yktz = 0.75$,
+and posteriors based on $n^k_t=16$ observations with $s^k_t=12$ (Posterior 1) and $s^k_t=0$ (Posterior 2), respectively.
+For Posterior 2, the conflict between prior assumptions and data is averaged out;
+both posterior density and posterior predictive have the same spread as Posterior 1 for which there is no conflict,
+giving a false sense of certainty.}
+\label{fig:singleprior-pdc}
+\end{figure}
 
  
 \td{***Illustration of such prior-data conflict with $\bebin$ distribution:
