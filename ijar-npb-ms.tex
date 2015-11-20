@@ -438,7 +438,7 @@ Taking this for all $t \in {\cal T}$ means that we expect the component reliabil
 to be on average 1/2 for all $t$, a very peculiar assumption,
 and, in our view, quite incompatible with the notion of prior ignorance.
 
-In this near-noninformative setting, the choice of $\nktzl$ not relevant,
+In this near-noninformative setting, the choice of $\nktzl$ is not relevant,
 as both $\yktnl$ and $\yktnu$ are obtained with $\nktzu$;
 indeed $\yktzl > 0$ and $\yktzu < 1$ can be chosen such that
 $\frac{s^k_t}{n_k} \in [\yktzl, \yktzu]$ for all $t \in \big(\min(\vec{t}^k), \max(\vec{t}^k)\big)$.
@@ -476,12 +476,15 @@ i.e. how to choose $\PkZi{1}, \ldots \PkZi{\tmax}$?***
 ***not necessary to ensure $p^k_{t_j} \ge p^k_{t_{j+1}}$ via $\yzl_{k,t_j} \ge \yzu_{k,t_{j+1}}$
 as for relatively dense $t$ grids, neighbouring intervals should be able to overlap***
 
-***Require $\yzu_{k,t_j} \ge \yzu_{k,t_{j+1}}$ and $\yzl_{k,t_j} \ge \yzl_{k,t_{j+1}}$?
-What if we know, e.g., pretty much what's going on for low $t$
-but want to be much more cautious for high $t$?
-$\yktzl$ can then drop to 0, but are we ok that $\yktzu$ cannot increase?
-(Prior guess for $p^k_t$ interpretation would say that $\yktz$ cannot increase,
-but does this need to hold for the prior guess range bound $\yktzu$?)***
+***Require $\yzu_{k,t_j} \ge \yzu_{k,t_{j+1}}$ and $\yzl_{k,t_j} \ge \yzl_{k,t_{j+1}}$.
+If we know, e.g., pretty much what's going on for low $t$
+but want to be much more cautious for high $t$,
+then $\yktzl$ can drop to 0, but $\yktzu$ cannot increase.
+Better to express certainty of prior guess via $\nktz$ bounds?
+With strongly differing $\nktz$ values, it could however happen that, e.g., $\yzu_{k,t_j} \le \yzu_{k,t_{j+1}}$!
+So require same $\nktz$ bounds for all $t$?
+%(Prior guess for $p^k_t$ interpretation would say that $\yktz$ cannot increase,
+%but does this need to hold for the prior guess range bound $\yktzu$?)***
 
 ***generally require $\yktzl > 0$ and $\yktzu < 1$ for all $t \not\in \big(\min(\vec{t}^k), \max(\vec{t}^k)\big)$
 to get proper posteriors!?!***
@@ -489,6 +492,16 @@ to get proper posteriors!?!***
 ***what to do in extreme tail of component distributions?
 How sensitive is the method to choosing prior (lower, upper) mean near-zero (how near?) for $p^k_t$ at high $t$'s?***
 
+***we should also cover the case where $\yktz$ bounds are not given for all $t \in {\cal T}$,
+as it will be too time-consuming to elicit $\yktz$ bounds for all $t$ in a dense grid.
+(Calculating $\Rsys(t)$ for a too coarse grid only will waste information from data.)
+Idea: ``fill up the $t$ grid at all $t$'' with least-committal bounds, i.e.: 
+at all $t$ not elicited, take $\yktzu$ equal to last (in time sequence) elicited $\yktzu$,
+and $\yktzl$ equal to next (in time sequence) elicited $\yktzl$.
+
+***possible elicitation procedure: starting with $\yktz$ bounds for `middle' or `typical' $t$,
+then $\yktz$ bounds for $t$ smaller than `middle' $t$ (or halfway between 0 and `middle' $t$?) and for $t$ larger than `middle' $t$,
+refine further as possible.
 
 \section{Computations \& Examples}
 
