@@ -1,6 +1,9 @@
 # playing around
 
-setwd("../ijar-npb")
+#setwd("../ijar-npb")
+#install.packages("devtools")
+#library("devtools")
+#install_github("louisaslett/ReliabilityTheory")
 library("ReliabilityTheory")
 library(ggplot2)
 library(reshape2)
@@ -171,6 +174,7 @@ g2 <- g2 + ylab("Survival Probability") + # coord_cartesian(ylim=c(-0.05,1.05)) 
 g2
 
 g2 <- ggplot(g2df) + geom_line(aes(x=Time, y=value, linetype=variable)) + 
+  geom_rug(aes(x=x), data=rbind(data.frame(x=g2ptestdata$"T1", Part="T1"), data.frame(x=g2ptestdata$"T2", Part="T2"))) +
 #  facet_grid(Part ~ .) # arranges facets in a column
   facet_wrap(~ Part, ncol=2) # for, e.g., 3 component types, this will arrange the 4 facets in 2x2 
 g2 <- g2 + ylab("Survival Probability") + bottomlegend
