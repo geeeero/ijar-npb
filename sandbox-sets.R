@@ -64,16 +64,91 @@ oneCompSurvSign <- function(name){
 # for component of type "name" based on nonParBayesSystemInferencePriorSets() inputs
 # for all components except survival signature; nLower, nUpper, yLower, yUpper must be data frames
 # where each column corresponds to the component type, so there must be a match 
-oneCompPriorPost <- function(name, at.times, test.data, alpha, beta){
+oneCompPriorPostSet <- function(name, at.times, test.data, nLower, nUpper, yLower, yUpper){
   sig <- oneCompSurvSign(name)
   nodata <- list(name=NULL)
   names(nodata) <- name
-  avec <- alpha[, match(name, names(alpha))]
-  bvec <- beta[, match(name, names(beta))]
+  nL <- nLower[, match(name, names(nLower))]
+  nU <- nUpper[, match(name, names(nUpper))]
+  yL <- yLower[, match(name, names(yLower))]
+  yU <- yUpper[, match(name, names(yUpper))]
   data <- test.data[match(name, names(test.data))]
-  prio <- nonParBayesSystemInference(at.times, sig, nodata, avec, bvec)
-  post <- nonParBayesSystemInference(at.times, sig, data, avec, bvec)
-  data.frame(Time=at.times, Prior=prio, Posterior=post)
+  prio <- nonParBayesSystemInferencePriorSets(at.times, sig, nodata, nL, nU, yL, yU)
+  post <- nonParBayesSystemInferencePriorSets(at.times, sig,   data, nL, nU, yL, yU)
+  data.frame(Time=rep(at.times,2), Lower=c(prio$lower,post$lower), Upper=c(prio$upper,post$upper),
+             Item=rep(c("Prior", "Posterior"), each=length(at.times)))
 }
+
+# ----------------------------------------------
+
+# parallel system with two components, T1 prior informative, T2 prior near ignorance
+g2p <- graph.formula(s -- 1:2 -- t)
+V(g2p)$compType <- NA
+V(g2p)$compType[match(c("1"), V(g2p)$name)] <- "T1"
+V(g2p)$compType[match(c("2"), V(g2p)$name)] <- "T2"
+g2pnulldata <- list("T1"=NULL, "T2"=NULL)
+g2ptestdata <- list("T1"=1:4, "T2"=1:4+0.5)
+g2pdat <- rbind(data.frame(x=g2ptestdata$"T1", Part="T1"), data.frame(x=g2ptestdata$"T2", Part="T2"))
+g2psig <- computeSystemSurvivalSignature(g2p)
+g2pt <- seq(0, 5, length.out=11)
+g2nL <- data.frame(T1=rep(1,11), T2=rep(1,11))
+g2nU <- data.frame(T1=rep(10,11), T2=rep(2,11))
+g2yL <- data.frame(T1=c(0.75, rep(c(0.75,0.50,0.01), each=3), 0.01), T2=rep(0.01, 11))
+g2yU <- data.frame(T1=c(0.99, rep(c(0.99,0.75,0.50), each=3), 0.50), T2=rep(0.99, 11))
+
+g2sT1 <- oneCompPriorPostSet("T1", g2pt, g2ptestdata, g2nL, g2nU, g2yL, g2yU)
+g2sT2 <- oneCompPriorPostSet("T2", g2pt, g2ptestdata, g2nL, g2nU, g2yL, g2yU)
+#ggplot(g2sT1) + geom_ribbon(aes(x=Time, ymin=Lower, ymax=Upper, group=Item, colour=Item, fill=Item), alpha=0.3)
+#ggplot(g2sT2) + geom_ribbon(aes(x=Time, ymin=Lower, ymax=Upper, group=Item, colour=Item, fill=Item), alpha=0.3)
+g2sprio <- nonParBayesSystemInferencePriorSets(g2pt, g2psig, g2pnulldata, g2nL, g2nU, g2yL, g2yU)
+g2spost <- nonParBayesSystemInferencePriorSets(g2pt, g2psig, g2ptestdata, g2nL, g2nU, g2yL, g2yU)
+
+g2sdf <- rbind(data.frame(g2sT1, Part="T1"), data.frame(g2sT2, Part="T2"),
+               data.frame(Time=rep(g2pt,2), Lower=c(g2sprio$lower,g2spost$lower), Upper=c(g2sprio$upper,g2spost$upper),
+                          Item=rep(c("Prior", "Posterior"), each=length(g2pt)), Part="System"))
+
+p2s <- ggplot(g2sdf) + geom_ribbon(aes(x=Time, ymin=Lower, ymax=Upper, group=Item, colour=Item, fill=Item), alpha=0.3)
+p2s <- p2s + facet_wrap(~Part, ncol=2) + geom_rug(aes(x=x), data=g2pdat) + xlab("Time") + ylab("Survival Probability")
+p2s
+
+# ----------------------------------------------
+
+# 2-parallel system with each subsystem 3 component series system
+g3 <- graph.formula(s -- 1 -- 2 -- 3 -- t, s -- 4 -- 5 -- 6 -- t)
+V(g3)$compType <- NA
+V(g3)$compType[match(c("1", "4"), V(g3)$name)] <- "T1"
+V(g3)$compType[match(c("2", "5"), V(g3)$name)] <- "T2"
+V(g3)$compType[match(c("3", "6"), V(g3)$name)] <- "T3"
+g3nulldata <- list("T1"=NULL, "T2"=NULL, "T3"=NULL)
+g3testdata <- list("T1"=c(2, 2.2, 2.4, 2.6), "T2"=c(3.0, 3.2, 3.4, 3.6), "T3"=(1:4)/10+4) # T3 late failures
+g3testdata <- list("T1"=c(2, 2.2, 2.4, 2.6), "T2"=c(3.0, 3.2, 3.4, 3.6), "T3"=(1:4)/10+0.5) # T3 early failures
+g3testdata <- list("T1"=c(2, 2.2, 2.4, 2.6), "T2"=c(3.0, 3.2, 3.4, 3.6), "T3"=(1:4)-0.5) # T3 fitting failures
+g3dat <- melt(g3testdata); names(g3dat) <- c("x", "Part")
+g3sig <- computeSystemSurvivalSignature(g3)
+g3t <- seq(0, 5, length.out=101)
+g3nL <- data.frame(T1=rep(1,101), T2=rep(1,101), T3=rep(1,101))
+g3nU <- data.frame(T1=rep(2,101), T2=rep(2,101), T3=rep(4,101))
+g3yL <- data.frame(T1=rep(0.01, 101), T2=rep(0.01, 101), T3=c(rep(c(0.625,0.375,0.250, 0.125, 0.01), each=20), 0.01))
+g3yU <- data.frame(T1=rep(0.99, 101), T2=rep(0.99, 101), T3=c(rep(c(0.990,0.875,0.500, 0.375, 0.25), each=20), 0.25))
+
+g3T1 <- oneCompPriorPostSet("T1", g3t, g3testdata, g3nL, g3nU, g3yL, g3yU)
+g3T2 <- oneCompPriorPostSet("T2", g3t, g3testdata, g3nL, g3nU, g3yL, g3yU)
+g3T3 <- oneCompPriorPostSet("T3", g3t, g3testdata, g3nL, g3nU, g3yL, g3yU)
+g3prio <- nonParBayesSystemInferencePriorSets(g3t, g3sig, g3nulldata, g3nL, g3nU, g3yL, g3yU)
+g3post <- nonParBayesSystemInferencePriorSets(g3t, g3sig, g3testdata, g3nL, g3nU, g3yL, g3yU)
+
+g3df <- rbind(data.frame(g3T1, Part="T1"), data.frame(g3T2, Part="T2"), data.frame(g3T3, Part="T3"),
+              data.frame(Time=rep(g3t,2), Lower=c(g3prio$lower,g3post$lower), Upper=c(g3prio$upper,g3post$upper),
+                         Item=rep(c("Prior", "Posterior"), each=length(g3t)), Part="System"))
+
+p3 <- ggplot(g3df) + geom_ribbon(aes(x=Time, ymin=Lower, ymax=Upper, group=Item, colour=Item, fill=Item), alpha=0.3)
+p3 <- p3 + facet_wrap(~Part, ncol=2) + geom_rug(aes(x=x), data=g3dat) + xlab("Time") + ylab("Survival Probability")
+#pdf("3comp-latefailures.pdf", width=8, height=5)
+#pdf("3comp-earlyfailures.pdf", width=8, height=5)
+pdf("3comp-fittingfailures.pdf", width=8, height=5)
+p3
+dev.off()
+
+# ----------------------------------------------
 
 #

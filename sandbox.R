@@ -129,7 +129,7 @@ V(g2p)$compType <- NA
 V(g2p)$compType[match(c("1"), V(g2p)$name)] <- "T1"
 V(g2p)$compType[match(c("2"), V(g2p)$name)] <- "T2"
 g2pnulldata <- list("T1"=NULL, "T2"=NULL)
-g2ptestdata <- list("T1"=1:4, "T2"=1:4)
+g2ptestdata <- list("T1"=1:4, "T2"=1:4+0.5)
 g2psig <- computeSystemSurvivalSignature(g2p)
 g2pt <- seq(0, 5, length.out=11)
 g2T1ab <- ny2ab(rep(1,11), seq(0.99, 0.01, length.out=11))
