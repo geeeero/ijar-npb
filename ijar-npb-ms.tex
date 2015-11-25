@@ -332,8 +332,8 @@ Unexpectedly observing that no component functions at time $t$ instead
 leads to parameters $\nktn = 24, \yktn=0.25$.
 The prior and the posteriors based on these two observation scenarios
 are depicted in Figure~\ref{fig:singleprior-pdc}
-through their Beta densities (left)
-and corresponding Beta-binomial probabilities $P(C^k_t = l_k\mid s^k_t)$
+through their Beta densities and cdfs (left)
+and corresponding Beta-binomial probabilities $P(C^k_t = l_k\mid s^k_t)$ and cmfs
 for the case of $m_k = 5$ (right).
 
 Due to symmetry, we see that both posteriors have the same variance or spread,
@@ -354,14 +354,15 @@ also reflected in the posterior predictive,
 where both Posterior 1 and 2 have the same variance as well.
 
 \begin{figure}
-\includegraphics[width=\textwidth]{singleprior-pdc}
-\caption{Beta densities (left) and corresponding Beta-binomial probability mass functions (right)
+\includegraphics[width=\textwidth]{singleprior-pdc2}
+\caption{Beta densities (top left) and cdfs (bottom left),
+with the corresponding Beta-binomial probability mass functions (top right) and cumulative mass functions (bottom right),
 for a prior with $\nktz = 8, \yktz = 0.75$,
 and posteriors based on $n^k_t=16$ observations with $s^k_t=12$ (Posterior~1) and $s^k_t=0$ (Posterior~2), respectively.
 Data for Posterior~1 confirm prior assumptions,
 while data for Posterior~2 are in conflict with the prior.
 However, this conflict is averaged out,
-and Posterior 1 and Posterior 2 have the same spread, both in the posterior pdf and the posterior predictive pmf,
+and Posterior 1 and Posterior 2 have the same spread, both in the posterior pdf/cdf and the posterior predictive pmf/cmf,
 such that Posterior 2 gives a false sense of certainty despite the massive conflict between prior and data.}
 \label{fig:singleprior-pdc}
 \end{figure}

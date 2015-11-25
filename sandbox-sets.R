@@ -125,11 +125,11 @@ g3testdata <- list("T1"=c(2, 2.2, 2.4, 2.6), "T2"=c(3.0, 3.2, 3.4, 3.6), "T3"=(1
 g3testdata <- list("T1"=c(2, 2.2, 2.4, 2.6), "T2"=c(3.0, 3.2, 3.4, 3.6), "T3"=(1:4)-0.5) # T3 fitting failures
 g3dat <- melt(g3testdata); names(g3dat) <- c("x", "Part")
 g3sig <- computeSystemSurvivalSignature(g3)
-g3t <- seq(0, 5, length.out=101)
-g3nL <- data.frame(T1=rep(1,101), T2=rep(1,101), T3=rep(1,101))
-g3nU <- data.frame(T1=rep(2,101), T2=rep(2,101), T3=rep(4,101))
-g3yL <- data.frame(T1=rep(0.01, 101), T2=rep(0.01, 101), T3=c(rep(c(0.625,0.375,0.250, 0.125, 0.01), each=20), 0.01))
-g3yU <- data.frame(T1=rep(0.99, 101), T2=rep(0.99, 101), T3=c(rep(c(0.990,0.875,0.500, 0.375, 0.25), each=20), 0.25))
+g3t <- seq(0, 5, length.out=301)
+g3nL <- data.frame(T1=rep(1,301), T2=rep(1,301), T3=rep(1,301))
+g3nU <- data.frame(T1=rep(2,301), T2=rep(2,301), T3=rep(4,301))
+g3yL <- data.frame(T1=rep(0.01, 301), T2=rep(0.01, 301), T3=c(rep(c(0.625,0.375,0.250,0.125,0.010), each=60), 0.01))
+g3yU <- data.frame(T1=rep(0.99, 301), T2=rep(0.99, 301), T3=c(rep(c(0.990,0.875,0.500,0.375,0.250), each=60), 0.25))
 
 g3T1 <- oneCompPriorPostSet("T1", g3t, g3testdata, g3nL, g3nU, g3yL, g3yU)
 g3T2 <- oneCompPriorPostSet("T2", g3t, g3testdata, g3nL, g3nU, g3yL, g3yU)
@@ -140,6 +140,7 @@ g3post <- nonParBayesSystemInferencePriorSets(g3t, g3sig, g3testdata, g3nL, g3nU
 g3df <- rbind(data.frame(g3T1, Part="T1"), data.frame(g3T2, Part="T2"), data.frame(g3T3, Part="T3"),
               data.frame(Time=rep(g3t,2), Lower=c(g3prio$lower,g3post$lower), Upper=c(g3prio$upper,g3post$upper),
                          Item=rep(c("Prior", "Posterior"), each=length(g3t)), Part="System"))
+g3df$Item <- ordered(g3df$Item, levels=c("Prior", "Posterior"))
 
 p3 <- ggplot(g3df) + geom_ribbon(aes(x=Time, ymin=Lower, ymax=Upper, group=Item, colour=Item, fill=Item), alpha=0.3)
 p3 <- p3 + facet_wrap(~Part, ncol=2) + geom_rug(aes(x=x), data=g3dat) + xlab("Time") + ylab("Survival Probability")
