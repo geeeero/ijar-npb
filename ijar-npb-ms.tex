@@ -466,6 +466,25 @@ benavoli zaffalon papers***}
                                          {B(\nn_{k,t}\ynl_{k,t}, \nn_{k,t}(1-\ynl_{k,t}))} \,.
 \end{align*}
 
+We need to optimize over $\nktz$'s only,
+as lower and upper bounds for $\Rsys(t)$ are obtained for $\yktzl$ and $\yktzu$, respectively.
+Remember that $\yktz$ gives the prior expected survival probability for a component of type $k$ at time $t$.
+As seen in Figures *** and ***, the posterior parameter set bounds are the transformed prior parameter set bounds,
+i.e., $\yktzu$ corresponds to the upper bound of $\PktN$ for all $\nktz \in \PktZ$.
+
+Now, a higher posterior expected survival probability means
+higher probability for many components surviving out of $m_k$
+(i.e., probabilities for the larger $l_k$'s are higher, and in turn for the lower $l_k$'s are lower).
+***Indeed, the Beta-binomial distribution is stochastically ordered for varying y, i.e.,
+its cdf is decreasing in $\yktn$ for fixed $l_k$, and the cdfs for different $\yktn$ do not cross each other.***
+This means that for $\yktn$ the probability weights given to the high values of $l_k$ are maximised.
+As $\Phi$ is non-decreasing in each of its arguments $l_k, k=1,\ldots,K$ (for coherent systems),
+$\Rsys(t)$ is maximised by putting most probability weight on the highest $l_k$ values.
+
+%for a certain $k$, a high probability on high $l_k$'s is never worse than a high probability on lower $l_k$'s,
+%keeping all other component type expressions fixed.
+
+
 ***main contribution of the paper:
 set of priors thing,
 guidelines on how to choose the parameters;
