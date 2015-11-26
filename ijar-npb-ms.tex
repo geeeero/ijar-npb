@@ -138,31 +138,11 @@ There are $m_k$ components of type $k$ in the system.
 Components of the same type are i.i.d.\ and independent of components of other types.
 Arbitrary system layout, i.e.\ any series / parallel combination, $k$ out of $n$ etc.
 
-Based on expert assumptions for component failure distribution and component test data,
-we make predictive inference for a system with components that are exchangeable
-with the test components by calculating the system reliability function $\Rsys(t) = P(\Tsys > t)$.
-Considering a discrete grid of time points $\{t_1, \ldots, \tmax\}$,
-naturally a Bayesian model for the functioning probability at each time point arises.
-To account for uncertainty in the choice of prior and due to the inherent issue with prior-data conflict,
-we propose an imprecise or interval probability approach
-based on sets of prior distributions defined through sets of canonical parameters.
-
-Our method produces a set of discrete system reliability functions,
-or, for each time point $t$, an interval for the system survival probability
-that appropriately reflects uncertainty due to vague prior information, the amount of test data, and prior-data conflict.
-
-This paper implements the nonparametric approach described in Section~4 of \citet{2015:bayessurvsign}
-and extends it to sets of priors.
-
-\section{Survival Signature}
-
 The survival signature allows for straightforward computation of system reliability
 for systems with complex layouts and multiple component types.
-It separates the (time-invariant) system structure from the time-dependent failure probabilities of components.
-
-Can be seen as applying the law of total probability by partitioning
-according to the number of components of type $k$ functioning at time $t$,
-denoted by $C^k_t \in \{0, 1, \ldots, l_k, \ldots, m_k\}$:
+It separates the (time-invariant) system structure from the time-dependent failure probabilities of components,
+by partitioning the event $\Tsys > t$ according to the number of components of type $k$ functioning at time $t$,
+denoted by $C^k_t \in \{0, 1, \ldots, l_k, \ldots, m_k\}$, and applying the law of total probability:
 \begin{align*}
 P(\Tsys > t)
  &= \sum_{l_1=0}^{m_1} \cdots \sum_{l_K=0}^{m_K} P(\Tsys > t \mid C^1_t = l_1,\ldots, C^K_t = l_K)
@@ -170,6 +150,127 @@ P(\Tsys > t)
  &= \sum_{l_1=0}^{m_1} \cdots \sum_{l_K=0}^{m_K} \Phi(l_1, \ldots, l_K)
                                                  \prod_{k=1}^K P(C^k_t = l_k) \,.
 \end{align*}
+
+Based on expert assumptions for component failure distribution and component test data,
+we make predictive inference for a system with components that are exchangeable
+with the test components by calculating the system reliability function $\Rsys(t) = P(\Tsys > t)$.
+Considering a discrete grid of time points $\{t_1, \ldots, \tmax\}$,
+naturally a Bayesian model for the functioning probability at each time point arises.
+To account for uncertainty in the choice of prior and due to the inherent issue with prior-data conflict (see Section~***),
+we propose an imprecise or interval probability approach
+based on sets of prior distributions defined through sets of canonical parameters.
+This approach also allows to adequately model weak or partial prior information.
+Especially prior near ignorance can be modelled much more meaningfully than through usual so-called noninformative priors. 
+
+Our method produces a set of discrete system reliability functions,
+or, for each time point $t$, an interval for the system survival probability,
+that appropriately reflects uncertainty due to vague prior information, the amount of test data, and prior-data conflict.
+
+This paper implements the nonparametric approach described in Section~4 of \citet{2015:bayessurvsign}
+and extends it to sets of priors.
+
+The paper is organised as follows.
+In Section~\ref{sec:survsign}, we describe ***
+
+
+\section{Survival Signature}
+\label{sec:survsign}
+
+In mathematical theory of reliability, the main focus is on the functioning of a system given the functioning, or not, 
+of its components and the structure of the system. The mathematical concept which is central to this theory is the 
+\emph{structure function} \citep{BP75}. For a system with $m$ components, let state vector 
+$\underline{x} = (x_1,x_2,\ldots,x_m) \in \{0,1\}^m$, with $x_i=1$ if the $i$th component functions 
+and $x_i=0$ if not. The labelling of the components is arbitrary but must be fixed to define $\underline{x}$. 
+The structure function $\phi : \{0,1\}^m \rightarrow \{0,1\}$, defined for all possible $\underline{x}$, takes 
+the value 1 if the system functions and 0 if the system does not function for state vector $\underline{x}$. 
+Most practical systems are coherent, which means that $\phi(\underline{x})$ 
+is non-decreasing in any of the components of $\underline{x}$, so system functioning cannot be improved by worse performance 
+of one or more of its components. The assumption of coherent systems is also convenient from the perspective of uncertainty
+quantification for system reliability. It is further logical to assume that $\phi(\underline{0})=0$ and $\phi(\underline{1})=1$, 
+so the system fails if all its components fail and it functions if all its components function. 
+
+For larger systems, working with the full structure function may be complicated, and one may particularly
+only need a summary of the structure function in case the system has exchangeable components of one or more
+types. We use the term `exchangeable components' to indicate that the failure times of the components in the system
+are exchangeable \citep{DF74}. \citet{2012:survsign} introduced such a summary,
+called the \emph{survival signature}, 
+to facilitate reliability analyses for systems with multiple types of components. In case of just a single type of components, 
+the survival signature is closely related to the system signature \citep{Sa07}, which is well-established and the topic of many
+research papers during the last decade. However, generalization of the signature to systems with
+multiple types of components is extremely complicated (as it involves ordering order statistics of different
+distributions), so much so that it cannot be applied to most practical systems. In addition to the 
+possible use for such systems, where the benefit only occurs if there are multiple components of the 
+same types, the survival signature is arguably also easier to interpret than the signature. 
+
+Consider a system with $K\ge 1$ types of components, with $m_k$ components of type $k \in \{1,\ldots,K\}$ and 
+$\sum_{k=1}^K m_k = m$. Assume that the random failure times of components of the same type are exchangeable \citep{DF74}.
+Due to the arbitrary ordering of the components in the state vector, components of the same type can be grouped together, 
+leading to a state vector that can be written as 
+$\underline{x} = (\underline{x}^1,\underline{x}^2,\ldots,\underline{x}^K)$, with 
+$\underline{x}^k = (x^k_1,x^k_2,\ldots,x^k_{m_k})$ the sub-vector representing the states of the components of type $k$. 
+
+The \emph{survival signature} for such a system, denoted by $\Phi(l_1,\ldots,l_K)$, with $l_k=0,1,\ldots,m_k$ 
+for $k=1,\ldots,K$, is defined as the probability for the event that the system functions given that \emph{precisely} $l_k$ of its 
+$m_k$ components of type $k$ function, for each $k\in \{1,\ldots,K\}$ \citep{2012:survsign}. 
+There are $\binom{m_k}{l_k}$ state vectors $\underline{x}^k$ with $\sum_{i=1}^{m_k} x^k_i = l_k$. Let $S^k_{l_k}$ 
+denote the set of these state vectors for components of type $k$ and let $S_{l_1,\ldots,l_K}$ denote the set of 
+all state vectors for the whole system for which $\sum_{i=1}^{m_k} x^k_i = l_k$, $k=1,\ldots,K$. Due to the 
+exchangeability assumption for the failure times of the $m_k$ components of type $k$, all the state vectors 
+$\underline{x}^k \in S^k_{l_k}$ are equally likely to occur, hence \citep{2012:survsign}
+\begin{align}
+\label{eq:surv-sig}
+\Phi(l_1,\ldots,l_K)
+ &= \left[ \prod_{k=1}^K \binom{m_k}{l_k}^{-1} \right] \times \sum_{\underline{x} \in S_{l_1,\ldots,l_K}} \phi(\underline{x})\,.
+\end{align}
+
+Let $C^k_t \in \{0,1,\ldots,m_k\}$ denote the number of components of type $k$ in the system that function at time $t>0$.
+Then, for system failure time $\Tsys$,
+\begin{align*}
+P(\Tsys > t) &= \Rsys(t) = \sum_{l_1=0}^{m_1} \cdots \sum_{l_K=0}^{m_K}  \Phi(l_1,\ldots,l_K) P\Big(\bigcap_{k=1}^K \{C^k_t = l_k\}\Big)\,.
+\end{align*}
+It should be emphasized that when using the survival signature,
+there are no restrictions on dependence of the failure times of components of different types,
+as the probability $P(\bigcap_{k=1}^K \{C^k_t = l_k\})$ can take any form of dependence into account,
+for example one can include common-cause failures quite straightforwardly into this approach \citep[see][]{CCM15}.
+However, there is a substantial simplification
+if one can assume that the failure times of components of different types are independent,
+and even more so if one can assume that the failure times of components of type $k$ 
+are conditionally independent and identically distributed with CDF $F_k(t)$.
+With these assumptions, we get
+\begin{align*}
+\Rsys(t) &= \sum_{l_1=0}^{m_1} \cdots \sum_{l_K=0}^{m_K} \left[ \Phi(l_1,\ldots,l_K)
+            \prod_{k=1}^K \left( \binom{m_k}{l_k} [F_k(t)]^{m_k-l_k} [1-F_k(t)]^{l_k} \right) \right]\,.
+\end{align*}
+
+The main advantage of the survival signature, in line with this property of the signature for systems with a single type of 
+components \citep{Sa07}, is that the information about the system structure is fully 
+separated from the information about functioning of the components, which simplifies related statistical inference as well as
+considerations of optimal system design. In particular for study of system reliability over time, with the structure of the system, 
+and hence the survival signature, not changing, this separation also enables relatively straightforward statistical inferences. 
+
+There are several relatively straightforward generalizations of the use of the survival signature.
+The probabilities for the numbers of functioning components can be generalized to lower and upper probabilities,
+as e.g.\ done by \citet{CCMA14} within the nonparametric predictive inference (NPI) framework of statistics \citep{Co11},
+where lower and upper probabilities for the events $C_k = l_k$
+are inferred from test data on components of the same types as those in the system.
+This is an approach that is also followed in the current paper, but with the use of generalized Bayesian inference instead of NPI.
+***This step is less trivial here as we must ensure to have probability distributions for these events,
+thus summing to one over $l_k=0,1,\ldots,m_k$ for each type $k$.
+***covered because of parametric distribution, min and max over parameter sets (see section 6)***
+***For coherent systems this is not very complicated due to the monotonicity of the survival signature,
+see \citet{CCMA14} where the method for dealing with imprecision on the random quantities $C_k$ is presented.***
+Recently, \citet{CCM16} suggested the generalization of the structure function from a binary function to a probability,
+to reflect uncertainty about system functioning for known states of its components.
+A further suggestion was to generalize this to lower and upper structure functions,
+within the theory of imprecise probability \citep{itip,CU11}.
+These suggestions are also easy to incorporate into system reliability with the use of the survival signature,
+which in the latter case also becomes an imprecise probability.  
+
+The survival signature is a powerful but rather basic concept.
+As such, further generalizations are conceptually easy,
+for example one can straightforwardly generalize the survival signature to multi-state systems
+such that it again summarizes the structure function
+in a manner that is sufficient for a range of uncertainty quantifications for the system reliability. 
 
 
 \section{Nonparametric Bayesian Approach}
@@ -550,6 +651,11 @@ replaced components constitute a new type with shifted component reliability fun
 
 
 \section{Conclusions and Outlook}
+
+Upscaling the survival signature to large real-world systems and networks, consisting of thousands of components, is a major challenge.
+However, even for such systems the fact that one only needs to derive the survival signature once for a system is an advantage,
+and also the monotonicity of the survival signature for coherent systems is very useful if one can only derive it partially.  
+
 
 ***Extend the model to deal with right-censored observations which are common in the reliability setting.
 We believe that a minimal assumption (component can fail immediately after censoring or live forever)
