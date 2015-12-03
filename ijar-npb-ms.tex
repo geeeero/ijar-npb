@@ -614,19 +614,25 @@ as for relatively dense $t$ grids, neighbouring intervals should be able to over
 If we know, e.g., pretty much what's going on for low $t$
 but want to be much more cautious for high $t$,
 then $\yktzl$ can drop to 0, but $\yktzu$ cannot increase.
-Better to express certainty of prior guess via $\nktz$ bounds?
-With strongly differing $\nktz$ values, it could however happen that, e.g., $\yzu_{k,t_j} \le \yzu_{k,t_{j+1}}$!
-So require same $\nktz$ bounds for all $t$?
+
+***Better to express certainty of prior guess via $\nktz$ bounds?\\
+With (strongly) differing $\nktz$ values, it can happen that, e.g., $\ynu_{k,t_j} < \ynu_{k,t_{j+1}}$!\\
+E.g., when $\yzu_{k,t_j} = \yzu_{k,t_{j+1}}$ and $\yzl_{k,t_j} = \yzl_{k,t_{j+1}}$,
+$s^k_t/n_k \in [\yzl_{k,t_j}, \yzu_{k,t_j}]$ (so no prior-data conflict) and no failures in $[t_j, t_{j+1}]$,\\
+then with $\nzu_{k,t_j} < \nzu_{k,t_{j+1}}$ we have $\ynu_{k,t_j} < \ynu_{k,t_{j+1}}$,\\
+ and with $\nzu_{k,t_j} > \nzu_{k,t_{j+1}}$ we have $\ynl_{k,t_j} > \ynl_{k,t_{j+1}}$.\\
+(weighted average between interval and precise value: the lower $n$, the 'faster' the interval will shrink!)\\
+So we need to require same $\nktz$ bounds for all $t$!
 %(Prior guess for $p^k_t$ interpretation would say that $\yktz$ cannot increase,
 %but does this need to hold for the prior guess range bound $\yktzu$?)***
 
 ***generally require $\yktzl > 0$ and $\yktzu < 1$ for all $t \not\in \big(\min(\vec{t}^k), \max(\vec{t}^k)\big)$
-to get proper posteriors!?!***
+to get proper posteriors***
 
 ***what to do in extreme tail of component distributions?
 How sensitive is the method to choosing prior (lower, upper) mean near-zero (how near?) for $p^k_t$ at high $t$'s?***
 
-***we should also cover the case where $\yktz$ bounds are not given for all $t \in {\cal T}$,
+***elicitation: we should also consider the case where $\yktz$ bounds are not given for all $t \in {\cal T}$,
 as it will be too time-consuming to elicit $\yktz$ bounds for all $t$ in a dense grid.
 (Calculating $\Rsys(t)$ for a too coarse grid only will waste information from data.)
 Idea: ``fill up the $t$ grid at all $t$'' with least-committal bounds, i.e.: 
