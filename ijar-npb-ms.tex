@@ -402,15 +402,20 @@ in the weighted average calculation of $\yn$,
 so $\nz$ gives the strength of the prior as compared to the sample size $n$.
 %The parameters $\nz$ and $\yz$ have a more intuitive interprtation,
 
-The Beta-binomial distribution in terms of the updated parameters $\nn$ and $\yn$,
+The Beta-binomial probability mass function (pmf) in terms of the updated parameters $\nn$ and $\yn$,
 now again with indicators $t$ and $k$,
 is therefore
 \begin{align}
 P(C^k_t = l_k \mid s^k_t) &= {m_k \choose l_k} \frac{B(l_k + \nn_{k,t}\yn_{k,t}, m_k - l_k + \nn_{k,t}(1-\yn_{k,t}))}
-                                                    {B(\nn_{k,t}\yn_{k,t}, \nn_{k,t}(1-\yn_{k,t}))} \,.
+                                                    {B(\nn_{k,t}\yn_{k,t}, \nn_{k,t}(1-\yn_{k,t}))} \,,
 \label{eq:postpredCny}
 \end{align}
-%\td{leave this equation out???}
+and the corresponding cumulative mass function (cmf) is given by
+\begin{align}
+F_{C^k_t\mid s^k_t}(l_k) &= P(C^k_t \le l_k \mid s^k_t) = \sum_{j_k=0}^{l_k} P(C^k_t = j_k \mid s^k_t)\,.
+\label{eq:postpredCnycmf}
+\end{align}
+
 
 The parametrization in terms of prior mean and prior strength
 enables us to see that in this conjugate setting,
@@ -552,9 +557,35 @@ benavoli zaffalon papers***}
 
 \section{Sets of System Reliability Functions}
 
-***Lower and upper bounds for $\Rsys(t)$ by min and max over $\PtZi{1}, \ldots, \PtZi{K}$.
+To obtain the lower and upper bound for the system reliability function $\Rsys(t)$,
+we now need to minimise and maximise Equation~*** over $\PtZi{1}, \ldots, \PtZi{K}$ for each $t$,
+where the posterior predictive probabilities for $C^k_t$ are given by the beta-binomial pmf \eqref{eq:postpredCny}.
+It turns out that we need to optimise over $\nktz$ ($k=1,\ldots,K$) only,
+as lower and upper bounds for $\Rsys(t)$ are obtained for $\yktzl$ and $\yktzu$, respectively.
 
-***Monotonicity in $\yz_{k,t}$, so we get, for each $t \in {\cal T}$,
+To see this,
+remember that $\yktz$ gives the prior expected functioning probability for a component of type $k$ at time $t$.
+From Equation~\eqref{eq:nyupdate} (right) we see that $\yktn$ is increasing in $\yktz$,
+%the posterior parameter set bounds are the transformed prior parameter set bounds,
+%i.e., $\yktzu$ corresponds to the upper bound of $\PktN$, for all $\nktz \in \PktZ$,
+such that for each fixed $\nktz$, $\yktzu$ will maximise the posterior expected functioning probability $\yktn$.
+%
+Now, a higher posterior expected functioning probability means
+higher probability for many components out of $m_k$ surviving,
+i.e., probabilities for the larger $l_k$'s are higher, and in turn for the lower $l_k$'s are lower.
+***Indeed, the Beta-binomial distribution is stochastically ordered for varying $\yktn$, i.e.,
+its cmf \eqref{eq:postpredCnycmf} is decreasing in $\yktn$ for all $l_k$,
+such that the cmfs for different values of $\yktn$ do not cross each other.***
+This means that for each fixed $\nktz$, the Beta-binomial cmf \eqref{eq:postpredCnycmf} is minimized for $\yktzu$ in all $l_k$,
+such that the probability weights given to high values of $l_k$ are maximised. %for $\yktzu$.
+For coherent systems, $\Phi$ is non-decreasing in each of its arguments $l_1,\ldots,l_K$,
+thus $\Rsys(t)$ is maximised by putting most probability weight on the highest $l_k$ values for each $k$,
+which is in turn obtained for $\yktzu$, $k=1,\ldots,K$.
+We therefore have
+%
+%for a certain $k$, a high probability on high $l_k$'s is never worse than a high probability on lower $l_k$'s,
+%keeping all other component type expressions fixed.
+%***Monotonicity in $\yz_{k,t}$, so we get, for each $t \in {\cal T}$,
 \begin{align*}
 \lefteqn{\lRsys(t \mid \vec{t}^1, \ldots, \vec{t}^K)}\\
  &= \min_{\PtZi{1}, \ldots, \PtZi{K}} \Rsys(t \mid \PtZi{1}, \ldots, \PtZi{K}, \vec{t}^1, \ldots, \vec{t}^K) \\
@@ -566,24 +597,6 @@ benavoli zaffalon papers***}
     \prod_{k=1}^K {m_k \choose l_k} \frac{B(l_k + \nn_{k,t}\ynl_{k,t}, m_k - l_k + \nn_{k,t}(1-\ynl_{k,t}))}
                                          {B(\nn_{k,t}\ynl_{k,t}, \nn_{k,t}(1-\ynl_{k,t}))} \,.
 \end{align*}
-
-We need to optimize over $\nktz$'s only,
-as lower and upper bounds for $\Rsys(t)$ are obtained for $\yktzl$ and $\yktzu$, respectively.
-Remember that $\yktz$ gives the prior expected survival probability for a component of type $k$ at time $t$.
-As seen in Figures *** and ***, the posterior parameter set bounds are the transformed prior parameter set bounds,
-i.e., $\yktzu$ corresponds to the upper bound of $\PktN$ for all $\nktz \in \PktZ$.
-
-Now, a higher posterior expected survival probability means
-higher probability for many components surviving out of $m_k$
-(i.e., probabilities for the larger $l_k$'s are higher, and in turn for the lower $l_k$'s are lower).
-***Indeed, the Beta-binomial distribution is stochastically ordered for varying y, i.e.,
-its cdf is decreasing in $\yktn$ for fixed $l_k$, and the cdfs for different $\yktn$ do not cross each other.***
-This means that for $\yktn$ the probability weights given to the high values of $l_k$ are maximised.
-As $\Phi$ is non-decreasing in each of its arguments $l_k, k=1,\ldots,K$ (for coherent systems),
-$\Rsys(t)$ is maximised by putting most probability weight on the highest $l_k$ values.
-
-%for a certain $k$, a high probability on high $l_k$'s is never worse than a high probability on lower $l_k$'s,
-%keeping all other component type expressions fixed.
 
 
 ***main contribution of the paper:
