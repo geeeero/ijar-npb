@@ -131,7 +131,7 @@ Prior-data conflict
 
 \section{Introduction}
 
-(some sentences may be useful for the abstract)
+(some sentences may be useful for the abstract instead)
 
 System with components of $k=1,\ldots,K$ different types.
 There are $m_k$ components of type $k$ in the system.
@@ -141,15 +141,7 @@ Arbitrary system layout, i.e.\ any series / parallel combination, $k$ out of $n$
 The survival signature allows for straightforward computation of system reliability
 for systems with complex layouts and multiple component types.
 It separates the (time-invariant) system structure from the time-dependent failure probabilities of components,
-by partitioning the event $\Tsys > t$ according to the number of components of type $k$ functioning at time $t$,
-denoted by $C^k_t \in \{0, 1, \ldots, l_k, \ldots, m_k\}$, and applying the law of total probability:
-\begin{align*}
-P(\Tsys > t)
- &= \sum_{l_1=0}^{m_1} \cdots \sum_{l_K=0}^{m_K} P(\Tsys > t \mid C^1_t = l_1,\ldots, C^K_t = l_K)
-                                                 P\Big( \bigcap_{k=1}^K \{ C^k_t = l_k\} \Big) \\
- &= \sum_{l_1=0}^{m_1} \cdots \sum_{l_K=0}^{m_K} \Phi(l_1, \ldots, l_K)
-                                                 \prod_{k=1}^K P(C^k_t = l_k) \,.
-\end{align*}
+by partitioning the event $\Tsys > t$ according to the number of components of each type functioning at time $t$.
 
 Based on expert assumptions for component failure distribution and component test data,
 we make predictive inference for a system with components that are exchangeable
@@ -211,8 +203,22 @@ $\underline{x}^k = (x^k_1,x^k_2,\ldots,x^k_{m_k})$ the sub-vector representing t
 
 The \emph{survival signature} for such a system, denoted by $\Phi(l_1,\ldots,l_K)$, with $l_k=0,1,\ldots,m_k$ 
 for $k=1,\ldots,K$, is defined as the probability for the event that the system functions given that \emph{precisely} $l_k$ of its 
-$m_k$ components of type $k$ function, for each $k\in \{1,\ldots,K\}$ \citep{2012:survsign}. 
-There are $\binom{m_k}{l_k}$ state vectors $\underline{x}^k$ with $\sum_{i=1}^{m_k} x^k_i = l_k$. Let $S^k_{l_k}$ 
+$m_k$ components of type $k$ function, for each $k\in \{1,\ldots,K\}$ \citep{2012:survsign}.
+Essentially, this creates a $K$-dimensional partition for the event $\Tsys > t$, such that $\Rsys(t) = P(\Tsys > t)$
+can be calculated using the law of total probability:
+\begin{align*}
+P(\Tsys > t)
+ &= \sum_{l_1=0}^{m_1} \cdots \sum_{l_K=0}^{m_K} P(\Tsys > t \mid C^1_t = l_1,\ldots, C^K_t = l_K) \\
+ &  \hspace*{24ex}                        \times P\Big( \bigcap_{k=1}^K \{ C^k_t = l_k\} \Big) \\
+ &= \sum_{l_1=0}^{m_1} \cdots \sum_{l_K=0}^{m_K} \Phi(l_1, \ldots, l_K)
+                                                 P\Big( \bigcap_{k=1}^K \{ C^k_t = l_k\} \Big) \,,
+%                                                 \prod_{k=1}^K P(C^k_t = l_k) \,.
+\end{align*}
+where $C^k_t \in \{0, 1, \ldots, m_k\}$ denotes
+the random number of components of type $k$ functioning at time $t$. 
+
+For calculating the survival signature based on the structure function, observe that
+there are $\binom{m_k}{l_k}$ state vectors $\underline{x}^k$ with $\sum_{i=1}^{m_k} x^k_i = l_k$. Let $S^k_{l_k}$ 
 denote the set of these state vectors for components of type $k$ and let $S_{l_1,\ldots,l_K}$ denote the set of 
 all state vectors for the whole system for which $\sum_{i=1}^{m_k} x^k_i = l_k$, $k=1,\ldots,K$. Due to the 
 exchangeability assumption for the failure times of the $m_k$ components of type $k$, all the state vectors 
@@ -222,12 +228,12 @@ $\underline{x}^k \in S^k_{l_k}$ are equally likely to occur, hence \citep{2012:s
 \Phi(l_1,\ldots,l_K)
  &= \left[ \prod_{k=1}^K \binom{m_k}{l_k}^{-1} \right] \times \sum_{\underline{x} \in S_{l_1,\ldots,l_K}} \phi(\underline{x})\,.
 \end{align}
-
-Let $C^k_t \in \{0,1,\ldots,m_k\}$ denote the number of components of type $k$ in the system that function at time $t>0$.
-Then, for system failure time $\Tsys$,
-\begin{align*}
-P(\Tsys > t) &= \Rsys(t) = \sum_{l_1=0}^{m_1} \cdots \sum_{l_K=0}^{m_K}  \Phi(l_1,\ldots,l_K) P\Big(\bigcap_{k=1}^K \{C^k_t = l_k\}\Big)\,.
-\end{align*}
+%
+%Let $C^k_t \in \{0,1,\ldots,m_k\}$ denote the number of components of type $k$ in the system that function at time $t>0$.
+%Then, for system failure time $\Tsys$,
+%\begin{align*}
+%P(\Tsys > t) &= \Rsys(t) = \sum_{l_1=0}^{m_1} \cdots \sum_{l_K=0}^{m_K}  \Phi(l_1,\ldots,l_K) P\Big(\bigcap_{k=1}^K \{C^k_t = l_k\}\Big)\,.
+%\end{align*}
 It should be emphasized that when using the survival signature,
 there are no restrictions on dependence of the failure times of components of different types,
 as the probability $P(\bigcap_{k=1}^K \{C^k_t = l_k\})$ can take any form of dependence into account,
@@ -241,6 +247,9 @@ With these assumptions, we get
 \Rsys(t) &= \sum_{l_1=0}^{m_1} \cdots \sum_{l_K=0}^{m_K} \left[ \Phi(l_1,\ldots,l_K)
             \prod_{k=1}^K \left( \binom{m_k}{l_k} [F_k(t)]^{m_k-l_k} [1-F_k(t)]^{l_k} \right) \right]\,.
 \end{align*}
+We will employ both assumptions in this paper,
+such that $C^k_t$ is Beta-Binomially distributed,
+giving us a closed form expression for $P(C^k_t = l_k)$ for all $t$, $k$, and $l_k$.
 
 The main advantage of the survival signature, in line with this property of the signature for systems with a single type of 
 components \citep{Sa07}, is that the information about the system structure is fully 
@@ -259,6 +268,7 @@ thus summing to one over $l_k=0,1,\ldots,m_k$ for each type $k$.
 ***covered because of parametric distribution, min and max over parameter sets (see section 6)***
 ***For coherent systems this is not very complicated due to the monotonicity of the survival signature,
 see \citet{CCMA14} where the method for dealing with imprecision on the random quantities $C_k$ is presented.***
+\td{Leave out the sentences framed with `***'?}
 Recently, \citet{CCM16} suggested the generalization of the structure function from a binary function to a probability,
 to reflect uncertainty about system functioning for known states of its components.
 A further suggestion was to generalize this to lower and upper structure functions,
@@ -273,7 +283,7 @@ such that it again summarizes the structure function
 in a manner that is sufficient for a range of uncertainty quantifications for the system reliability. 
 
 
-\section{Nonparametric Bayesian Approach}
+\section{Nonparametric Bayesian Approach for Component Reliability}
 
 The random failure time of component number $i$ of type $k$ is denoted by $T^k_i$, $i = 1, \ldots m_k$.
 The failure time distribution can be written in terms of the cdf $F^k(t) = P(T^k_i \le t)$,
