@@ -158,6 +158,11 @@ Our method produces a set of discrete system reliability functions,
 or, for each time point $t$, an interval for the system survival probability,
 that appropriately reflects uncertainty due to vague prior information, the amount of test data, and prior-data conflict.
 
+***main contribution of the paper:
+set of priors thing,
+guidelines on how to choose the parameters;
+this is easier in terms of $(\nz, \yz)$ than in terms of $(\alpha, \beta)$***
+
 This paper implements the nonparametric approach described in Section~4 of \citet{2015:bayessurvsign}
 and extends it to sets of priors.
 
@@ -285,6 +290,7 @@ in a manner that is sufficient for a range of uncertainty quantifications for th
 
 
 \section{Nonparametric Bayesian Approach for Component Reliability}
+\label{sec:nonparamapproach}
 
 Let us denote the random failure time of component number $i$ of type $k$ by $T^k_i$, $i = 1, \ldots m_k$.
 The failure time distribution can be written in terms of the cdf $F^k(t) = P(T^k_i \le t)$,
@@ -561,8 +567,9 @@ Taking this for all $t \in {\cal T}$ means that we expect the component reliabil
 to be on average 1/2 for all $t$, a very peculiar assumption,
 and, in our view, quite incompatible with the notion of prior ignorance.
 
-While for an informative prior the choice of $\nktzl$ is relevant for posterior inferences in case of prior-data conflict,
-in a near-noninformative setting, the choice of $\nktzl$ is not relevant,
+For an informative prior the choice of $\nktzl$ is relevant for posterior inferences in case of prior-data conflict,
+as then one of the bounds for $\ykt$ is attained for $\nktzl$.
+In a near-noninformative setting, the choice of $\nktzl$ is instead not relevant,
 as both $\yktnl$ and $\yktnu$ are obtained with $\nktzu$;
 indeed $\yktzl > 0$ and $\yktzu < 1$ can be chosen such that
 $\frac{s^k_t}{n_k} \in [\yktzl, \yktzu]$ for all $t \in \big(\min(\vec{t}^k), \max(\vec{t}^k)\big)$.
@@ -575,9 +582,9 @@ benavoli zaffalon papers***}
 \section{Sets of System Reliability Functions}
 
 To obtain the lower and upper bound for the system reliability function $\Rsys(t)$,
-we now need to minimise and maximise Equation~\eqref{} over $\PtZi{1}, \ldots, \PtZi{K}$ for each $t$,
-where the posterior predictive probabilities for $C^k_t$ are given by the beta-binomial pmf \eqref{eq:postpredCny}.
-It turns out that we need to optimise over $\nktz$ ($k=1,\ldots,K$) only,
+we now need to minimise and maximise Equation~\eqref{eq:rsyswithsurvsign} over $\PtZi{1}, \ldots, \PtZi{K}$ for each $t$,
+where the posterior predictive probabilities for $C^k_t$ are given by the Beta-Binomial pmf \eqref{eq:postpredCny}.
+It turns out that we need to optimise over $\ntz{1}, \ldots, \ntz{K}$ only, %$\nktz$ ($k=1,\ldots,K$) only,
 as lower and upper bounds for $\Rsys(t)$ are obtained for $\yktzl$ and $\yktzu$, respectively.
 
 To see this,
@@ -590,10 +597,10 @@ such that for each fixed $\nktz$, $\yktzu$ will maximise the posterior expected 
 Now, a higher posterior expected functioning probability means
 higher probability for many components out of $m_k$ surviving,
 i.e., probabilities for the larger $l_k$'s are higher, and in turn for the lower $l_k$'s are lower.
-***Indeed, the Beta-binomial distribution is stochastically ordered for varying $\yktn$, i.e.,
+Indeed, the Beta-Binomial distribution is stochastically ordered for varying $\yktn$, i.e.,
 its cmf \eqref{eq:postpredCnycmf} is decreasing in $\yktn$ for all $l_k$,
-such that the cmfs for different values of $\yktn$ do not cross each other.***
-This means that for each fixed $\nktz$, the Beta-binomial cmf \eqref{eq:postpredCnycmf} is minimized for $\yktzu$ in all $l_k$,
+such that the cmfs for different values of $\yktn$ do not cross each other.
+This means that for each fixed $\nktz$, the Beta-Binomial cmf \eqref{eq:postpredCnycmf} is minimized for $\yktzu$ in all $l_k$,
 such that the probability weights given to high values of $l_k$ are maximised. %for $\yktzu$.
 For coherent systems, $\Phi$ is non-decreasing in each of its arguments $l_1,\ldots,l_K$,
 thus $\Rsys(t)$ is maximised by putting most probability weight on the highest $l_k$ values for each $k$,
@@ -614,37 +621,52 @@ We therefore have
     \prod_{k=1}^K {m_k \choose l_k} \frac{B(l_k + \nn_{k,t}\ynl_{k,t}, m_k - l_k + \nn_{k,t}(1-\ynl_{k,t}))}
                                          {B(\nn_{k,t}\ynl_{k,t}, \nn_{k,t}(1-\ynl_{k,t}))} \,.
 \end{align*}
+In the following, we will give some guidelines on how to choose the parameter sets $\PkZi{1}, \ldots, \PkZi{\tmax}$
+which define the set of prior discrete reliability functions for components of type $k$.
+We think this is much easier in terms of $\nz$ and $\yz$ than it would be in terms of $\alpha$ and $\beta$.
+%***How to choose the sets of priors for the survival function of type $k$ components,
+%i.e. how to choose $\PkZi{1}, \ldots \PkZi{\tmax}$?***
 
-
-***main contribution of the paper:
-set of priors thing,
-guidelines on how to choose the parameters;
-this is easier in terms of $(\nz, \yz)$ than in terms of $(\alpha, \beta)$***
-
-***How to choose the sets of priors for the survival function of type $k$ components,
-i.e. how to choose $\PkZi{1}, \ldots \PkZi{\tmax}$?***
-
-***not necessary to ensure $p^k_{t_j} \ge p^k_{t_{j+1}}$ via $\yzl_{k,t_j} \ge \yzu_{k,t_{j+1}}$
-as for relatively dense $t$ grids, neighbouring intervals should be able to overlap***
-
-***Require $\yzu_{k,t_j} \ge \yzu_{k,t_{j+1}}$ and $\yzl_{k,t_j} \ge \yzl_{k,t_{j+1}}$.
-If we know, e.g., pretty much what's going on for low $t$
-but want to be much more cautious for high $t$,
-then $\yktzl$ can drop to 0, but $\yktzu$ cannot increase.
-
-***Better to express certainty of prior guess via $\nktz$ bounds?\\
-With (strongly) differing $\nktz$ values, it can happen that, e.g., $\ynu_{k,t_j} < \ynu_{k,t_{j+1}}$!\\
-E.g., when $\yzu_{k,t_j} = \yzu_{k,t_{j+1}}$ and $\yzl_{k,t_j} = \yzl_{k,t_{j+1}}$,
-$s^k_t/n_k \in [\yzl_{k,t_j}, \yzu_{k,t_j}]$ (so no prior-data conflict) and no failures in $[t_j, t_{j+1}]$,\\
-then with $\nzu_{k,t_j} < \nzu_{k,t_{j+1}}$ we have $\ynu_{k,t_j} < \ynu_{k,t_{j+1}}$,\\
- and with $\nzu_{k,t_j} > \nzu_{k,t_{j+1}}$ we have $\ynl_{k,t_j} > \ynl_{k,t_{j+1}}$.\\
-(weighted average between interval and precise value: the lower $n$, the 'faster' the interval will shrink!)\\
-So we need to require same $\nktz$ bounds for all $t$!
+As mentioned in Section~\ref{sec:nonparamapproach}, for the actual functioning probabilities $\ptk$
+it should hold that $p^k_{t_j} \ge p^k_{t_{j+1}}$. ***or $p^k_{t_i} \ge p^k_{t_i}$ for all $i < j$.
+%***not necessary to ensure $p^k_{t_j} \ge p^k_{t_{j+1}}$ via $\yzl_{k,t_j} \ge \yzu_{k,t_{j+1}}$
+%as for relatively dense $t$ grids, neighbouring intervals should be able to overlap***
 %(Prior guess for $p^k_t$ interpretation would say that $\yktz$ cannot increase,
 %but does this need to hold for the prior guess range bound $\yktzu$?)***
+This naturally translates to conditions on the prior guess for $\ptk$,
+such that we propose that 
+$\yzu_{k,t_j} \ge \yzu_{k,t_{j+1}}$ and $\yzl_{k,t_j} \ge \yzl_{k,t_{j+1}}$ should hold.
+Due to $s^k_t/n_k$ decrasing in $t$ and the weighted average property of the update step for $\ykt$,
+this ensures that 
+$\ynu_{k,t_j} \ge \ynu_{k,t_{j+1}}$ and $\ynl_{k,t_j} \ge \ynl_{k,t_{j+1}}$.
+In a situation where we are quite sure about the functioning probability for low $t$,
+but are unsure about what happens for larger $t$ and so want to be maximally cautious for those $t$,
+then we can let $\yktzl$ drop to (almost) 0, but $\yktzu$ should not increase.
+%***Require $\yzu_{k,t_j} \ge \yzu_{k,t_{j+1}}$ and $\yzl_{k,t_j} \ge \yzl_{k,t_{j+1}}$.
+%If we know, e.g., pretty much what's going on for low $t$
+%but want to be much more cautious for high $t$,
+%then $\yktzl$ can drop to 0, but $\yktzu$ cannot increase.
 
-***generally require $\yktzl > 0$ and $\yktzu < 1$ for all $t \not\in \big(\min(\vec{t}^k), \max(\vec{t}^k)\big)$
-to get proper posteriors***
+We think it is not advisable to express certainty about expected functioning probabilities
+with $\nktz$ bounds that vary strongly over $t$.
+%***Better to express certainty of prior guess via $\nktz$ bounds?\\
+With (strongly) differing $\nktz$ bounds, monotonicty for $\yktn$ bounds cannot be ensured.
+%it can happen that, e.g., $\ynu_{k,t_j} < \ynu_{k,t_{j+1}}$!\\
+E.g., when $\yzu_{k,t_j} = \yzu_{k,t_{j+1}}$, $\yzl_{k,t_j} = \yzl_{k,t_{j+1}}$,
+and $s^k_{t_j}/n_k \in [\yzl_{k,t_j}, \yzu_{k,t_j}]$ (so there is no prior-data conflict),
+and furthermore no failures happening in $[t_j, t_{j+1}]$, i.e., $s^k_{t_{j+1}}/n_k = s^k_{t_{j}}/n_k$, then
+\begin{itemize}
+\item for $\nzu_{k,t_j} < \nzu_{k,t_{j+1}}$ we get $\ynu_{k,t_j} < \ynu_{k,t_{j+1}}$, and
+\item for $\nzu_{k,t_j} > \nzu_{k,t_{j+1}}$ we get $\ynl_{k,t_j} < \ynl_{k,t_{j+1}}$.
+\end{itemize}
+Again, this follows from the weighted average property of $\yktn$;
+for constant $\yktz$, the lower $\nktz$ the closer $\yktn$ is to $s^k_t/n_k$.
+% one can think of the update between interval and precise value: the lower $n$, the 'faster' the interval will shrink!)\\
+Therefore, we propose to take the same $\nktz$ bounds for all $t$, or, at most, to have it change with $t$ gradually only.
+
+%***generally require $\yktzl > 0$ and $\yktzu < 1$ for all $t \not\in \big(\min(\vec{t}^k), \max(\vec{t}^k)\big)$
+%to get proper posteriors***
+Generally, one should choose $\yktzl > 0$ and $\yktzu < 1$ for all $t \not\in \big(\min(\vec{t}^k), \max(\vec{t}^k)\big)$.
 
 ***what to do in extreme tail of component distributions?
 How sensitive is the method to choosing prior (lower, upper) mean near-zero (how near?) for $p^k_t$ at high $t$'s?***
