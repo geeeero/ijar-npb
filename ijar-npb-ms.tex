@@ -57,7 +57,7 @@
 \newcommand{\ber}{\operatorname{Bernoulli}} 
 \newcommand{\bin}{\operatorname{Binomial}}
 \newcommand{\be}{\operatorname{Beta}} 
-\newcommand{\bebin}{\operatorname{Beta-binomial}} 
+\newcommand{\bebin}{\operatorname{Beta-Binomial}} 
 
 \def\tmax{t_\text{max}}
 \def\tnow{t_\text{now}}
@@ -206,14 +206,15 @@ for $k=1,\ldots,K$, is defined as the probability for the event that the system 
 $m_k$ components of type $k$ function, for each $k\in \{1,\ldots,K\}$ \citep{2012:survsign}.
 Essentially, this creates a $K$-dimensional partition for the event $\Tsys > t$, such that $\Rsys(t) = P(\Tsys > t)$
 can be calculated using the law of total probability:
-\begin{align*}
+\begin{align}
+\label{eq:rsyswithsurvsign}
 P(\Tsys > t)
- &= \sum_{l_1=0}^{m_1} \cdots \sum_{l_K=0}^{m_K} P(\Tsys > t \mid C^1_t = l_1,\ldots, C^K_t = l_K) \\
- &  \hspace*{24ex}                        \times P\Big( \bigcap_{k=1}^K \{ C^k_t = l_k\} \Big) \\
+ &= \sum_{l_1=0}^{m_1} \cdots \sum_{l_K=0}^{m_K} P(\Tsys > t \mid C^1_t = l_1,\ldots, C^K_t = l_K) \nonumber\\
+ &  \hspace*{24ex}                        \times P\Big( \bigcap_{k=1}^K \{ C^k_t = l_k\} \Big) \nonumber\\
  &= \sum_{l_1=0}^{m_1} \cdots \sum_{l_K=0}^{m_K} \Phi(l_1, \ldots, l_K)
                                                  P\Big( \bigcap_{k=1}^K \{ C^k_t = l_k\} \Big) \,,
 %                                                 \prod_{k=1}^K P(C^k_t = l_k) \,.
-\end{align*}
+\end{align}
 where $C^k_t \in \{0, 1, \ldots, m_k\}$ denotes
 the random number of components of type $k$ functioning at time $t$. 
 
@@ -248,7 +249,7 @@ With these assumptions, we get
             \prod_{k=1}^K \left( \binom{m_k}{l_k} [F_k(t)]^{m_k-l_k} [1-F_k(t)]^{l_k} \right) \right]\,.
 \end{align*}
 We will employ both assumptions in this paper,
-such that $C^k_t$ is Beta-Binomially distributed,
+leading to $C^k_t$ having a Beta-Binomial distribution,
 giving us a closed form expression for $P(C^k_t = l_k)$ for all $t$, $k$, and $l_k$.
 
 The main advantage of the survival signature, in line with this property of the signature for systems with a single type of 
@@ -285,7 +286,7 @@ in a manner that is sufficient for a range of uncertainty quantifications for th
 
 \section{Nonparametric Bayesian Approach for Component Reliability}
 
-The random failure time of component number $i$ of type $k$ is denoted by $T^k_i$, $i = 1, \ldots m_k$.
+Let us denote the random failure time of component number $i$ of type $k$ by $T^k_i$, $i = 1, \ldots m_k$.
 The failure time distribution can be written in terms of the cdf $F^k(t) = P(T^k_i \le t)$,
 or in terms of the reliability function $R^k(t) = P(T^k > t) = 1 - F^k(t)$,
 also known as the survival function.
@@ -315,7 +316,7 @@ otherwise it would be possible to assume, e.g.,
 $R^k(t) = p^k_{t_j}, t \in [t_j, t_{j+1})$,
 or taking $p^k_{t_j}$ and $p^k_{t_{j+1}}$ as upper and lower bounds for $R^k(t)$, $t \in [t_j, t_{j+1})$.
 
-\td{***illustrate discrete distribution with a graph of R, q, h?***}
+\td{***illustrate discrete distribution with a graph of R, f, h?***}
 
 Due to the independence assumption for components of the same type, 
 the number of functioning components out of the $m_k$ components of type $k$
@@ -336,11 +337,11 @@ Having observed the lifetime data $\vec{t}^k = (t^k_1, \ldots, t^k_{n_k})$,
 at any fixed time $t \in {\cal T}$ this results in the observation from the Binomial model described above,
 $s^k_t = \sum_{i=1}^{n_k} \indic(t^k_i > t)$.
 The posterior is then $\ptk \mid s^k_t \sim \be(\alpha^k_t + s^k_t, \beta^k_t + n_k - s^k_t)$.
-The combination of a Binomial observation model with a Beta prior is often called Beta-binomial model.
+The combination of a Binomial observation model with a Beta prior is often called Beta-Binomial model.
 
 The posterior predictive distribution for the number of components surviving at time $t$
 of the $m_k$ components in the system, based on the lifetime data and the prior information,
-is then a so-called Beta-binomial distribution,
+is then a so-called Beta-Binomial distribution,
 $C^k_t \mid s^k_t \sim \bebin(m_k, \alpha^k_t + s^k_t, \beta^k_t + n_k - s^k_t)$.
 That is, we have
 \begin{align*}
@@ -352,7 +353,7 @@ This posterior predictive distribution is basically a Binomial distribution
 where the functioning probability $\ptk$ takes values in $[0,1]$
 with the probability given by the posterior on $\ptk$.
 
-To wrap up, to calculate the system reliability according to ***eqnumber***,
+To wrap up, to calculate the system reliability according to \eqref{eq:rsyswithsurvsign},
 for each component type $k$,
 we need lifetime data $\vec{t}^k$,
 and have to choose $2 \times |{\cal T}|$ parameters
@@ -392,15 +393,16 @@ as $\V(p) = \frac{\yz (1-\yz)}{\nz + 1}$.
 Furthermore, $\nz$ can be interpreted as a pseudocount or prior strength,
 this is clear from the interpretation of $\alpha$ and $\beta$ and \eqref{eq:reparam},
 and will be further illustrated below through revisiting the posterior
-based on observed lifetimes $\vec{t} = (t_1, \ldots, t_{n})$.
-
+%based on observed lifetimes $\vec{t} = (t_1, \ldots, t_{n})$.
+given $s$ of $n$ components functioning.
+We have that
 $p \mid s$ is Beta distributed with the updated parameters
 \begin{align}
 \nn &= \nz + n\,, &
-\yn &= \frac{\nz}{\nz + n} \cdot \yz + \frac{n}{\nz + n} \cdot \frac{s}{n}\,,
+\yn &= \frac{\nz}{\nz + n} \cdot \yz + \frac{n}{\nz + n} \cdot \frac{s}{n}\,.
 \label{eq:nyupdate}
 \end{align}
-so after seeing that $s$ out of $n$ components function (at time $t$),
+After seeing that $s$ out of $n$ components function (at time $t$),
 the posterior mean $\yn$ for $p$ is a weighted average of
 the prior mean $\yz$ and $s/n$ (the fraction of functioning components in the data),
 with the weights $\nz$ and $n$, respectively.
@@ -412,7 +414,7 @@ in the weighted average calculation of $\yn$,
 so $\nz$ gives the strength of the prior as compared to the sample size $n$.
 %The parameters $\nz$ and $\yz$ have a more intuitive interprtation,
 
-The Beta-binomial probability mass function (pmf) in terms of the updated parameters $\nn$ and $\yn$,
+The Beta-Binomial probability mass function (pmf) in terms of the updated parameters $\nn$ and $\yn$,
 now again with indicators $t$ and $k$,
 is therefore
 \begin{align}
@@ -490,13 +492,15 @@ based on sets of Beta priors, described next.
 
 \section{Sets of Beta Priors}
 
-As was shown in \citet{2009:WalterAugustin}, %Walter \& Augustin (2009),
+As was shown by \citet{2009:WalterAugustin}, %Walter \& Augustin (2009),
 we can have both tractability and meaningful reaction to prior-data conflict
 by using sets of priors $\MktZ$ produced by parameter sets $\PktZ = [\nktzl, \nktzu] \times [\yktzl, \yktzu]$. 
 (A detailed discussion of different choices for $\PktZ$ is given in \citet[\S 3.1]{2013:diss-gw}.)
 In our model, each prior parameter pair $(\nktz, \yktz) \in \PktZ$
 corresponds to a Beta prior, thus $\MktZ$ is a set of Beta priors.
 The set of posteriors $\MktN$ is obtained by updating each prior in $\MktZ$ according to Bayes' Rule.
+This element-by-element updating may seem ad-hoc, but can be rigorously justified
+as ensuring coherence \citep[\S ***]{1991:walley}, and was termed ``Generalized Bayes' Rule'' by \citet[\S 6***]{1991:walley}.
 Due to conjugacy, $\MktN$ is a set of Beta distributions with parameters $(\nktn, \yktn)$
 obtained from updating $(\nktz, \yktz) \in \PktZ$ according to \eqref{eq:nyupdate},
 and so can be described efficiently through the set of updated parameters
@@ -528,7 +532,7 @@ As $\yktn$ gives the posterior expectation for the functioning probability $p_t^
 shorter $\yktn$ intervals mean more precise knowledge about $p_t^k$.
 Also, the variance interval for $p_t^k$ will decrease
 as the Beta distributions in $\MktN$ will be more pointed
-due to the increase of $\nktz$ to $\nktn$.s
+due to the increase of $\nktz$ to $\nktn$.
 
 In case of prior-data conflict ($s^k_t/n^k_t \not\in [\yktzl, \yktzu]$),
 $\PktN$ has instead the so-called banana shape,
@@ -537,6 +541,8 @@ for lower $\nktn$ values than for higher $\nktn$ values, see Figure***.
 Overall, this results in a wider $\yktn$ interval as compared to the non-conflict case, 
 reflecting the extra uncertainty due to prior-data conflict,
 thus making more cautious probability statements about $p_t^k$.
+
+\td{Figure with $\PN$s and sets of beta cdfs for conflict and no conflict case.}
 
 Furthermore, with sets of Beta priors it is also possible
 to express prior ignorance in a more adequate way,
@@ -555,11 +561,12 @@ Taking this for all $t \in {\cal T}$ means that we expect the component reliabil
 to be on average 1/2 for all $t$, a very peculiar assumption,
 and, in our view, quite incompatible with the notion of prior ignorance.
 
-In this near-noninformative setting, the choice of $\nktzl$ is not relevant,
+While for an informative prior the choice of $\nktzl$ is relevant for posterior inferences in case of prior-data conflict,
+in a near-noninformative setting, the choice of $\nktzl$ is not relevant,
 as both $\yktnl$ and $\yktnu$ are obtained with $\nktzu$;
 indeed $\yktzl > 0$ and $\yktzu < 1$ can be chosen such that
 $\frac{s^k_t}{n_k} \in [\yktzl, \yktzu]$ for all $t \in \big(\min(\vec{t}^k), \max(\vec{t}^k)\big)$.
-Logically, one cannot have prior-data conflict in case of prior near ignorance.
+Obviously, one cannot have prior-data conflict in case of prior near ignorance.
 
 \td{***called near-noninformative, for near-noninformative sets when $\yz$ is not bounded see
 benavoli zaffalon papers***}
@@ -568,7 +575,7 @@ benavoli zaffalon papers***}
 \section{Sets of System Reliability Functions}
 
 To obtain the lower and upper bound for the system reliability function $\Rsys(t)$,
-we now need to minimise and maximise Equation~*** over $\PtZi{1}, \ldots, \PtZi{K}$ for each $t$,
+we now need to minimise and maximise Equation~\eqref{} over $\PtZi{1}, \ldots, \PtZi{K}$ for each $t$,
 where the posterior predictive probabilities for $C^k_t$ are given by the beta-binomial pmf \eqref{eq:postpredCny}.
 It turns out that we need to optimise over $\nktz$ ($k=1,\ldots,K$) only,
 as lower and upper bounds for $\Rsys(t)$ are obtained for $\yktzl$ and $\yktzu$, respectively.
