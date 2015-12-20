@@ -448,9 +448,9 @@ As a simple example, assume that we expect $\ptk$ to be about $0.75$ for a certa
 so we choose $\yktz = 0.75$,
 and that we value this choice of mean functioning probability with $\nktz = 8$,
 i.e., like having seen $8$ observations with a mean $0.75$.
-Assume further that there are $n^k = 16$ components of type $k$ in the test data.
+Assume further that there are $n_k = 16$ components of type $k$ in the test data.
 When we observe $s^k_t = 12$ components functioning at time $t$,
-so $s^k_t/n^k = 0.75$ as we expect,
+so $s^k_t/n_k = 0.75$ as we expect,
 then the updated parameters are $\nktn = 24, \yktn=0.75$.
 Unexpectedly observing that no component functions at time $t$ instead
 leads to parameters $\nktn = 24, \yktn=0.25$.
@@ -497,6 +497,7 @@ based on sets of Beta priors, described next.
 
 
 \section{Sets of Beta Priors}
+\label{sec:setsofbetapriors}
 
 As was shown by \citet{2009:WalterAugustin}, %Walter \& Augustin (2009),
 we can have both tractability and meaningful reaction to prior-data conflict
@@ -506,7 +507,7 @@ In our model, each prior parameter pair $(\nktz, \yktz) \in \PktZ$
 corresponds to a Beta prior, thus $\MktZ$ is a set of Beta priors.
 The set of posteriors $\MktN$ is obtained by updating each prior in $\MktZ$ according to Bayes' Rule.
 This element-by-element updating may seem ad-hoc, but can be rigorously justified
-as ensuring coherence \citep[\S ***]{1991:walley}, and was termed ``Generalized Bayes' Rule'' by \citet[\S 6***]{1991:walley}.
+as ensuring coherence \citep[\S 2.5]{1991:walley}, and was termed ``Generalized Bayes' Rule'' by \citet[\S 6.4]{1991:walley}.
 Due to conjugacy, $\MktN$ is a set of Beta distributions with parameters $(\nktn, \yktn)$
 obtained from updating $(\nktz, \yktz) \in \PktZ$ according to \eqref{eq:nyupdate},
 and so can be described efficiently through the set of updated parameters
@@ -526,8 +527,8 @@ Central to these inference properties is that
 while the prior parameter set $\PktZ$ is rectangular,
 the posterior parameter set $\PktN$ is not rectangular anymore;
 indeed, the shape of $\PktN$ depends on the presence of prior-data conflict,
-which is naturally operationalized as $s^k_t/n^k_t \not\in [\yktzl, \yktzu]$:
-prior-data conflict is present when the observed fraction of functioning components
+which is naturally operationalized as $s^k_t/n_k \not\in [\yktzl, \yktzu]$:
+prior-data conflict is present when, at time $t$, the observed fraction of functioning components
 is outside its expected range.
 
 In absence of prior-data conflict, 
@@ -540,9 +541,9 @@ Also, the variance interval for $p_t^k$ will decrease
 as the Beta distributions in $\MktN$ will be more pointed
 due to the increase of $\nktz$ to $\nktn$.
 
-In case of prior-data conflict ($s^k_t/n^k_t \not\in [\yktzl, \yktzu]$),
+In case of prior-data conflict ($s^k_t/n_k \not\in [\yktzl, \yktzu]$),
 $\PktN$ has instead the so-called banana shape,
-arising from $\yktn$ intervals being shifted closer towards $s^k_t/n^k_t$
+arising from $\yktn$ intervals being shifted closer towards $s^k_t/n_k$
 for lower $\nktn$ values than for higher $\nktn$ values, see Figure***.
 Overall, this results in a wider $\yktn$ interval as compared to the non-conflict case, 
 reflecting the extra uncertainty due to prior-data conflict,
@@ -628,7 +629,7 @@ We think this is much easier in terms of $\nz$ and $\yz$ than it would be in ter
 %i.e. how to choose $\PkZi{1}, \ldots \PkZi{\tmax}$?***
 
 As mentioned in Section~\ref{sec:nonparamapproach}, for the actual functioning probabilities $\ptk$
-it should hold that $p^k_{t_j} \ge p^k_{t_{j+1}}$. ***or $p^k_{t_i} \ge p^k_{t_i}$ for all $i < j$.
+it should hold that $p^k_{t_j} \ge p^k_{t_{j+1}}$. (***or $p^k_{t_i} \ge p^k_{t_i}$ for all $i < j$).
 %***not necessary to ensure $p^k_{t_j} \ge p^k_{t_{j+1}}$ via $\yzl_{k,t_j} \ge \yzu_{k,t_{j+1}}$
 %as for relatively dense $t$ grids, neighbouring intervals should be able to overlap***
 %(Prior guess for $p^k_t$ interpretation would say that $\yktz$ cannot increase,
@@ -662,30 +663,63 @@ and furthermore no failures happening in $[t_j, t_{j+1}]$, i.e., $s^k_{t_{j+1}}/
 Again, this follows from the weighted average property of $\yktn$;
 for constant $\yktz$, the lower $\nktz$ the closer $\yktn$ is to $s^k_t/n_k$.
 % one can think of the update between interval and precise value: the lower $n$, the 'faster' the interval will shrink!)\\
+It is possible to construct similar examples also with regard to the lower bound $\nzl_{k,t_j}$.
 Therefore, we propose to take the same $\nktz$ bounds for all $t$, or, at most, to have it change with $t$ gradually only.
+
+Generally, the interpretation as pseudocount or prior strength should guide the choice of bounds for $\nktz$; 
+low values for $\nktz$ as compared to the test sample size $n_k$
+give low weight to the prior expected functioning probability intervals $[\yktzl, \yktzu]$,
+and the location of posterior intervals $[\yktnl, \yktnu]$ will be dominated by the location of $s^k_t/n_k$.
+Furthermore, the length of $[\yktnl, \yktnu]$ is shorter for low $\nktz$ values;
+in a no-conflict situation, when $\nktzu = n_k$ $[\yktnl, \yktnu]$ has half the length of $[\yktzl, \yktzu]$.
+In contrast, high values for $\nktz$ will lead to slower learning and wider $\yktn$ intervals,
+which means more cautious posterior inferences.
+The difference betweeen $\nktzu$ and $\nktzl$ determines the strength of the prior-data conflict sensitivity;
+as is clear from Figure~***, the wider the $\nktz$ interval,
+the wider $[\yktnl, \yktnu]$ in case of conflict.
+So it seems useful to choose $\nktzl = 1$ or $\nktzl = 2$,
+while choosing $\nktzu$ with help of the half-width rule as described above.
 
 %***generally require $\yktzl > 0$ and $\yktzu < 1$ for all $t \not\in \big(\min(\vec{t}^k), \max(\vec{t}^k)\big)$
 %to get proper posteriors***
-Generally, one should choose $\yktzl > 0$ and $\yktzu < 1$ for all $t \not\in \big(\min(\vec{t}^k), \max(\vec{t}^k)\big)$.
+As mentioned in Section~\ref{sec:setsofbetapriors},
+it is not advisable to choose $\yktzl = 0$ and $\yktzu = 1$.
+For any $t \not\in \big(\min(\vec{t}^k), \max(\vec{t}^k)\big)$,
+this can lead to improper posterior predictive distributions if $l_k=0$ or $l_k=m_k$.
+%Generally, one should choose $\yktzl > 0$ and $\yktzu < 1$ for all $t \not\in \big(\min(\vec{t}^k), \max(\vec{t}^k)\big)$.
+But it is possible to choose values close to $0$ and $1$, respectively,
+and due to the linear update step for $\yktn$ (see Eq.~\eqref{eq:nyupdate}),
+posterior inferences are not overly sensitive to whether $\yktnu = 0.99$ or $\yktnu = 0.9999$.
+%***what to do in extreme tail of component distributions?
+%How sensitive is the method to choosing prior (lower, upper) mean near-zero (how near?) for $p^k_t$ at high $t$'s?***
+Likewise, our nonparametric method does not bring unintuitive tail behaviour
+as some parametric methods do;
+there is no problem in, e.g., assigning $\yktnu$ near-zero for high $t$ if prior knowledge suggests so.
 
-***what to do in extreme tail of component distributions?
-How sensitive is the method to choosing prior (lower, upper) mean near-zero (how near?) for $p^k_t$ at high $t$'s?***
-
-***elicitation: we should also consider the case where $\yktz$ bounds are not given for all $t \in {\cal T}$,
-as it will be too time-consuming to elicit $\yktz$ bounds for all $t$ in a dense grid.
-(Calculating $\Rsys(t)$ for a too coarse grid only will waste information from data.)
-Idea: ``fill up the $t$ grid at all $t$'' with least-committal bounds, i.e.: 
-at all $t$ not elicited, take $\yktzu$ equal to last (in time sequence) elicited $\yktzu$,
-and $\yktzl$ equal to next (in time sequence) elicited $\yktzl$.
-
-***possible elicitation procedure: starting with $\yktz$ bounds for `middle' or `typical' $t$,
-then $\yktz$ bounds for $t$ smaller than `middle' $t$ (or halfway between 0 and `middle' $t$?) and for $t$ larger than `middle' $t$,
-refine further as possible.
+%***elicitation: we should also consider the case where $\yktz$ bounds are not given for all $t \in {\cal T}$,
+%as it will be too time-consuming to elicit $\yktz$ bounds for all $t$ in a dense grid.
+While it is possible to set the bounds $\yktzl$ and $\yktzu$ for each $t \in {\cal T}$ individually,
+in practice this will be often too time-consuming when ${\cal T}$ forms a dense grid.
+%(Calculating $\Rsys(t)$ for a too coarse grid only will waste information from data.)
+Switching to a coarser time grid will waste information from data,
+as then failure times in the test data are rounded up to the next $t \in {\cal T}$.
+We rather propose to elicit bounds only for a subset of ${\cal T}$,
+and to fill up the $t$ grid with the least committal bounds, i.e.,
+taking $\yktzu$ equal to last (in the time sequence) elicited $\yktzu$,
+an likewise $\yktzl$ equal to next (in time sequence) elicited $\yktzl$.
+A possible elicitation procedure in this vein could be
+to start with eliciting $\yktz$ bounds for a few `central' time points $t$,
+filling up the grid as described above accordingly,
+and then to further refine the obtained bounds if necessary.
+%`middle' or `typical' $t$,
+%then $\yktz$ bounds for $t$ smaller than `middle' $t$ (or halfway between 0 and `middle' $t$?) and for $t$ larger than `middle' $t$,
 
 \section{Computations \& Examples}
 
-***code published in Louis' \textbf{R} package \texttt{ReliabilityTheory}
-(which contains the function to calculate the survival signature)***
+***code published in Louis' \textbf{R} package \texttt{ReliabilityTheory},
+function \texttt{nonParBayesSystemInferencePriorSets()};
+the package also contains the function \texttt{computeSystemSurvivalSignature()}
+to calculate the survival signature for a given system layout (reliability block diagramm)***
 
 
 ***calculate and show $\Rsys(t)$ plots for a range of examples (keep system layout fixed?):
