@@ -85,5 +85,8 @@ abdf$Item <- ordered(abdf$Item, levels=c("Prior", "Posterior"))
 ab1 <- ggplot(abdf) + geom_ribbon(aes(x=Time, ymin=Lower, ymax=Upper, group=Item, colour=Item, fill=Item), alpha=0.3)
 ab1 <- ab1 + facet_wrap(~Part, nrow=2) + geom_rug(aes(x=x), data=abdat) + xlab("Time") + ylab("Survival Probability")
 ab1 <- ab1 + bottomlegend
+
+pdf("breakingsystem-1.pdf", width=8, height=5)
 ab1
+dev.off()
 #

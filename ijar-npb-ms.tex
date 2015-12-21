@@ -762,7 +762,7 @@ to calculate the survival signature for a given system layout (reliability block
 
 As a toy example, consider a `bridge' type system layout with three types of components T1, T2 and T3,
 as depicted in Figure~\ref{fig:bridge-layout}.
-For components type T1 and T2, we consider a near-noninformative set of prior reliability functions.
+For component types T1 and T2, we consider a near-noninformative set of prior reliability functions.
 For components of type T3, we consider an informative set of prior reliability functions
 as given in Table~\ref{tab:bridge-T3prior}.
 This set could result from eliciting prior functioning probabilities at times $0,1,2,3,4,5$ only,
@@ -770,7 +770,7 @@ and filling up the rest.
 These prior assumptions, together with sets of posterior reliability functions
 resulting from three different scenarios for test data for component type T3,
 are illustrated in Figures~\ref{fig:bridge-fitting}, \ref{fig:bridge-early} and \ref{fig:bridge-late}; 
-test data for components of type T1 and T2 are invariably
+test data for components of type T1 and T2 are invariably taken as
 $\vec{t}^1 = (2.0, 2.2, 2.4, 2.6)$ and $\vec{t}^2 = (3.0, 3.2, 3.4, 3.6)$, respectively.
 
 \begin{table}
@@ -797,7 +797,7 @@ We see that posterior lower and upper functioning probabilities drop at those ti
 when there is a failure time in the test data,
 or a drop in the prior functioning probability bounds.
 Note that the lower bound for prior system reliability function is zero
-due to the prior lower bound for T1;
+due to the prior lower bound of zero for T1;
 for the system to function, the component of type T1 must function.
 
 \begin{figure}
@@ -811,6 +811,16 @@ Test data failure times are denoted with tick marks near the time axis.}
 In Figure~\ref{fig:bridge-early},
 test data of component type T3 is instead $\vec{t}^3 = (0.6, 0.7, 0.8, 0.9)$,
 and so earlier than expected.
+Compared to Figure~\ref{fig:bridge-fitting},
+posterior functioning intervals for T3 are wider between $t=1$ and $t=3.5$,
+reflecting additional imprecision due to prior-data conflict.
+For $t > 1$, it is clearly visible how $\ytnu{3}$ is halfway between $\ytzu{3}$ and $s_t^3/n_3 = 0$
+(weights $\ntzu{3} = 4$ and $n_3 = 4$),
+while $\ytnl{3}$ is one-fifth of $\ytzl{3}$
+(weights $\ntzl{3} = 1$ and $n_3 = 4$).
+Note that the posterior system functioning probability is constant for $t \in [1,2]$
+because the prior functioning probability is constant for $t \in [1,2]$
+and there are no failure times $\in [1,2]$ in the test data.
 
 \begin{figure}
 \includegraphics[width=\textwidth]{bridge-earlyfailures}
@@ -821,7 +831,14 @@ with failure times earlier as expected for component type T3.}
 
 In Figure~\ref{fig:bridge-late}, 
 test data of component type T3 is now $\vec{t}^3 = (4.1, 4.2, 4.3, 4.4)$,
-and so later than expected.
+and so observed failures are later than expected.
+Here we see that for $t \in [2,4]$,
+posterior functioning bounds for T3 are even wider than prior functioning bounds.
+The width turns back to being half the prior width
+only after the four failures.
+The imprecision carries over to the system bounds,
+where we see wider bounds as compared to the other scenarios
+especially between $t=2$ and $t=4$.
 
 \begin{figure}
 \includegraphics[width=\textwidth]{bridge-latefailures}
@@ -830,15 +847,28 @@ with failure times later as expected for component type T3.}
 \label{fig:bridge-late}
 \end{figure}
 
+***Another example: simplified automotive breaking system, Figure~\ref{fig:breakingsystem}.
+Prior sets and data exemplary only, prior bounds more smooth curves?
+The master breaking cylinder (M) activates all four wheel braking cylinders (C1 -- C4),
+which in turn actuate a braking pad assembly each (P1 -- P4).
+The hand break mechanism (H) goes directly to two brake pad assemblies P3 and P4;
+the car breaks when at least one brake pad assembly is actuated.***
 
-***calculate and show $\Rsys(t)$ plots for a range of examples (keep system layout fixed?):
-informative prior set for some component types, different degree of imprecision,
-noninformative prior set for other components (make clear that precise `noninformative' prior actually contains info), 
-combine with prior-data conflict and non-conflict test data,
-to show effect of precision of prior knowledge / amount of data / (degree of) prior-data conflict on $\Rsys(t)$.***
+\begin{figure}
+\includegraphics[width=\textwidth]{breakingsystem-1}
+\caption{A simplified automotive breaking system. ***System layout goes to empty space in lower row.}
+\label{fig:breakingsystem}
+\end{figure}
 
-***Vacuous prior sets $[\yktzl, \yktzu] = (0,1)$ for some component types,
-informative prior sets for others. $[\nktzl, \nktzu]$ interval for all component types.***
+
+%***calculate and show $\Rsys(t)$ plots for a range of examples (keep system layout fixed?):
+%informative prior set for some component types, different degree of imprecision,
+%noninformative prior set for other components (make clear that precise `noninformative' prior actually contains info), 
+%combine with prior-data conflict and non-conflict test data,
+%to show effect of precision of prior knowledge / amount of data / (degree of) prior-data conflict on $\Rsys(t)$.***
+
+%***Vacuous prior sets $[\yktzl, \yktzu] = (0,1)$ for some component types,
+%informative prior sets for others. $[\nktzl, \nktzu]$ interval for all component types.***
 
 ***Some extra illustrations? E.g. the effect of extra redundancy on $\Rsys(t)$ intervals like in Risk Analysis paper?
 (could nicely illustrate challenges in decision making with intervals:
