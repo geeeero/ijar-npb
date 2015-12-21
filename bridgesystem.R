@@ -51,7 +51,7 @@ b3t <- seq(0, 5, length.out=301)
 b3nL <- data.frame(T1=rep(1,301), T2=rep(1,301), T3=rep(1,301))
 b3nU <- data.frame(T1=rep(2,301), T2=rep(2,301), T3=rep(4,301))
 b3yL <- data.frame(T1=rep(0.001, 301), T2=rep(0.001, 301), T3=c(rep(c(0.625,0.375,0.250,0.125,0.010), each=60), 0.01))
-b3yU <- data.frame(T1=rep(0.999, 301), T2=rep(0.999, 301), T3=c(rep(c(0.990,0.875,0.500,0.375,0.250), each=60), 0.25))
+b3yU <- data.frame(T1=rep(0.999, 301), T2=rep(0.999, 301), T3=c(rep(c(0.999,0.875,0.500,0.375,0.250), each=60), 0.25))
 
 b3T1 <- oneCompPriorPostSet("T1", b3t, b3testdata, b3nL, b3nU, b3yL, b3yU)
 b3T2 <- oneCompPriorPostSet("T2", b3t, b3testdata, b3nL, b3nU, b3yL, b3yU)
@@ -65,10 +65,10 @@ b3df <- rbind(data.frame(b3T1, Part="T1"), data.frame(b3T2, Part="T2"), data.fra
 b3df$Item <- ordered(b3df$Item, levels=c("Prior", "Posterior"))
 
 p3 <- ggplot(b3df) + geom_ribbon(aes(x=Time, ymin=Lower, ymax=Upper, group=Item, colour=Item, fill=Item), alpha=0.3)
-p3 <- p3 + facet_wrap(~Part, ncol=2) + geom_rug(aes(x=x), data=g3dat) + xlab("Time") + ylab("Survival Probability")
-#pdf("3comp-latefailures.pdf", width=8, height=5)
-#pdf("3comp-earlyfailures.pdf", width=8, height=5)
-pdf("3comp-fittingfailures.pdf", width=8, height=5)
+p3 <- p3 + facet_wrap(~Part, ncol=2) + geom_rug(aes(x=x), data=b3dat) + xlab("Time") + ylab("Survival Probability")
+pdf("bridge-latefailures.pdf", width=8, height=5)
+pdf("bridge-earlyfailures.pdf", width=8, height=5)
+pdf("bridge-fittingfailures.pdf", width=8, height=5)
 p3
 dev.off()
 

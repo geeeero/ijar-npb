@@ -714,12 +714,121 @@ and then to further refine the obtained bounds if necessary.
 %`middle' or `typical' $t$,
 %then $\yktz$ bounds for $t$ smaller than `middle' $t$ (or halfway between 0 and `middle' $t$?) and for $t$ larger than `middle' $t$,
 
+
 \section{Computations \& Examples}
 
-***code published in Louis' \textbf{R} package \texttt{ReliabilityTheory},
-function \texttt{nonParBayesSystemInferencePriorSets()};
+%***code published in Louis' \textbf{R} package \texttt{ReliabilityTheory},
+The method is implemented in the \textbf{R} package \texttt{ReliabilityTheory} \citep{2015:aslett-RT}
+with the function \texttt{nonParBayesSystemInferencePriorSets()};
 the package also contains the function \texttt{computeSystemSurvivalSignature()}
-to calculate the survival signature for a given system layout (reliability block diagramm)***
+to calculate the survival signature for a given system layout (reliability block diagramm).
+
+\begin{figure}
+\centering
+\begin{tikzpicture}
+[type1/.style={rectangle,draw,fill=black!20,very thick,inner sep=0pt,minimum size=8mm},
+ type2/.style={rectangle,draw,fill=black!20,very thick,inner sep=0pt,minimum size=8mm},
+ type3/.style={rectangle,draw,fill=black!20,very thick,inner sep=0pt,minimum size=8mm},
+ cross/.style={cross out,draw=red,very thick,minimum width=7mm, minimum height=5mm},
+ hv path/.style={thick, to path={-| (\tikztotarget)}},
+ vh path/.style={thick, to path={|- (\tikztotarget)}}]
+%\begin{scope}[scale=0.75]
+\node[type1] (T1)   at ( 0  , 0) {T1};
+\node[type2] (T2)   at ( 2.8, 0) {T2};
+\node[type3] (T3-2) at ( 1.4, 1) {T3};
+\node[type3] (T3-3) at ( 1.4,-1) {T3};
+\node[type3] (T3-5) at ( 4.2, 1) {T3};
+\node[type3] (T3-6) at ( 4.2,-1) {T3};
+\coordinate (start) at (-1,0);
+\coordinate (end)   at (5.6,0);
+\coordinate (bista) at (0.7,0);
+\coordinate (biend) at (4.9,0);
+\path (start)     edge[thick]   (T1.west)
+      (T1.east)   edge[thick]   (bista)
+      (bista)     edge[vh path] (T3-2.west)
+                  edge[vh path] (T3-3.west)
+      (T3-2.east) edge[hv path] (T2.north)
+      (T3-3.east) edge[hv path] (T2.south)
+      (T2.north)  edge[vh path] (T3-5.west)
+      (T2.south)  edge[vh path] (T3-6.west)
+      (T3-5.east) edge[hv path] (biend)
+      (T3-6.east) edge[hv path] (biend)
+      (biend)     edge[thick]   (end);
+%\end{scope}
+\end{tikzpicture}
+\caption{Reliability block diagram for a `bridge' system with three component types.}
+\label{fig:bridge-layout}
+\end{figure}
+
+As a toy example, consider a `bridge' type system layout with three types of components T1, T2 and T3,
+as depicted in Figure~\ref{fig:bridge-layout}.
+For components type T1 and T2, we consider a near-noninformative set of prior reliability functions.
+For components of type T3, we consider an informative set of prior reliability functions
+as given in Table~\ref{tab:bridge-T3prior}.
+This set could result from eliciting prior functioning probabilities at times $0,1,2,3,4,5$ only,
+and filling up the rest.
+These prior assumptions, together with sets of posterior reliability functions
+resulting from three different scenarios for test data for component type T3,
+are illustrated in Figures~\ref{fig:bridge-fitting}, \ref{fig:bridge-early} and \ref{fig:bridge-late}; 
+test data for components of type T1 and T2 are invariably
+$\vec{t}^1 = (2.0, 2.2, 2.4, 2.6)$ and $\vec{t}^2 = (3.0, 3.2, 3.4, 3.6)$, respectively.
+
+\begin{table}
+\centering
+\begin{tabular}{c|rrrrr}
+$t$ & $[0,1)$ & $[1,2)$ & $[2,3)$ & $[3,4)$ & $[4,5)$ \\
+\hline
+$\ytzl{3}$ & 0.625 & 0.375 & 0.250 & 0.125 & 0.010 \\
+$\ytzu{3}$ & 0.999 & 0.875 & 0.500 & 0.375 & 0.250
+\end{tabular}
+\caption{Lower and upper prior functioning probability bounds for component type T3 in the `bridge' system.}
+\label{tab:bridge-T3prior}
+\end{table}
+
+In Figure~\ref{fig:bridge-fitting}, 
+test data for component type T3 is $\vec{t}^3 = (0.5, 1.5, 2.5, 3.5)$,
+and so in line with expectations.
+The posterior set of reliability functions for each component type and the whole system
+is considerably smaller as compared to the prior set
+(due to the low prior strength intervals
+$[\ntzl{1},\ntzu{1}] = [\ntzl{2},\ntzu{2}] = [1,2]$, $[\ntzl{3},\ntzu{3}] = [1,4]$)
+and so giving more precise reliability statements.
+We see that posterior lower and upper functioning probabilities drop at those times $t$
+when there is a failure time in the test data,
+or a drop in the prior functioning probability bounds.
+Note that the lower bound for prior system reliability function is zero
+due to the prior lower bound for T1;
+for the system to function, the component of type T1 must function.
+
+\begin{figure}
+\includegraphics[width=\textwidth]{bridge-fittingfailures}
+\caption{Prior and posterior sets of reliability functions for the `bridge' system and its three component types,
+with failure times as expected for component type T3.
+Test data failure times are denoted with tick marks near the time axis.}
+\label{fig:bridge-fitting}
+\end{figure}
+
+In Figure~\ref{fig:bridge-early},
+test data of component type T3 is instead $\vec{t}^3 = (0.6, 0.7, 0.8, 0.9)$,
+and so earlier than expected.
+
+\begin{figure}
+\includegraphics[width=\textwidth]{bridge-earlyfailures}
+\caption{Prior and posterior sets of reliability functions for the `bridge' type system and its three component types,
+with failure times earlier as expected for component type T3.}
+\label{fig:bridge-early}
+\end{figure}
+
+In Figure~\ref{fig:bridge-late}, 
+test data of component type T3 is now $\vec{t}^3 = (4.1, 4.2, 4.3, 4.4)$,
+and so later than expected.
+
+\begin{figure}
+\includegraphics[width=\textwidth]{bridge-latefailures}
+\caption{Prior and posterior sets of reliability functions for the `bridge' type system and its three component types,
+with failure times later as expected for component type T3.}
+\label{fig:bridge-late}
+\end{figure}
 
 
 ***calculate and show $\Rsys(t)$ plots for a range of examples (keep system layout fixed?):
