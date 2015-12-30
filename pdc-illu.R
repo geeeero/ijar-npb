@@ -48,6 +48,15 @@ dbebinvec <- function(pos, m, l = NULL){
   }, m=m, n=pos[1], y=pos[2])
 }
 
+pbebinvec <- function(pos, m, l = NULL){
+  res <- dbebinvec(pos=pos, m=m, l=NULL)
+  res <- cumsum(res)
+  if(!is.null(l))
+    return(res[l+1])
+  else
+    return(res)
+}
+
 # one prior updated to posteriors with same variance
 sgpr <- c(8, 0.75) # n0, y0
 data1 <- c(12,16)  #  s,  n
@@ -281,7 +290,73 @@ paramset2 + theme(plot.margin = unit(c(0,0.5,0,-0.25), "lines"), legend.margin =
 dev.off()
 
 # sets of Beta-Binomial cmfs
+m <- 5
+lvec <- 0:m
 
-head(betasetdf)
+bebinpriolow <- sapply(lvec, function(x){
+  optim(par=c(4, 0.7), fn=function(.n0y0, m, x){
+    pbebinvec(.n0y0, m=m, l=x)
+  }, method="L-BFGS-B", control=list(fnscale=1),
+  lower=c(n0(setpr)[1], y0(setpr)[1]),
+  upper=c(n0(setpr)[2], y0(setpr)[2]), m=m, x=x)$value
+})
+
+bebinprioupp <- sapply(lvec, function(x){
+  optim(par=c(4, 0.8), fn=function(.n0y0, m, x){
+    pbebinvec(.n0y0, m=m, l=x)
+  }, method="L-BFGS-B", control=list(fnscale=-1),
+  lower=c(n0(setpr)[1], y0(setpr)[1]),
+  upper=c(n0(setpr)[2], y0(setpr)[2]), m=m, x=x)$value
+})
+
+bebinpriocorners <- sapply(luck4cny(setpr), function(x){
+  pbebinvec(x, m=m)
+})
+
+bebinpos1low <- sapply(lvec, function(x){
+  optim(par=c(4, 0.7), fn=function(.n0y0, m, x){
+    pbebinvec(nyupdate(pr=.n0y0, data=c(tau(data(setpos1)), n(data(setpos1)))), m=m, l=x)
+  }, method="L-BFGS-B", control=list(fnscale=1),
+  lower=c(n0(setpr)[1], y0(setpr)[1]),
+  upper=c(n0(setpr)[2], y0(setpr)[2]), m=m, x=x)$value
+})
+
+bebinpos1upp <- sapply(lvec, function(x){
+  optim(par=c(4, 0.8), fn=function(.n0y0, m, x){
+    pbebinvec(nyupdate(pr=.n0y0, data=c(tau(data(setpos1)), n(data(setpos1)))), m=m, l=x)
+  }, method="L-BFGS-B", control=list(fnscale=-1),
+  lower=c(n0(setpr)[1], y0(setpr)[1]),
+  upper=c(n0(setpr)[2], y0(setpr)[2]), m=m, x=x)$value
+})
+
+bebinpos1corners <- sapply(luck4cny(setpr), function(x){
+  pbebinvec(nyupdate(pr=x, data=c(tau(data(setpos1)), n(data(setpos1)))), m=m)
+})
+
+bebinpos2low <- sapply(lvec, function(x){
+  optim(par=c(4, 0.7), fn=function(.n0y0, m, x){
+    pbebinvec(nyupdate(pr=.n0y0, data=c(tau(data(setpos2)), n(data(setpos2)))), m=m, l=x)
+  }, method="L-BFGS-B", control=list(fnscale=1),
+  lower=c(n0(setpr)[1], y0(setpr)[1]),
+  upper=c(n0(setpr)[2], y0(setpr)[2]), m=m, x=x)$value
+})
+
+bebinpos2upp <- sapply(lvec, function(x){
+  optim(par=c(4, 0.8), fn=function(.n0y0, m, x){
+    pbebinvec(nyupdate(pr=.n0y0, data=c(tau(data(setpos2)), n(data(setpos2)))), m=m, l=x)
+  }, method="L-BFGS-B", control=list(fnscale=-1),
+  lower=c(n0(setpr)[1], y0(setpr)[1]),
+  upper=c(n0(setpr)[2], y0(setpr)[2]), m=m, x=x)$value
+})
+
+bebinpos2corners <- sapply(luck4cny(setpr), function(x){
+  pbebinvec(nyupdate(pr=x, data=c(tau(data(setpos2)), n(data(setpos2)))), m=m)
+})
+
+bebinsetdf <- rbind(data.frame(x=lvec, Lower=bebinpriolow, Upper=bebinprioupp, bebinpriocorners, Item="Prior", Facet="Prior & Posterior 1"),
+                    data.frame(x=lvec, Lower=bebinpos1low, Upper=bebinpos1upp, bebinpos1corners, Item="Posterior 1", Facet="Prior & Posterior 1"),
+                    data.frame(x=lvec, Lower=bebinpriolow, Upper=bebinprioupp, bebinpriocorners, Item="Prior", Facet="Prior & Posterior 2"),
+                    data.frame(x=lvec, Lower=bebinpos2low, Upper=bebinpos2upp, bebinpos2corners, Item="Posterior 2", Facet="Prior & Posterior 2"))
+bebinsetdf$Item <- ordered(bebinsetdf$Item, levels=c("Prior", "Posterior 1", "Posterior 2"))
 
 #
