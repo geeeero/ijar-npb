@@ -5,6 +5,9 @@ library(ggplot2)
 library(reshape2)
 library(grid)
 library(gridExtra)
+library(luck)
+source("../../lund_1512/lund-1512/course/04-01_BinomialData.R")
+source("../../lund_1512/lund-1512/course/04-02_Binomial.R")
 
 updateLuckY <- function (n0, y0, tau, n){ (n0*y0+tau)/(n0+n) }
 updateLuckN <- function (n0, n){ n0+n }
@@ -133,5 +136,74 @@ pdcillupmfcmf   <- pdcillupmfcmf + theme(plot.margin = unit(c(0,0,  0,-0.75), "l
 pdf("singleprior-pdc2.pdf", width=8, height=5)
 grid.arrange(betapdfcdf, pdcillupmfcmf, nrow=1, ncol=2, widths=c(1,1.2))
 dev.off()
+
+# ------------------- sets of Beta pdfs, sets of Beta-Bin cmfs -------------------------
+
+setpr <- BinomialLuckModel(n0=c(1,8), y0=c(0.7, 0.8))
+setpos1 <- setpr
+data(setpos1) <- BinomialData(s=12, n=16)
+setpos2 <- setpr
+data(setpos2) <- BinomialData(s= 0, n=16)
+
+betavec <- seq(0,1, length.out=200)
+
+cdfplot(setpos1, xvec=betavec)
+cdfplot(setpos1, xvec=betavec, control=controlList(posterior=TRUE))
+cdfplot(setpos2, xvec=betavec, control=controlList(posterior=TRUE))
+
+betapriolow <- sapply(betavec, function(x){
+  optim(par=c(4, 0.7), fn=function(.n0y0, x){
+    pbetany(x, .n0y0)
+  }, method="L-BFGS-B", control=list(fnscale=1),
+  lower=c(n0(setpr)[1], y0(setpr)[1]),
+  upper=c(n0(setpr)[2], y0(setpr)[2]), x=x)$value
+})
+
+betaprioupp <- sapply(betavec, function(x){
+  optim(par=c(4, 0.8), fn=function(.n0y0, x){
+    pbetany(x, .n0y0)
+  }, method="L-BFGS-B", control=list(fnscale=-1),
+  lower=c(n0(setpr)[1], y0(setpr)[1]),
+  upper=c(n0(setpr)[2], y0(setpr)[2]), x=x)$value
+})
+
+betapos1low <- sapply(betavec, function(x){
+  optim(par=c(4, 0.7), fn=function(.n0y0, x){
+    pbetany(x, nyupdate(pr=.n0y0, data=c(tau(data(setpos1)), n(data(setpos1)))))
+  }, method="L-BFGS-B", control=list(fnscale=1),
+  lower=c(n0(setpr)[1], y0(setpr)[1]),
+  upper=c(n0(setpr)[2], y0(setpr)[2]), x=x)$value
+})
+
+betapos1upp <- sapply(betavec, function(x){
+  optim(par=c(4, 0.8), fn=function(.n0y0, x){
+    pbetany(x, nyupdate(pr=.n0y0, data=c(tau(data(setpos1)), n(data(setpos1)))))
+  }, method="L-BFGS-B", control=list(fnscale=-1),
+  lower=c(n0(setpr)[1], y0(setpr)[1]),
+  upper=c(n0(setpr)[2], y0(setpr)[2]), x=x)$value
+})
+
+betapos2low <- sapply(betavec, function(x){
+  optim(par=c(4, 0.7), fn=function(.n0y0, x){
+    pbetany(x, nyupdate(pr=.n0y0, data=c(tau(data(setpos2)), n(data(setpos2)))))
+  }, method="L-BFGS-B", control=list(fnscale=1),
+  lower=c(n0(setpr)[1], y0(setpr)[1]),
+  upper=c(n0(setpr)[2], y0(setpr)[2]), x=x)$value
+})
+
+betapos2upp <- sapply(betavec, function(x){
+  optim(par=c(4, 0.8), fn=function(.n0y0, x){
+    pbetany(x, nyupdate(pr=.n0y0, data=c(tau(data(setpos2)), n(data(setpos2)))))
+  }, method="L-BFGS-B", control=list(fnscale=-1),
+  lower=c(n0(setpr)[1], y0(setpr)[1]),
+  upper=c(n0(setpr)[2], y0(setpr)[2]), x=x)$value
+})
+
+betasetdf <- rbind(data.frame(x=betavec, Lower=betapriolow, Upper=betaprioupp, Item="Prior"),
+                   data.frame(x=betavec, Lower=betapos1low, Upper=betapos1upp, Item="Posterior 1"),
+                   data.frame(x=betavec, Lower=betapos2low, Upper=betapos2upp, Item="Posterior 2"))
+betasetdf$Item <- ordered(betasetdf$Item, levels=c("Prior", "Posterior 1", "Posterior 2"))
+betaset1 <- ggplot(betasetdf) + geom_ribbon(aes(x=x, ymin=Lower, ymax=Upper, group=Item, colour=Item, fill=Item), alpha=0.3)
+betaset1
 
 #
