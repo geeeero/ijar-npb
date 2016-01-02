@@ -611,17 +611,17 @@ We therefore have
 %for a certain $k$, a high probability on high $l_k$'s is never worse than a high probability on lower $l_k$'s,
 %keeping all other component type expressions fixed.
 %***Monotonicity in $\yz_{k,t}$, so we get, for each $t \in {\cal T}$,
-\begin{align*}
-\lefteqn{\lRsys(t \mid \vec{t}^1, \ldots, \vec{t}^K)}\\
- &= \min_{\PtZi{1}, \ldots, \PtZi{K}} \Rsys(t \mid \PtZi{1}, \ldots, \PtZi{K}, \vec{t}^1, \ldots, \vec{t}^K) \\
+\begin{align}
+\lefteqn{\lRsys(t \mid \vec{t}^1, \ldots, \vec{t}^K)} \nonumber \\
+ &= \min_{\PtZi{1}, \ldots, \PtZi{K}} \Rsys(t \mid \PtZi{1}, \ldots, \PtZi{K}, \vec{t}^1, \ldots, \vec{t}^K) \nonumber \\
  &= \min_{\nz_{1,t},\ldots,\nz_{K,t}} 
     \sum_{l_1=0}^{m_1} \cdots \sum_{l_K=0}^{m_K} \Phi(l_1, \ldots, l_K)
-                                                 \prod_{k=1}^K P(C^k_t = l_k \mid \yktzl, \nktz, s^k_t) \\
+                                                 \prod_{k=1}^K P(C^k_t = l_k \mid \yktzl, \nktz, s^k_t) \nonumber \\
  &= \min_{\nz_{1,t},\ldots,\nz_{K,t}} 
-    \sum_{l_1=0}^{m_1} \cdots \sum_{l_K=0}^{m_K} \Phi(l_1, \ldots, l_K) \times \\ & \hspace*{12ex}
+    \sum_{l_1=0}^{m_1} \cdots \sum_{l_K=0}^{m_K} \Phi(l_1, \ldots, l_K) \times \nonumber \\ & \hspace*{12ex}
     \prod_{k=1}^K {m_k \choose l_k} \frac{B(l_k + \nn_{k,t}\ynl_{k,t}, m_k - l_k + \nn_{k,t}(1-\ynl_{k,t}))}
-                                         {B(\nn_{k,t}\ynl_{k,t}, \nn_{k,t}(1-\ynl_{k,t}))} \,.
-\end{align*}
+                                         {B(\nn_{k,t}\ynl_{k,t}, \nn_{k,t}(1-\ynl_{k,t}))} \,. \label{eq:LwrSysPost}
+\end{align}
 In the following, we will give some guidelines on how to choose the parameter sets $\PkZi{1}, \ldots, \PkZi{\tmax}$
 which define the set of prior discrete reliability functions for components of type $k$.
 We think this is much easier in terms of $\nz$ and $\yz$ than it would be in terms of $\alpha$ and $\beta$.
@@ -718,10 +718,31 @@ and then to further refine the obtained bounds if necessary.
 \section{Computations \& Examples}
 
 %***code published in Louis' \textbf{R} package \texttt{ReliabilityTheory},
-The method is implemented in the \textbf{R} package \texttt{ReliabilityTheory} \citep{2015:aslett-RT}
-with the function \texttt{nonParBayesSystemInferencePriorSets()};
-the package also contains the function \texttt{computeSystemSurvivalSignature()}
-to calculate the survival signature for a given system layout (reliability block diagramm).
+
+\subsection{Software}
+
+The methods of this paper have been implemented in the \textbf{R}
+\citep{R} package \texttt{ReliabilityTheory} \citep{2015:aslett-RT},
+providing an easy to use interface for reliability practitioners.  The
+primary function, which computes the upper and lower posterior
+predictive system survival probabilities as in \eqref{eq:LwrSysPost}, is
+named \texttt{nonParBayesSystemInferencePriorSets()}.  The user
+specifies the times at which to evaluate the bounds, the survival
+signature ($\Phi(\cdot)$), the component test data ($\vec{t}^1, \ldots,
+\vec{t}^K$), and the prior parameter set for each component type and
+time ($\PtZi{k}$, via $\nzu_{k,t}, \nzl_{k,t}, \yzu_{k,t}$, and
+$\yzl_{k,t}$).  All computations of $\lRsys$
+and $\uRsys$ at different time points are performed in parallel
+automatically where the CPU has multiple cores.
+
+Note that computation of the system signature itself can be simplified by
+expressing the structure of the system as an undirected graph using the
+\texttt{computeSystemSurvivalSignature()} function in the same package,
+leaving only data and prior to be handled.  These publicly available
+functions have been used in computing all the following examples for
+reproducibility.  \ref{ap:software} details how to use this software.
+
+\subsection{Examples}
 
 \begin{figure}
 \centering
@@ -955,5 +976,74 @@ to calculate its remaining useful life (RUL).
 \bibliographystyle{elsarticle-harv}
 \bibliography{ijar-npb-refs}
 
-\end{document}
 
+\section*{Appendix}
+\appendix
+\renewcommand*{\thesection}{\Alph{section}}
+\section{Software details}
+\label{ap:software}
+
+Functions which make it easy to use the methods of this paper have been added to the \textbf{R} package \texttt{ReliabilityTheory} \citep{2015:aslett-RT}.  There are two functions of particular note: \texttt{computeSystemSurvivalSignature} and \texttt{nonParBayesSystemInferencePriorSets}
+
+\subsection{Computing the survival signature}
+
+The function \texttt{computeSystemSurvivalSignature} allows easy 
+computation of the survival signature if the system is expressed as an
+undirected graph with `start' and `terminal' nodes (which are not
+considered components for survival signature computation).  The system
+is considered to work if there is a path from the start to the terminal
+node passing only through functioning components.
+
+Graph representations of systems are most simply defined by using the 
+\texttt{graph.formula} function.  The `start' node should be denoted
+\texttt{s} and the `terminal' node should be denoted \texttt{t} and
+intermediate nodes (representing actual components) should be numbered and
+connected by edges denoted by \texttt{-}, where the numbering denotes physically
+distinct components.  Component numbers can be repeated to include
+multiple links.  For example, to build a simple three component series
+system:
+
+\noindent\texttt{sys <- graph.formula(s\,-\,1\,-\,2\,-\,3\,-\,t)}
+
+and to build a three component parallel system:
+
+\noindent\texttt{sys <- graph.formula(s\,-\,1\,-\,t, s\,-\,2\,-\,t, s\,-\,3\,-\,t)}
+
+There is an additional shorthand which indicates a link exists to a list of multiple components separated by the \texttt{:} operator, so that the parallel system can be also be expressed more compactly by:
+
+\noindent\texttt{sys <- graph.formula(s\,-\,1:2:3\,-\,t)}
+
+Therefore, the simple bridge system of Figure \ref{fig:bridge-layout} can be constructed with:
+
+\noindent\texttt{sys <- graph.formula(s\,-\,1\,-\,2\,-\,3\,-\,t, s\,-\,1\,-\,4\,-\,5\,-\,t, 2:4\,-\,6\,-\,3:5)}
+\begin{itemize}
+  \item \texttt{s\,-\,1\,-\,2\,-\,3\,-\,t} signifies the route from left to right entering the first component and going across the top of the system block diagram in Figure \ref{fig:bridge-layout};
+  \item \texttt{s\,-\,1\,-\,4\,-\,5\,-\,t} signifies the bottom route through the block diagram;
+  \item \texttt{2:4\,-\,6\,-\,3:5} connects the top two components of type 3 to the bottom two components of type 3, signifying the bridge.
+\end{itemize}
+Naturally such as expression is not necessarily unique, so that completely equivalently one may write:
+
+\noindent\texttt{sys <- graph.formula(s\,-\,1\,-\,2:4\,-\,6\,-\,3:5\,-\,t, 2\,-\,3, 4\,-\,5)}
+
+\ 
+
+With the structure defined and the individual components numbered, it 
+just remains to specify the types of each component.  This can be done
+using the \texttt{setCompTypes} function.  This function takes the
+system graph and a list of component type names and corresponding
+component numbers.  Thus, completing the example for Figure
+\ref{fig:bridge-layout}:
+\noindent\texttt{sys <- setCompTypes(sys, list("T1"=c(1), "T2"=c(6),}
+
+\noindent\texttt{~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"T3"=c(2,3,4,5)))}
+
+\ 
+
+Computing the survival signature then involves a simple function call:
+\noindent\texttt{survsig <- computeSystemSurvivalSignature(sys)}
+
+\subsection{Computing sets of system survival probabilities}
+
+*** to be completed
+
+\end{document}
