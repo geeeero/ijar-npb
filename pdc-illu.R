@@ -289,6 +289,15 @@ pdf("paramsets.pdf", width=6, height=5)
 paramset2 + theme(plot.margin = unit(c(0,0.5,0,-0.25), "lines"), legend.margin = unit(-0.5, "cm"))
 dev.off()
 
+# in two separate facets
+paramset3 <- ggplot(paramsetdf) + geom_ribbon(aes(x=n0, ymin=Lower, ymax=Upper, group=Item, colour=Item, fill=Item), alpha=0.3)
+paramset3 <- paramset3 + facet_grid(. ~ Facet) + xlab(expression(n^(0))) + ylab(expression(y^(0))) + rightlegend
+
+pdf("paramsets.pdf", width=6, height=2.5) # plot.margin: t r b f
+paramset3 + theme(plot.margin = unit(c(0,0.5,0,0), "lines"), legend.margin = unit(-0.0, "cm"))
+dev.off()
+
+
 # sets of Beta-Binomial cmfs
 m <- 5
 lvec <- 0:m

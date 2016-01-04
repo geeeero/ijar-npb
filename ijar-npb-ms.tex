@@ -515,13 +515,23 @@ and so can be described efficiently through the set of updated parameters
 \PktN &= \Big\{ (\nktn, \yktn) \mid (\nktz, \yktz) \in \PktZ = [\nktzl, \nktzu] \times [\yktzl, \yktzu] \Big\}\,.
 \end{align*}
 Such rectangular prior parameter sets $\PktZ$ have been shown
-to balance desirable model properties and ease of elicitation quite well.
+to balance desirable model properties and ease of elicitation quite well
+\citep[pp.~123f]{2013:diss-gw}; \citep{Troffaes2013a-short}.
 %
 For each component type $k$ and time point $t$,
 one has to choose only the four parameters $\nktzl, \nktzu, \yktzl, \yktzu$
 (so $4 \times |{\cal T}|$ parameters are needed to define the set of prior distributions characterizing
 prior knowledge on the survival function of components of type $k$);
 notwithstanding this, the model has favourable inference properties.
+
+\begin{figure}
+\includegraphics[width=\textwidth]{paramsets}
+\caption{Prior parameter set $\PktZ = [1,8] \times [0.7,0.8]$ and posterior parameter set $\PktN$
+for data $s^k_t/n_k = 12/16$ (left) and $s^k_t/n_k = 0/16$ (right).
+For no-conflict data ($s^k_t/n_k \in [\yktzl,\yktzu]$), $\PktN$ has the `spotlight' shape (left);
+in case of prior-data conflict ($s^k_t/n_k \not\in [\yktzl,\yktzu]$), $\PktN$ has the `banana' shape (right).}
+\label{fig:paramsets}
+\end{figure}
 
 Central to these inference properties is that
 while the prior parameter set $\PktZ$ is rectangular,
@@ -534,7 +544,7 @@ is outside its expected range.
 In absence of prior-data conflict, 
 $\PktN$ shrinks in the $\ykt$ dimension;
 how much it shrinks depends on $\nktz \in [\nktzl, \nktzu]$,
-leading to the so-called spotlight shape depicted in Figure***.
+leading to the so-called spotlight shape depicted in Figure~\ref{fig:paramsets} (left).
 As $\yktn$ gives the posterior expectation for the functioning probability $p_t^k$,
 shorter $\yktn$ intervals mean more precise knowledge about $p_t^k$.
 Also, the variance interval for $p_t^k$ will decrease
@@ -544,12 +554,12 @@ due to the increase of $\nktz$ to $\nktn$.
 In case of prior-data conflict ($s^k_t/n_k \not\in [\yktzl, \yktzu]$),
 $\PktN$ has instead the so-called banana shape,
 arising from $\yktn$ intervals being shifted closer towards $s^k_t/n_k$
-for lower $\nktn$ values than for higher $\nktn$ values, see Figure***.
+for lower $\nktn$ values than for higher $\nktn$ values, see Figure~\ref{fig:paramsets} (right).
 Overall, this results in a wider $\yktn$ interval as compared to the non-conflict case, 
 reflecting the extra uncertainty due to prior-data conflict,
 thus making more cautious probability statements about $p_t^k$.
 
-\td{Figure with $\PN$s and sets of beta cdfs for conflict and no conflict case.}
+\td{Figure with sets of beta cdfs and beta-binom cmfs for conflict and no conflict case.}
 
 Furthermore, with sets of Beta priors it is also possible
 to express prior ignorance in a more adequate way,
@@ -1033,6 +1043,7 @@ using the \texttt{setCompTypes} function.  This function takes the
 system graph and a list of component type names and corresponding
 component numbers.  Thus, completing the example for Figure
 \ref{fig:bridge-layout}:
+
 \noindent\texttt{sys <- setCompTypes(sys, list("T1"=c(1), "T2"=c(6),}
 
 \noindent\texttt{~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"T3"=c(2,3,4,5)))}
