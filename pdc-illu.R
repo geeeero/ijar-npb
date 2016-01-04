@@ -368,4 +368,27 @@ bebinsetdf <- rbind(data.frame(x=lvec, Lower=bebinpriolow, Upper=bebinprioupp, b
                     data.frame(x=lvec, Lower=bebinpos2low, Upper=bebinpos2upp, bebinpos2corners, Item="Posterior 2", Facet="Prior & Posterior 2"))
 bebinsetdf$Item <- ordered(bebinsetdf$Item, levels=c("Prior", "Posterior 1", "Posterior 2"))
 
+bebinset1 <- ggplot(bebinsetdf, aes(group=Item, colour=Item)) + geom_ribbon(aes(x=x, ymin=Lower, ymax=Upper, fill=Item), alpha=0.3)
+bebinset1 <- bebinset1 + #geom_point() +
+  geom_line(aes(x=x, y=c1)) + geom_point(aes(x=x, y=c1)) +
+  geom_line(aes(x=x, y=c2)) + geom_point(aes(x=x, y=c2)) +
+  geom_line(aes(x=x, y=c3)) + geom_point(aes(x=x, y=c3)) +
+  geom_line(aes(x=x, y=c4)) + geom_point(aes(x=x, y=c4))
+bebinset1 <- bebinset1 + facet_grid(Facet ~ .) + rightlegend + xlab(expression(l[k])) + ylab("cmf")
+bebinset1
+
+# plot.margin: t r b l
+betaset1  <- betaset1  + theme(plot.margin = unit(c(0,0.5,0,-0.0), "lines")) + 
+  guides(linetype="none", fill="none", group="none", colour="none")
+bebinset1 <- bebinset1 + theme(plot.margin = unit(c(0,0,  0,-0.0), "lines"),
+                                         legend.margin = unit(-0.0, "cm"))
+pdf("betaset-binomset1.pdf", width=8, height=5)
+grid.arrange(betaset1, bebinset1, nrow=1, ncol=2, widths=c(1,1.2))
+dev.off()
+
+# prior and posterior functioning probability ranges for l_k = 3:
+subset(bebinsetdf, (x==2) & (Facet=="Prior & Posterior 1") & (Item=="Prior"))
+subset(bebinsetdf, (x==2) & (Facet=="Prior & Posterior 1") & (Item=="Posterior 1"))
+subset(bebinsetdf, (x==2) & (Facet=="Prior & Posterior 2") & (Item=="Posterior 2"))
+
 #

@@ -389,7 +389,7 @@ in contrast to their posterior values $\nn$ and $\yn$
 obtained after observing $n$ failure times, see below.
 $\nz$ and $\yz$ are sometimes called \emph{canonical} parameters,
 identified from rewriting the density in a canonical form;
-see, e.g., \citet[pp.~202 and 272f]{2000:bernardosmith}.
+see, e.g., \citet[pp.~202 and 272f]{2000:bernardosmith}, or \citet[\S 1.2.3.1]{2013:diss-gw}.
 This canonical form gives a joint structure to all conjugate priors in exponential families.
 
 From the properties of the Beta distribution,
@@ -511,9 +511,11 @@ as ensuring coherence \citep[\S 2.5]{1991:walley}, and was termed ``Generalized 
 Due to conjugacy, $\MktN$ is a set of Beta distributions with parameters $(\nktn, \yktn)$
 obtained from updating $(\nktz, \yktz) \in \PktZ$ according to \eqref{eq:nyupdate},
 and so can be described efficiently through the set of updated parameters
-\begin{align*}
+\begin{align}
 \PktN &= \Big\{ (\nktn, \yktn) \mid (\nktz, \yktz) \in \PktZ = [\nktzl, \nktzu] \times [\yktzl, \yktzu] \Big\}\,.
-\end{align*}
+\label{eq:paramsets}
+\end{align}
+Examples for parameter sets $\PktZ$ and $\PktN$ as in \eqref{eq:paramsets} are depicted in Figure~\ref{fig:paramsets}.
 Such rectangular prior parameter sets $\PktZ$ have been shown
 to balance desirable model properties and ease of elicitation quite well
 \citep[pp.~123f]{2013:diss-gw}; \citep{Troffaes2013a-short}.
@@ -527,9 +529,12 @@ notwithstanding this, the model has favourable inference properties.
 \begin{figure}
 \includegraphics[width=\textwidth]{paramsets}
 \caption{Prior parameter set $\PktZ = [1,8] \times [0.7,0.8]$ and posterior parameter set $\PktN$
-for data $s^k_t/n_k = 12/16$ (left) and $s^k_t/n_k = 0/16$ (right).
+for data $s^k_t/n_k = 12/16$ (Posterior 1, left) and $s^k_t/n_k = 0/16$ (Posterior 2, right).
 For no-conflict data ($s^k_t/n_k \in [\yktzl,\yktzu]$), $\PktN$ has the `spotlight' shape (left);
-in case of prior-data conflict ($s^k_t/n_k \not\in [\yktzl,\yktzu]$), $\PktN$ has the `banana' shape (right).}
+in case of prior-data conflict ($s^k_t/n_k \not\in [\yktzl,\yktzu]$), $\PktN$ has the `banana' shape (right),
+leading to a large degree of imprecision in the $\yktn$ dimension of $\PktN$,
+thus reflecting increased uncertainty about the functioning probability $p^k_t$
+due to the conflict between prior assumptions and observed data.}
 \label{fig:paramsets}
 \end{figure}
 
@@ -555,14 +560,82 @@ In case of prior-data conflict ($s^k_t/n_k \not\in [\yktzl, \yktzu]$),
 $\PktN$ has instead the so-called banana shape,
 arising from $\yktn$ intervals being shifted closer towards $s^k_t/n_k$
 for lower $\nktn$ values than for higher $\nktn$ values, see Figure~\ref{fig:paramsets} (right).
-Overall, this results in a wider $\yktn$ interval as compared to the non-conflict case, 
+Overall, this results in a wider $\yktn$ interval as compared to the no conflict case, 
 reflecting the extra uncertainty due to prior-data conflict,
 thus making more cautious probability statements about $p_t^k$.
 
-\td{Figure with sets of beta cdfs and beta-binom cmfs for conflict and no conflict case.}
+Based on these shapes and \eqref{eq:nyupdate}, it is possible to deduce the following expressions
+for the lower and upper bounds of $\yktn$:
+\begin{align}
+\begin{aligned}
+\min_{\PktN} \yktn &=
+ \begin{cases}
+ %\dfrac{\nktzu \yktzl + s^k_t}{\nktzu + n_k} & \text{if } s^k_t/n_k \ge \yktzl \\
+ \big(\nktzu \yktzl + s^k_t\big) / \big(\nktzu + n_k\big) & \text{if } s^k_t/n_k \ge \yktzl \\
+ %\dfrac{\nktzl \yktzl + s^k_t}{\nktzl + n_k} & \text{if } s^k_t/n_k <   \yktzl
+ \big(\nktzl \yktzl + s^k_t\big) / \big(\nktzl + n_k\big) & \text{if } s^k_t/n_k <   \yktzl
+ \end{cases}\,,\\
+\max_{\PktN} \yktn &=
+ \begin{cases}
+ %\dfrac{\nktzu \yktzu + s^k_t}{\nktzu + n_k} & \text{if } s^k_t/n_k \le \yktzu \\
+ \big(\nktzu \yktzu + s^k_t\big) / \big(\nktzu + n_k\big) & \text{if } s^k_t/n_k \le \yktzu \\
+ %\dfrac{\nktzl \yktzu + s^k_t}{\nktzl + n_k} & \text{if } s^k_t/n_k >   \yktzu
+ \big(\nktzl \yktzu + s^k_t\big) / \big(\nktzl + n_k\big) & \text{if } s^k_t/n_k >   \yktzu
+ \end{cases}\,.
+\end{aligned}
+\label{eq:ysetupdate}
+\end{align}
+The lower bound for $\yktn$ is always attained for $\yktzl$, the upper bound for $\yktzu$.
+Note that when $s^k_t/n_k \in [\yktzl, \yktzu]$,
+both the lower and the upper bound for $\yktn$ are attained using $\nktzu$,
+this corresponds to the spotlight shape.
+When $s^k_t/n_k \not\in [\yktzl, \yktzu]$,
+due to the banana shape
+we will get one of the bounds for $\yktn$ using $\nktzl$.
+
+\begin{figure}
+\includegraphics[width=\textwidth]{betaset-binomset1}
+\caption{Sets of Beta pdfs (left) and Beta-Binomial cmfs (right, for $m_k=5$)
+corresponding to the prior and posterior parameter sets in Figure~\ref{fig:paramsets}.
+The sets are depicted as shaded areas,
+with the distributions corresponding to the four corners
+of the prior parameter set $\PktZ$ (or their posterior counterparts) as solid lines.
+The top row depicts the set of prior cdfs/cmfs and the set of posterior cdfs/cmfs for the case where data confirm prior assumptions
+(see left panel of Figure~\ref{fig:paramsets});
+the bottom row depicts the (identical) set of prior cdfs/cmfs and the set of posterior cdfs/cmfs in case of prior-data conflict
+(see right panel of Figure~\ref{fig:paramsets}).
+%The set of posteriors and the set of posterior predictive distributions
+The set of posterior cdfs and cmfs
+is much larger in case of prior-data conflict:
+uncertainty due to this conflict is reflected through increased imprecision.}
+\label{fig:betaset-binomset}
+\end{figure}
+
+The different locations and sizes of $\PktN$ in the conflict versus the no conflict case are then, in turn,
+also reflected in the corresponding sets of Beta cdfs and Beta-Binomial cmfs.
+As an example, the sets corresponding to the parameter sets in Figure~\ref{fig:paramsets}
+are depicted in Figure~\ref{fig:betaset-binomset}.
+
+In the no conflict case (Posterior 1, top row),
+the reduction of the $\yktn$ range in $\PktN$ leads to a much smaller set
+of Beta and Beta-Binomial distributions.
+E.g., the range of predictive probabilities
+that two out of a set of five components of type $k$ function at time $t$ 
+has changed from $[0.10, 0.28]$ to $[0.11,0.14]$.
+This reflects the gain in precision due to test data in accordance with prior assumptions.
+
+In the prior-data conflict case (Posterior 2, bottom row),
+the wide $\yktn$ range in $\PktN$ leads to a set of Beta and Beta-Binomial distributions
+that is much larger than in the no conflict case.
+Here, the range of posterior predictive probabilities
+that two out of a set of five components of type $k$ function at time $t$
+is now $[0.86, 1.00]$, i.e., less precise than in the no conflict case.
+Using sets of Beta priors, the resulting set of posterior predictive Beta-Binomial distributions
+adequately reflects the precision of prior information,
+the amount of data, and prior-data conflict.
 
 Furthermore, with sets of Beta priors it is also possible
-to express prior ignorance in a more adequate way,
+to express prior ignorance in an appropriate way,
 by letting $\yktzl \to 0$ and $\yktzu \to 1$
 for some or all $t \in {\cal T}$.
 (It is not advisable to choose $\yktzl = 0$ and $\yktzu = 1$,
@@ -570,7 +643,7 @@ as this can lead to improper posterior predictive distributions.
 E.g., for any $t < \min(\vec{t}^k)$,
 we would get $\yktnu = 1$, leading to one argument of the Beta function
 in the denominator of \eqref{eq:postpredCny} being zero.)
-Choosing these limits for $\yktz$ means that we are prepared to give trivial bounds for the functioning probability only,
+Choosing these limits for $\yktz$ means that we are prepared to give only trivial bounds for the functioning probability,
 and do not wish to make any commitments about $p^k_t$ a priori.
 Compare this to the uniform prior over $[0,1]$, a usual choice of `noninformative' prior,
 being a Beta prior with $\alpha^k_t = \beta^k_t = 1$, i.e., $\nktz = 2$, $\yktz = 0.5$.
@@ -578,16 +651,19 @@ Taking this for all $t \in {\cal T}$ means that we expect the component reliabil
 to be on average 1/2 for all $t$, a very peculiar assumption,
 and, in our view, quite incompatible with the notion of prior ignorance.
 
-For an informative prior the choice of $\nktzl$ is relevant for posterior inferences in case of prior-data conflict,
-as then one of the bounds for $\ykt$ is attained for $\nktzl$.
-In a near-noninformative setting, the choice of $\nktzl$ is instead not relevant,
-as both $\yktnl$ and $\yktnu$ are obtained with $\nktzu$;
+%With the bounded domain for $\yktz$ 
+%\td{***called near-noninformative, for near-noninformative sets when $\yz$ is not bounded see
+%benavoli zaffalon papers***}
+%
+%As a note regarding the bounds for $\nktz$,
+%for an informative prior the choice of $\nktzl$ is relevant for posterior inferences in case of prior-data conflict,
+%as then one of the bounds for $\ykt$ is attained for $\nktzl$.
+%In a near-noninformative setting, the choice of $\nktzl$ is instead not relevant,
+In a near-noninformative setting, the choice of $\nktzl$ is not relevant,
+as due to \eqref{eq:ysetupdate}, both lower and upper bound for $\yktn$ are obtained with $\nktzu$; 
 indeed $\yktzl > 0$ and $\yktzu < 1$ can be chosen such that
 $\frac{s^k_t}{n_k} \in [\yktzl, \yktzu]$ for all $t \in \big(\min(\vec{t}^k), \max(\vec{t}^k)\big)$.
 Obviously, one cannot have prior-data conflict in case of prior near ignorance.
-
-\td{***called near-noninformative, for near-noninformative sets when $\yz$ is not bounded see
-benavoli zaffalon papers***}
 
 
 \section{Sets of System Reliability Functions}
@@ -674,18 +750,18 @@ Again, this follows from the weighted average property of $\yktn$;
 for constant $\yktz$, the lower $\nktz$ the closer $\yktn$ is to $s^k_t/n_k$.
 % one can think of the update between interval and precise value: the lower $n$, the 'faster' the interval will shrink!)\\
 It is possible to construct similar examples also with regard to the lower bound $\nzl_{k,t_j}$.
-Therefore, we propose to take the same $\nktz$ bounds for all $t$, or, at most, to have it change with $t$ gradually only.
+Therefore, we propose to take the same $\nktz$ bounds for all $t$, or, at most, to let them change with $t$ gradually only.
 
 Generally, the interpretation as pseudocount or prior strength should guide the choice of bounds for $\nktz$; 
 low values for $\nktz$ as compared to the test sample size $n_k$
 give low weight to the prior expected functioning probability intervals $[\yktzl, \yktzu]$,
 and the location of posterior intervals $[\yktnl, \yktnu]$ will be dominated by the location of $s^k_t/n_k$.
 Furthermore, the length of $[\yktnl, \yktnu]$ is shorter for low $\nktz$ values;
-in a no-conflict situation, when $\nktzu = n_k$ $[\yktnl, \yktnu]$ has half the length of $[\yktzl, \yktzu]$.
+in a no-conflict situation, when $\nktzu = n_k$ then $[\yktnl, \yktnu]$ has half the length of $[\yktzl, \yktzu]$.
 In contrast, high values for $\nktz$ will lead to slower learning and wider $\yktn$ intervals,
 which means more cautious posterior inferences.
 The difference betweeen $\nktzu$ and $\nktzl$ determines the strength of the prior-data conflict sensitivity;
-as is clear from Figure~***, the wider the $\nktz$ interval,
+as is clear from Figure~\ref{fig:paramsets} and \eqref{eq:ysetupdate}, the wider the $\nktz$ interval,
 the wider $[\yktnl, \yktnu]$ in case of conflict.
 So it seems useful to choose $\nktzl = 1$ or $\nktzl = 2$,
 while choosing $\nktzu$ with help of the half-width rule as described above.
@@ -695,7 +771,8 @@ while choosing $\nktzu$ with help of the half-width rule as described above.
 As mentioned in Section~\ref{sec:setsofbetapriors},
 it is not advisable to choose $\yktzl = 0$ and $\yktzu = 1$.
 For any $t \not\in \big(\min(\vec{t}^k), \max(\vec{t}^k)\big)$,
-this can lead to improper posterior predictive distributions if $l_k=0$ or $l_k=m_k$.
+this can lead to improper posterior predictive distributions
+due to zero arguments for the Beta functions in the denominator of \eqref{eq:LwrSysPost}.
 %Generally, one should choose $\yktzl > 0$ and $\yktzu < 1$ for all $t \not\in \big(\min(\vec{t}^k), \max(\vec{t}^k)\big)$.
 But it is possible to choose values close to $0$ and $1$, respectively,
 and due to the linear update step for $\yktn$ (see Eq.~\eqref{eq:nyupdate}),
@@ -713,14 +790,14 @@ in practice this will be often too time-consuming when ${\cal T}$ forms a dense 
 %(Calculating $\Rsys(t)$ for a too coarse grid only will waste information from data.)
 Switching to a coarser time grid will waste information from data,
 as then failure times in the test data are rounded up to the next $t \in {\cal T}$.
-We rather propose to elicit bounds only for a subset of ${\cal T}$,
-and to fill up the $t$ grid with the least committal bounds, i.e.,
+We rather propose to elicit bounds for a subset of ${\cal T}$ only,
+and to fill up the time grid with the least committal bounds, i.e.,
 taking $\yktzu$ equal to last (in the time sequence) elicited $\yktzu$,
-an likewise $\yktzl$ equal to next (in time sequence) elicited $\yktzl$.
+and likewise $\yktzl$ equal to next (in time sequence) elicited $\yktzl$.
 A possible elicitation procedure in this vein could be
 to start with eliciting $\yktz$ bounds for a few `central' time points $t$,
 filling up the grid as described above accordingly,
-and then to further refine the obtained bounds if necessary.
+and then to further refine the obtained bounds as deemed necessary by the expert.
 %`middle' or `typical' $t$,
 %then $\yktz$ bounds for $t$ smaller than `middle' $t$ (or halfway between 0 and `middle' $t$?) and for $t$ larger than `middle' $t$,
 
