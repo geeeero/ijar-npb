@@ -13,6 +13,7 @@
 \usepackage{amsthm}
 
 \usepackage[usenames,dvipsnames]{xcolor}
+\usepackage{booktabs}
 \usepackage{todonotes}
 \usepackage{etoolbox}
 \usepackage{url}
@@ -883,11 +884,13 @@ $\vec{t}^1 = (2.2, 2.4, 2.6, 2.8)$ and $\vec{t}^2 = (3.2, 3.4, 3.6, 3.8)$, respe
 
 \begin{table}
 \centering
-\begin{tabular}{c|rrrrr}
+\begin{tabular}{crrrrr}
+\toprule
 $t$ & $[0,1)$ & $[1,2)$ & $[2,3)$ & $[3,4)$ & $[4,5)$ \\
-\hline
+\midrule
 $\ytzl{3}$ & 0.625 & 0.375 & 0.250 & 0.125 & 0.010 \\
-$\ytzu{3}$ & 0.999 & 0.875 & 0.500 & 0.375 & 0.250
+$\ytzu{3}$ & 0.999 & 0.875 & 0.500 & 0.375 & 0.250 \\
+\bottomrule
 \end{tabular}
 \caption{Lower and upper prior functioning probability bounds for component type T3 in the `bridge' system.}
 \label{tab:bridge-T3prior}
