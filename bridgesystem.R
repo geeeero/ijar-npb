@@ -37,10 +37,7 @@ oneCompPriorPostSet <- function(name, at.times, test.data, nLower, nUpper, yLowe
 # ----------------------------------------------
 
 b3 <- graph.formula(s -- 1 -- 2:3 -- 4 -- 5:6 --t, 2 -- 5, 3 -- 6)
-V(b3)$compType <- NA
-V(b3)$compType[match(c("1"), V(b3)$name)] <- "T1"
-V(b3)$compType[match(c("4"), V(b3)$name)] <- "T2"
-V(b3)$compType[match(c("2", "3", "5", "6"), V(b3)$name)] <- "T3"
+b3 <- setCompTypes(b3, list("T1"=c(1), "T2"=c(4), "T3"=c(2,3,5,6)))
 b3nulldata <- list("T1"=NULL, "T2"=NULL, "T3"=NULL)
 b3testdata <- list("T1"=c(2.0, 2.2, 2.4, 2.6), "T2"=c(3.0, 3.2, 3.4, 3.6), "T3"=(1:4)/10+4) # T3 late failures
 b3testdata <- list("T1"=c(2.0, 2.2, 2.4, 2.6), "T2"=c(3.0, 3.2, 3.4, 3.6), "T3"=(1:4)/10+0.5) # T3 early failures

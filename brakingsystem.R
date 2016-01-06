@@ -42,11 +42,7 @@ oneCompPriorPostSet <- function(name, at.times, test.data, nLower, nUpper, yLowe
 
 ab <- graph.formula(s -- M -- C1:C2:C3:C4, P1:P2:P3:P4 -- t,
                     C1 -- P1, C2 -- P2, C3 -- P3, C4 -- P4, s -- H -- P3:P4)
-V(ab)$compType <- NA
-V(ab)$compType[match(c("M"), V(ab)$name)] <- "M"
-V(ab)$compType[match(c("H"), V(ab)$name)] <- "H"
-V(ab)$compType[match(c("C1", "C2", "C3", "C4"), V(ab)$name)] <- "C"
-V(ab)$compType[match(c("P1", "P2", "P3", "P4"), V(ab)$name)] <- "P"
+ab <- setCompTypes(ab, list("M"=c("M"), "H"=c("H"), "C"=c("C1", "C2", "C3", "C4"), "P"=c("P1", "P2", "P3", "P4")))
 # data
 set.seed(233)
 Mdata <- rexp(5, rate=0.25)
@@ -82,11 +78,13 @@ abdf <- rbind(data.frame(abM, Part="M"), data.frame(abH, Part="H"), data.frame(a
                          Item=rep(c("Prior", "Posterior"), each=length(abt)), Part="System"))
 abdf$Item <- ordered(abdf$Item, levels=c("Prior", "Posterior"))
 #the plot
-ab1 <- ggplot(abdf) + geom_ribbon(aes(x=Time, ymin=Lower, ymax=Upper, group=Item, colour=Item, fill=Item), alpha=0.3)
+ab1 <- ggplot(abdf, aes(x=Time))
+ab1 <- ab1 +  geom_line(aes(y=Upper, group=Item, colour=Item)) + geom_line(aes(y=Lower, group=Item, colour=Item))
+ab1 <- ab1 + geom_ribbon(aes(ymin=Lower, ymax=Upper, group=Item, colour=Item, fill=Item), alpha=0.3)
 ab1 <- ab1 + facet_wrap(~Part, nrow=2) + geom_rug(aes(x=x), data=abdat) + xlab("Time") + ylab("Survival Probability")
 ab1 <- ab1 + bottomlegend
 
-pdf("breakingsystem-1.pdf", width=8, height=5)
+pdf("breakingsystem-2.pdf", width=8, height=5)
 ab1
 dev.off()
 #
