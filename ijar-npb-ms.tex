@@ -841,27 +841,27 @@ reproducibility.  \ref{ap:software} details how to use this software.
  hv path/.style={thick, to path={-| (\tikztotarget)}},
  vh path/.style={thick, to path={|- (\tikztotarget)}}]
 %\begin{scope}[scale=0.75]
-\node[type1] (T3)   at ( 0  , 0) {T3};
+\node[type1] (T3)   at ( 5.6, 0) {T3};
 \node[type2] (T2)   at ( 2.8, 0) {T2};
 \node[type3] (T1-2) at ( 1.4, 1) {T1};
 \node[type3] (T1-3) at ( 1.4,-1) {T1};
 \node[type3] (T1-5) at ( 4.2, 1) {T1};
 \node[type3] (T1-6) at ( 4.2,-1) {T1};
-\coordinate (start) at (-1,0);
-\coordinate (end)   at (5.6,0);
+\coordinate (start) at (0  ,0);
+\coordinate (end)   at (6.3,0);
 \coordinate (bista) at (0.7,0);
 \coordinate (biend) at (4.9,0);
-\path (start)     edge[thick]   (T3.west)
-      (T3.east)   edge[thick]   (bista)
-      (bista)     edge[vh path] (T1-2.west)
+\path (bista)     edge[hv path] (start)
+                  edge[vh path] (T1-2.west)
                   edge[vh path] (T1-3.west)
       (T1-2.east) edge[hv path] (T2.north)
       (T1-3.east) edge[hv path] (T2.south)
       (T2.north)  edge[vh path] (T1-5.west)
       (T2.south)  edge[vh path] (T1-6.west)
-      (T1-5.east) edge[hv path] (biend)
-      (T1-6.east) edge[hv path] (biend)
-      (biend)     edge[thick]   (end);
+      (biend)     edge[vh path] (T1-5.east)
+                  edge[vh path] (T1-6.east)
+                  edge[hv path] (T3.west)
+      (T3.east)   edge[hv path] (end);
 %\end{scope}
 \end{tikzpicture}
 \caption{Reliability block diagram for a `bridge' system with three component types.}
