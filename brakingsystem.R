@@ -52,6 +52,7 @@ Pdata <- rgamma(20, scale=0.9, shape=3.2)
 abnulldata <- list("M"=NULL, "H"=NULL, "C"=NULL, "P"=NULL)
 abtestdata <- list("M"=Mdata, "H"=Hdata, "C"=Cdata, "P"=Pdata)
 abdat <- melt(abtestdata); names(abdat) <- c("x", "Part")
+abdat$Part <- ordered(abdat$Part, levels=c("M", "H", "C", "P", "System"))
 absig <- computeSystemSurvivalSignature(ab)
 abt <- seq(0, 10, length.out=301)
 # priors
@@ -77,6 +78,7 @@ abdf <- rbind(data.frame(abM, Part="M"), data.frame(abH, Part="H"), data.frame(a
               data.frame(Time=rep(abt,2), Lower=c(abprio$lower,abpost$lower), Upper=c(abprio$upper,abpost$upper),
                          Item=rep(c("Prior", "Posterior"), each=length(abt)), Part="System"))
 abdf$Item <- ordered(abdf$Item, levels=c("Prior", "Posterior"))
+abdf$Part <- ordered(abdf$Part, levels=c("M", "H", "C", "P", "System"))
 #the plot
 ab1 <- ggplot(abdf, aes(x=Time))
 ab1 <- ab1 +  geom_line(aes(y=Upper, group=Item, colour=Item)) + geom_line(aes(y=Lower, group=Item, colour=Item))

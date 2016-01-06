@@ -879,7 +879,7 @@ These prior assumptions, together with sets of posterior reliability functions
 resulting from three different scenarios for test data for component type T3,
 are illustrated in Figures~\ref{fig:bridge-fitting}, \ref{fig:bridge-early} and \ref{fig:bridge-late}; 
 test data for components of type T1 and T2 are invariably taken as
-$\vec{t}^1 = (2.0, 2.2, 2.4, 2.6)$ and $\vec{t}^2 = (3.0, 3.2, 3.4, 3.6)$, respectively.
+$\vec{t}^1 = (2.2, 2.4, 2.6, 2.8)$ and $\vec{t}^2 = (3.2, 3.4, 3.6, 3.8)$, respectively.
 
 \begin{table}
 \centering
@@ -906,7 +906,7 @@ when there is a failure time in the test data,
 or a drop in the prior functioning probability bounds.
 Note that the lower bound for prior system reliability function is zero
 due to the prior lower bound of zero for T1;
-for the system to function, the component of type T1 must function.
+for the system to function, at least two components of type T1 must function.
 
 \begin{figure}
 \includegraphics[width=\textwidth]{bridge-fittingfailures}
@@ -945,7 +945,7 @@ posterior functioning bounds for T3 are even wider than prior functioning bounds
 The width turns back to being half the prior width
 only after the four failures.
 The imprecision carries over to the system bounds,
-where we see wider bounds as compared to the other scenarios
+where we see wider bounds as compared to the other two scenarios
 especially between $t=2$ and $t=4$.
 
 \begin{figure}
@@ -971,7 +971,7 @@ the car breaks when at least one brake pad assembly is actuated.***
  cross/.style={cross out,draw=red,very thick,minimum width=7mm, minimum height=5mm},
  hv path/.style={thick, to path={-| (\tikztotarget)}},
  vh path/.style={thick, to path={|- (\tikztotarget)}}]
-\node at (0,0) {\includegraphics[width=\textwidth]{breakingsystem-1}};
+\node at (0,0) {\includegraphics[width=\textwidth]{breakingsystem-2}};
 \begin{scope}[scale=1.00,xshift=3.4cm,yshift=-1.1cm]
 \node[typeM] (M)    at ( 0  , 0  ) {M};
 \node[typeC] (C1)   at ( 1  , 1.5) {C1};

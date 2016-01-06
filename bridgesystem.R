@@ -7,6 +7,9 @@ library("ReliabilityTheory")
 library(ggplot2)
 library(reshape2)
 
+bottomlegend <- theme(legend.position = 'bottom', legend.direction = 'horizontal', legend.title = element_blank())
+rightlegend <- theme(legend.title = element_blank())
+
 # produces survival signature matrix for one component of type "name",
 # for use in nonParBayesSystemInference()
 oneCompSurvSign <- function(name){
@@ -36,13 +39,14 @@ oneCompPriorPostSet <- function(name, at.times, test.data, nLower, nUpper, yLowe
 
 # ----------------------------------------------
 
-b3 <- graph.formula(s -- 1 -- 2:3 -- 4 -- 5:6 --t, 2 -- 5, 3 -- 6)
-b3 <- setCompTypes(b3, list("T1"=c(1), "T2"=c(4), "T3"=c(2,3,5,6)))
+b3 <- graph.formula(s -- 2:3 -- 4 -- 5:6 -- 1 -- t, 2 -- 5, 3 -- 6)
+b3 <- setCompTypes(b3, list("T1"=c(2,3,5,6), "T2"=c(4), "T3"=c(1)))
 b3nulldata <- list("T1"=NULL, "T2"=NULL, "T3"=NULL)
-b3testdata <- list("T1"=c(2.0, 2.2, 2.4, 2.6), "T2"=c(3.0, 3.2, 3.4, 3.6), "T3"=(1:4)/10+4) # T3 late failures
-b3testdata <- list("T1"=c(2.0, 2.2, 2.4, 2.6), "T2"=c(3.0, 3.2, 3.4, 3.6), "T3"=(1:4)/10+0.5) # T3 early failures
-b3testdata <- list("T1"=c(2.0, 2.2, 2.4, 2.6), "T2"=c(3.0, 3.2, 3.4, 3.6), "T3"=(1:4)-0.5) # T3 fitting failures
+b3testdata <- list("T1"=c(2.2, 2.4, 2.6, 2.8), "T2"=c(3.2, 3.4, 3.6, 3.8), "T3"=(1:4)/10+4) # T3 late failures
+b3testdata <- list("T1"=c(2.2, 2.4, 2.6, 2.8), "T2"=c(3.2, 3.4, 3.6, 3.8), "T3"=(1:4)/10+0.5) # T3 early failures
+b3testdata <- list("T1"=c(2.2, 2.4, 2.6, 2.8), "T2"=c(3.2, 3.4, 3.6, 3.8), "T3"=(1:4)-0.5) # T3 fitting failures
 b3dat <- melt(b3testdata); names(b3dat) <- c("x", "Part")
+b3dat$Part <- ordered(b3dat$Part, levels=c("T1", "T2", "T3", "System"))
 b3sig <- computeSystemSurvivalSignature(b3)
 b3t <- seq(0, 5, length.out=301)
 b3nL <- data.frame(T1=rep(1,301), T2=rep(1,301), T3=rep(1,301))
@@ -60,9 +64,12 @@ b3df <- rbind(data.frame(b3T1, Part="T1"), data.frame(b3T2, Part="T2"), data.fra
               data.frame(Time=rep(b3t,2), Lower=c(b3prio$lower,b3post$lower), Upper=c(b3prio$upper,b3post$upper),
                          Item=rep(c("Prior", "Posterior"), each=length(b3t)), Part="System"))
 b3df$Item <- ordered(b3df$Item, levels=c("Prior", "Posterior"))
+b3df$Part <- ordered(b3df$Part, levels=c("T1", "T2", "T3", "System"))
 
-p3 <- ggplot(b3df) + geom_ribbon(aes(x=Time, ymin=Lower, ymax=Upper, group=Item, colour=Item, fill=Item), alpha=0.3)
-p3 <- p3 + facet_wrap(~Part, ncol=2) + geom_rug(aes(x=x), data=b3dat) + xlab("Time") + ylab("Survival Probability")
+p3 <- ggplot(b3df, aes(x=Time)) + rightlegend
+p3 <- p3 + geom_line(aes(y=Upper, group=Item, colour=Item)) + geom_line(aes(y=Lower, group=Item, colour=Item))
+p3 <- p3 + geom_ribbon(aes(ymin=Lower, ymax=Upper, group=Item, colour=Item, fill=Item), alpha=0.3)
+p3 <- p3  + facet_wrap(~Part, nrow=2) + geom_rug(aes(x=x), data=b3dat) + xlab("Time") + ylab("Survival Probability")
 pdf("bridge-latefailures.pdf", width=8, height=5)
 pdf("bridge-earlyfailures.pdf", width=8, height=5)
 pdf("bridge-fittingfailures.pdf", width=8, height=5)
