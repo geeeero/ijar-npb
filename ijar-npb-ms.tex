@@ -668,6 +668,7 @@ Obviously, one cannot have prior-data conflict in case of prior near ignorance.
 
 
 \section{Sets of System Reliability Functions}
+\label{sec:setsofrel}
 
 To obtain the lower and upper bound for the system reliability function $\Rsys(t)$,
 we now need to minimise and maximise Equation~\eqref{eq:rsyswithsurvsign} over $\PtZi{1}, \ldots, \PtZi{K}$ for each $t$,
@@ -1120,8 +1121,8 @@ Naturally such as expression is not necessarily unique, so that completely equiv
 With the structure defined and the individual components numbered, it 
 just remains to specify the types of each component.  This can be done
 using the \texttt{setCompTypes} function.  This function takes the
-system graph and a list of component type names and corresponding
-component numbers.  Thus, completing the example for Figure
+system graph and a list of component type names (as the tag) and corresponding
+component numbers (as the value).  Thus, completing the example for Figure
 \ref{fig:bridge-layout}:
 
 \noindent\texttt{sys <- setCompTypes(sys, list("T1"=c(1), "T2"=c(6),}
@@ -1135,6 +1136,53 @@ Computing the survival signature then involves a simple function call:
 
 \subsection{Computing sets of system survival probabilities}
 
-*** to be completed
+Once the system has been correctly described using an undirected graph
+as above, the methods presented in Sections \ref{sec:nonparamapproach}
+-- \ref{sec:setsofrel} can be used via the function
+\texttt{nonParBayesSystemInferencePriorSets}.
+
+The function prototype is:
+
+\noindent\texttt{nonParBayesSystemInferencePriorSets(at.times, survival.signature,}
+
+\noindent\texttt{~~~~~~~~~~test.data, nLower=2, nUpper=2, yLower=0.5, yUpper=0.5)}
+
+Aside from the system design, which can be passed to the function via
+the \texttt{survival.signature} argument, the remaining elements which
+must be specified are the:
+\begin{enumerate}
+  \item grid of times at which to evaluate the posterior, ${\cal T} = \{t_1, \ldots, \tmax\}$, via the \texttt{at.times} argument.
+  \item component test data $\vec{t}^k = (t^k_1, \ldots, t^k_{n_k})$ for $k=1,\dots,K$, via the \texttt{test.data} argument.
+  \item prior sets via the range of prior parameter sets $\PktZ = [\nktzl, \nktzu] \times [\yktzl, \yktzu]$, via the \texttt{nLower}, \texttt{nUpper}, \texttt{yLower} and \texttt{yUpper} arguments.
+\end{enumerate}
+
+The grid of times, \texttt{at.times}, is specified as simply a vector 
+of time points.
+
+The \texttt{test.data} argument is a list of component type names (as
+the tag) and corresponding lifetime data (as the value), for example 
+a toy sized dataset for each component would be expressed as:
+
+\noindent\texttt{test.data=list("T1"=c(0.19, 0.73, 1.87, 1.17),}
+
+\noindent\texttt{~~~~~~~~~~~~~~~"T2"=c(0.22, 0.27, 0.63, 1.80, 1.25, 1.95),}
+
+\noindent\texttt{~~~~~~~~~~~~~~~"T3"=c(1.33, 0.65, 1.59))}
+
+Finally, there are multiple options for specifying the prior parameter
+sets.  Each of the \texttt{nLower}, \texttt{nUpper}, \texttt{yLower}
+and \texttt{yUpper} arguments can be specified as:
+\begin{itemize}
+  \item a single value for a homogeneous prior across time and components.  e.g.\ \texttt{nLower=2} $\implies \nktzl=2 \ \forall\,k, t$
+  \item a vector of values of length $|{\cal T}|$ (\texttt{length(at.times)}), for a time inhomogeneous prior which is identical across component types.
+  \item a data frame of size $1\times K$, where each column is named the same as in the \texttt{survival.signature} and \texttt{test.data} arguments, for a time homogeneous prior which varies across component types.
+  \item a data frame of size $|{\cal T}|\times K$, where each column is named the same as in the \texttt{survival.signature} and \texttt{test.data} arguments, for a time inhomogeneous prior which varies across component types.
+\end{itemize}
+
+With these arguments supplied,  \texttt{nonParBayesSystemInferencePriorSets} will then compute
+the posterior sets automatically in parallel across the cores of a
+multicore CPU and return a list with two objects, named \texttt{lower} 
+and \texttt{upper}, containing respectively the lower and upper bound 
+for the system reliability function $\Rsys(t)$.
 
 \end{document}
