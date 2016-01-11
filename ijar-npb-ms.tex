@@ -174,7 +174,7 @@ In Section~\ref{sec:survsign}, we describe ***
 \section{Survival Signature}
 \label{sec:survsign}
 
-In mathematical theory of reliability, the main focus is on the functioning of a system given the functioning, or not, 
+In the mathematical theory of reliability, the main focus is on the functioning of a system given the functioning, or not, 
 of its components and the structure of the system. The mathematical concept which is central to this theory is the 
 \emph{structure function} \citep{BP75}. For a system with $m$ components, let state vector 
 $\underline{x} = (x_1,x_2,\ldots,x_m) \in \{0,1\}^m$, with $x_i=1$ if the $i$th component functions 
@@ -300,54 +300,54 @@ also known as the survival function.
 For a nonparametric description of $R^k(t)$,
 we consider a set of time points $t$, $t \in {\cal T} = \{t_1, \ldots, \tmax\}$.
 
-For each time point $t$, the functioning of a single component of type $k$ at time $t$ (functioning: 1, failed: 0)
-is Bernoulli distributed with a suitable functioning probability (as, $1-$failure probability) $\ptk$, so
+At each time point $t$, the operational state of a single component of type $k$
+is Bernoulli distributed (functioning: 1, failed: 0) with parameter $\ptk$, so that
 \begin{align*}
 P\big(\indic(T^k_i > t) = 1\big) &= \ptk\,, \\
 P\big(\indic(T^k_i > t) = 0\big) &= 1 - \ptk\,,
 \end{align*}
-in short, $\indic(T^k_i > t) \sim \ber(\ptk)$, $i = 1, \ldots, m_k$, $t \in {\cal T}$.
+That is, $\indic(T^k_i > t) \sim \ber(\ptk)$, $i = 1, \ldots, m_k$, $t \in {\cal T}$.
 
-The set of functioning probabilities $\{ \ptk, t \in {\cal T}\}$
+The set of probabilities $\{ \ptk, t \in {\cal T}\}$
 defines a discrete failure time distribution for components of type $k$ through
 \begin{align*}
 R^k(t_j) &= P(T^k > t_j) = p^k_{t_j},\ t_j = t_1, \ldots, \tmax\,.
 \end{align*}
-We can express this failure time distribution also through the probability mass function (pmf) and the discrete hazard function,
+We can also express this failure time distribution through the probability mass function (pmf) and discrete hazard function,
 \begin{align*}
 f^k(t_j) &= P\big(T^k \in (t_j,t_{j+1}]\big) = p^k_{t_j} - p^k_{t_{j+1}}\,,\\ 
 h^k(t_j) &= P\big(T^k \in (t_j,t_{j+1}]\mid T^k > t_j\big) = \frac{f^k(t_j)}{R^k(t_j)}\,. % or R^k(t_{j-1}) ???
 \end{align*}
-We assume the time grid $\cal T$ is dense enough for the application at hand,
-otherwise it would be possible to assume, e.g.,
+The time grid $\cal T$ can be chosen to be appropriately dense for the application at hand,
+with the natural extension between grid points by taking $R^k(\cdot)$ to be the right continuous step function induced by the grid values,
 $R^k(t) = p^k_{t_j}, t \in [t_j, t_{j+1})$,
-or taking $p^k_{t_j}$ and $p^k_{t_{j+1}}$ as upper and lower bounds for $R^k(t)$, $t \in [t_j, t_{j+1})$.
+or by taking $p^k_{t_j}$ and $p^k_{t_{j+1}}$ as upper and lower bounds for $R^k(t)$, $t \in [t_j, t_{j+1})$.
 
 \td{***illustrate discrete distribution with a graph of R, f, h?***}
 
-Due to the independence assumption for components of the same type, 
-the number of functioning components out of the $m_k$ components of type $k$
+The independence assumption for components of the same type immediately implies that 
+the number of functioning components of type $k$ in the system
 is binomially distributed, $C^k_t = \sum_{i=1}^{m_k} \indic(T^k_i > t) \sim \bin(\ptk, m_k)$.
 %(maybe not relevant for this manuscript, but would it make sense to take Kaplan-Meier estimates for the $p^k_t$'s,
 %or the NPI bounds for Kaplan-Meier?)
 
-The $\ptk$'s can be taken such that they reflect, e.g., a bathtub curve for the corresponding hazard rate $h^k(t_j)$.
+The $\ptk$'s can, in theory, be directly chosen to arbitrarily closely approximate any valid lifetime pdf on
+$[0,\infty)$, for example matching a bathtub curve for the corresponding hazard rate $h^k(t_j)$.
 Naturally, $p^k_{t_j} \ge p^k_{t_{j+1}}$ should hold (assuming no repair).
+However, such direct specification is non-trivial, neglects any inherent uncertainty in the particular choice, and cannot be 
+easily combined with test data.
+To account for the uncertainty, one can express knowledge about $\ptk$ through a prior distribution.
+A convenient and natural choice is $\ptk \sim \be(\alpha^k_t, \beta^k_t)$, particularly because in a Bayesian inferential
+setting this is the conjugate prior which leads to a Beta posterior.
 
-However, directly choosing the $\ptk$'s is hard,
-and fixing values for all $p^k_t$ would furthermore neglect any inherent uncertainty in the particular choice.  
-To account for this uncertainty, one can express knowledge on $\ptk$ through a prior distribution.
-A convenient and natural choice is $\ptk \sim \be(\alpha^k_t, \beta^k_t)$, a conjugate prior,
-leading to the posterior being again Beta.
-
-Having observed the lifetime data $\vec{t}^k = (t^k_1, \ldots, t^k_{n_k})$,
-at any fixed time $t \in {\cal T}$ this results in the observation from the Binomial model described above,
+Let the lifetime test data collected on component $k$ be $\vec{t}^k = (t^k_1, \ldots, t^k_{n_k})$.
+At each fixed time $t \in {\cal T}$, this corresponds to an observation from the Binomial model described above,
 $s^k_t = \sum_{i=1}^{n_k} \indic(t^k_i > t)$.
 The posterior is then $\ptk \mid s^k_t \sim \be(\alpha^k_t + s^k_t, \beta^k_t + n_k - s^k_t)$.
 The combination of a Binomial observation model with a Beta prior is often called Beta-Binomial model.
 
 The posterior predictive distribution for the number of components surviving at time $t$
-of the $m_k$ components in the system, based on the lifetime data and the prior information,
+in a new system, based on the lifetime data and the prior information,
 is then a so-called Beta-Binomial distribution,
 $C^k_t \mid s^k_t \sim \bebin(m_k, \alpha^k_t + s^k_t, \beta^k_t + n_k - s^k_t)$.
 That is, we have
@@ -356,12 +356,12 @@ P(C^k_t = l_k \mid s^k_t) &= {m_k \choose l_k} \frac{B(l_k + \alpha^k_t + s^k_t,
                                                     {B(\alpha^k_t + s^k_t, \beta^k_t + n_k - s^k_t)} \,,
 \end{align*}
 where $B(\cdot, \cdot)$ is the Beta function.
-This posterior predictive distribution is basically a Binomial distribution
+This posterior predictive distribution is essentially a Binomial distribution
 where the functioning probability $\ptk$ takes values in $[0,1]$
 with the probability given by the posterior on $\ptk$.
 
-To wrap up, to calculate the system reliability according to \eqref{eq:rsyswithsurvsign},
-for each component type $k$,
+Consequently, in order to calculate the system reliability according to \eqref{eq:rsyswithsurvsign},
+for each component type $k$
 we need lifetime data $\vec{t}^k$,
 and have to choose $2 \times |{\cal T}|$ parameters
 to specify the prior distribution for the discrete survival function of $T^k_i$.
