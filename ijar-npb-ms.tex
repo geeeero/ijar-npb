@@ -1106,15 +1106,15 @@ There is an additional shorthand which indicates a link exists to a list of mult
 
 Therefore, the simple bridge system of Figure \ref{fig:bridge-layout} can be constructed with:
 
-\noindent\texttt{sys <- graph.formula(s\,-\,1\,-\,2\,-\,3\,-\,t, s\,-\,1\,-\,4\,-\,5\,-\,t, 2:4\,-\,6\,-\,3:5)}
+\noindent\texttt{sys <- graph.formula(s\,-\,1\,-\,2\,-\,3\,-\,t, s\,-\,4\,-\,5\,-\,3\,-\,t, 1:4\,-\,6\,-\,2:5)}
 \begin{itemize}
-  \item \texttt{s\,-\,1\,-\,2\,-\,3\,-\,t} signifies the route from left to right entering the first component and going across the top of the system block diagram in Figure \ref{fig:bridge-layout};
-  \item \texttt{s\,-\,1\,-\,4\,-\,5\,-\,t} signifies the bottom route through the block diagram;
-  \item \texttt{2:4\,-\,6\,-\,3:5} connects the top two components of type 3 to the bottom two components of type 3, signifying the bridge.
+  \item \texttt{s\,-\,1\,-\,2\,-\,3\,-\,t} signifies the route from left to right entering the first component going across the top of the system block diagram in Figure \ref{fig:bridge-layout};
+  \item \texttt{s\,-\,4\,-\,5\,-\,3\,-\,t} signifies the bottom route through the block diagram;
+  \item \texttt{1:4\,-\,6\,-\,2:5} connects the top two components of type 3 to the bottom two components of type 3, signifying the bridge.
 \end{itemize}
 Naturally such as expression is not necessarily unique, so that completely equivalently one may write:
 
-\noindent\texttt{sys <- graph.formula(s\,-\,1\,-\,2:4\,-\,6\,-\,3:5\,-\,t, 2\,-\,3, 4\,-\,5)}
+\noindent\texttt{sys <- graph.formula(s\,-\,1:4\,-\,6\,-\,2:5\,-\,3\,-\,t, 1\,-\,2, 4\,-\,5)}
 
 \ 
 
@@ -1125,9 +1125,9 @@ system graph and a list of component type names (as the tag) and corresponding
 component numbers (as the value).  Thus, completing the example for Figure
 \ref{fig:bridge-layout}:
 
-\noindent\texttt{sys <- setCompTypes(sys, list("T1"=c(1), "T2"=c(6),}
+\noindent\texttt{sys <- setCompTypes(sys, list("T1"=c(1,2,4,5), "T2"=c(6),}
 
-\noindent\texttt{~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"T3"=c(2,3,4,5)))}
+\noindent\texttt{~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"T3"=c(3)))}
 
 \ 
 
