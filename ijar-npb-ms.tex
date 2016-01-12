@@ -293,9 +293,9 @@ in a manner that is sufficient for a range of uncertainty quantifications for th
 \section{Nonparametric Bayesian Approach for Component Reliability}
 \label{sec:nonparamapproach}
 
-Let us denote the random failure time of component number $i$ of type $k$ by $T^k_i$, $i = 1, \ldots m_k$.
+Let us denote the random failure time of component number $i$ of type $k$ by $T^k_i$, $i = 1, \ldots, m_k$.
 The failure time distribution can be written in terms of the cdf $F^k(t) = P(T^k_i \le t)$,
-or in terms of the reliability function $R^k(t) = P(T^k > t) = 1 - F^k(t)$,
+or in terms of the reliability function $R^k(t) = P(T^k_i > t) = 1 - F^k(t)$,
 also known as the survival function.
 For a nonparametric description of $R^k(t)$,
 we consider a set of time points $t$, $t \in {\cal T} = \{t_1, \ldots, \tmax\}$.
@@ -390,8 +390,8 @@ in contrast to their posterior values $\nn$ and $\yn$
 obtained after observing $n$ failure times, see below.
 $\nz$ and $\yz$ are sometimes called \emph{canonical} parameters,
 identified from rewriting the density in a canonical form;
-see, e.g., \citet[pp.~202 and 272f]{2000:bernardosmith}, or \citet[\S 1.2.3.1]{2013:diss-gw}.
-This canonical form gives a joint structure to all conjugate priors in exponential families.
+see, e.g., \cite[pp.~202 and 272f]{2000:bernardosmith}, or \cite[\S 1.2.3.1]{2013:diss-gw}.
+This canonical form gives a common structure to all conjugate priors in exponential families.
 
 From the properties of the Beta distribution,
 it follows that $\yz = \E[p]$ is the prior expectation for the functioning probability $p$,
@@ -401,7 +401,7 @@ Furthermore, $\nz$ can be interpreted as a pseudocount or prior strength,
 this is clear from the interpretation of $\alpha$ and $\beta$ and \eqref{eq:reparam},
 and will be further illustrated below through revisiting the posterior
 %based on observed lifetimes $\vec{t} = (t_1, \ldots, t_{n})$.
-given $s$ of $n$ components functioning.
+given that $s$ of $n$ components function.
 We have that
 $p \mid s$ is Beta distributed with the updated parameters
 \begin{align}
@@ -553,7 +553,7 @@ how much it shrinks depends on $\nktz \in [\nktzl, \nktzu]$,
 leading to the so-called spotlight shape depicted in Figure~\ref{fig:paramsets} (left).
 As $\yktn$ gives the posterior expectation for the functioning probability $p_t^k$,
 shorter $\yktn$ intervals mean more precise knowledge about $p_t^k$.
-Also, the variance interval for $p_t^k$ will decrease
+Also, the variance interval for $p_t^k$ will shorten and shift towards zero,
 as the Beta distributions in $\MktN$ will be more pointed
 due to the increase of $\nktz$ to $\nktn$.
 
@@ -591,7 +591,7 @@ Note that when $s^k_t/n_k \in [\yktzl, \yktzu]$,
 both the lower and the upper bound for $\yktn$ are attained using $\nktzu$,
 this corresponds to the spotlight shape.
 When $s^k_t/n_k \not\in [\yktzl, \yktzu]$,
-due to the banana shape
+the banana shape indicates that
 we will get one of the bounds for $\yktn$ using $\nktzl$.
 
 \begin{figure}
