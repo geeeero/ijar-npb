@@ -371,117 +371,112 @@ In total, values for $2 \times |{\cal T}| \times K$ parameters must be chosen.
 \section{Reparametrisation of the Beta Distribution}
 
 The parametrisation of the Beta distribution used above is common,
-and allows to interpret $\alpha^k_t$ and $\beta^k_t$ as
+and allows $\alpha^k_t$ and $\beta^k_t$ to be interpreted as
 hypothetical numbers of functioning and failed components of type $k$ at time $t$, respectively.
-However, for our generalisation to sets of priors,
+However, when we generalise to sets of priors in the sequel,
 it is useful to consider a different parametrisation.
 
-For discussing this reparametrisation, we will drop the super- and subscript $k$ and $t$ for a while.
-Instead of $\alpha$ and $\beta$, we consider the parameters $\nz$ and $\yz$, where
+For clarity of presentation we will temporarily drop the super- and subscript $k$ and $t$ indices for component type and time.
+Instead of $\alpha$ and $\beta$, we consider the parameters $\nz \in [0, \infty)$ and $\yz \in [0,1]$, where
 \begin{align}
 \nz &= \alpha + \beta &
 &\text{and} &
 \yz &= \frac{\alpha}{\alpha + \beta} \,,
 \label{eq:reparam}
 \end{align}
-or vice versa, $\alpha = \nz\yz$ and $\beta = \nz(1-\yz)$.
-The upper index ${}\uz$ is used to identify $\nz$ and $\yz$ as prior parameter values,
+or equivalently, $\alpha = \nz\yz$ and $\beta = \nz(1-\yz)$.
+The upper index ${}\uz$ is used to identify these as prior parameter values,
 in contrast to their posterior values $\nn$ and $\yn$
-obtained after observing $n$ failure times, see below.
+obtained after observing $n$ failure times (see below).
 $\nz$ and $\yz$ are sometimes called \emph{canonical} parameters,
-identified from rewriting the density in a canonical form;
-see, e.g., \cite[pp.~202 and 272f]{2000:bernardosmith}, or \cite[\S 1.2.3.1]{2013:diss-gw}.
-This canonical form gives a common structure to all conjugate priors in exponential families.
+identified from rewriting the density in canonical form;
+see for example \cite[pp.~202 and 272f]{2000:bernardosmith}, or \cite[\S 1.2.3.1]{2013:diss-gw}.
+This canonical form gives a common structure to all conjugacy results in exponential families.
 
 From the properties of the Beta distribution,
 it follows that $\yz = \E[p]$ is the prior expectation for the functioning probability $p$,
-and that the higher $\nz$, the more probability weight will be concentrated around $\yz$,
-as $\V(p) = \frac{\yz (1-\yz)}{\nz + 1}$.
-Furthermore, $\nz$ can be interpreted as a pseudocount or prior strength,
-this is clear from the interpretation of $\alpha$ and $\beta$ and \eqref{eq:reparam},
-and will be further illustrated below through revisiting the posterior
-%based on observed lifetimes $\vec{t} = (t_1, \ldots, t_{n})$.
-given that $s$ of $n$ components function.
-We have that
-$p \mid s$ is Beta distributed with the updated parameters
+and that larger $\nz$ values lead to greater concentration of probability measure around $\yz$,
+since $\V(p) = \frac{\yz (1-\yz)}{\nz + 1}$.
+Consequently, $\nz$ represents the prior strength and moreover can be directly interpreted as a pseudocount, as will become clear.
+%this is clear from the interpretation of $\alpha$ and $\beta$ and \eqref{eq:reparam},
+%and will be further illustrated below through revisiting the posterior
+%%based on observed lifetimes $\vec{t} = (t_1, \ldots, t_{n})$.
+Indeed, consider the posterior given that $s$ out of $n$ components function:
+by conjugacy
+$p \mid s$ is Beta distributed with updated parameters
 \begin{align}
 \nn &= \nz + n\,, &
 \yn &= \frac{\nz}{\nz + n} \cdot \yz + \frac{n}{\nz + n} \cdot \frac{s}{n}\,.
 \label{eq:nyupdate}
 \end{align}
-After seeing that $s$ out of $n$ components function (at time $t$),
+Thus, after observing that $s$ out of $n$ components function (at time $t$),
 the posterior mean $\yn$ for $p$ is a weighted average of
 the prior mean $\yz$ and $s/n$ (the fraction of functioning components in the data),
-with the weights $\nz$ and $n$, respectively.
-We see that $\nz$ plays the same role for the prior mean $\yz$
-as the sample size $n$ for the observed mean $s/n$,
-thus the notion of pseudocount.
-Indeed, the higher $\nz$, the higher the weight for $\yz$
-in the weighted average calculation of $\yn$,
-so $\nz$ gives the strength of the prior as compared to the sample size $n$.
+with weights $\nz$ and $n$, respectively.
+Therefore $\nz$ takes on the same role for the prior mean $\yz$
+as the sample size $n$ does for the observed mean $s/n$,
+leading to the notion of it being a pseudocount.
+%Indeed, the higher $\nz$, the higher the weight for $\yz$
+%in the weighted average calculation of $\yn$,
+%so $\nz$ gives the strength of the prior as compared to the sample size $n$.
 %The parameters $\nz$ and $\yz$ have a more intuitive interprtation,
 
-The Beta-Binomial probability mass function (pmf) in terms of the updated parameters $\nn$ and $\yn$,
-now again with indicators $t$ and $k$,
-is therefore
+Reintroducing time and component type indices, the posterior predictive Beta-Binomial probability mass function (pmf) can be written in terms of the updated parameters as
 \begin{align}
 P(C^k_t = l_k \mid s^k_t) &= {m_k \choose l_k} \frac{B(l_k + \nn_{k,t}\yn_{k,t}, m_k - l_k + \nn_{k,t}(1-\yn_{k,t}))}
                                                     {B(\nn_{k,t}\yn_{k,t}, \nn_{k,t}(1-\yn_{k,t}))} \,,
 \label{eq:postpredCny}
 \end{align}
-and the corresponding cumulative mass function (cmf) is given by
+with the corresponding cumulative mass function (cmf) given by
 \begin{align}
 F_{C^k_t\mid s^k_t}(l_k) &= P(C^k_t \le l_k \mid s^k_t) = \sum_{j_k=0}^{l_k} P(C^k_t = j_k \mid s^k_t)\,.
 \label{eq:postpredCnycmf}
 \end{align}
 
 
-The parametrization in terms of prior mean and prior strength
-enables us to see that in this conjugate setting,
-learning from data amounts to averaging between prior and data.
-While this allows for the tractability of the model,
-it also comes with a serious drawback:
-When observed data are very much different from what is assumed in the prior,
-this conflict is simply averaged out,
-and is not reflected in the posterior or the posterior predictive.
+The parameterisation in terms of prior mean and prior strength (or pseudocount)
+makes clear that in this conjugate setting,
+learning from data corresponds to averaging between prior and data.
+This form is attractive not only because it enhances the interpretability of the model and prior specification,
+but crucially it also makes clear what should be a serious concern in any Bayesian analysis:
+when observed data differ greatly from what is expressed in the prior,
+this conflict is simply averaged out
+and is not reflected in the posterior or posterior predictive distributions.
 
-As a simple example, assume that we expect $\ptk$ to be about $0.75$ for a certain $k$ and $t$,
+As a simple example, imagine that we expect $\ptk$ to be about $0.75$ for a certain $k$ and $t$,
 so we choose $\yktz = 0.75$,
 and that we value this choice of mean functioning probability with $\nktz = 8$,
-i.e., like having seen $8$ observations with a mean $0.75$.
-Assume further that there are $n_k = 16$ components of type $k$ in the test data.
-When we observe $s^k_t = 12$ components functioning at time $t$,
-so $s^k_t/n_k = 0.75$ as we expect,
-then the updated parameters are $\nktn = 24, \yktn=0.75$.
-Unexpectedly observing that no component functions at time $t$ instead
+i.e., equivalently to having seen $8$ observations with a mean $0.75$.
+If we observe $n_k = 16$ components of type $k$ in the test data and $s^k_t = 12$ function at time $t$,
+then $s^k_t/n_k = 0.75$ as we expect,
+so that the updated parameters are $\nktn = 24, \yktn=0.75$.
+However, in contrast, unexpectedly observing that no component functions at time $t$ instead
 leads to parameters $\nktn = 24, \yktn=0.25$.
-The prior and the posteriors based on these two observation scenarios
+The prior and the posteriors based on these two scenarios
 are depicted in Figure~\ref{fig:singleprior-pdc}
-through their Beta densities and cdfs (left)
-and corresponding Beta-binomial probabilities $P(C^k_t = l_k\mid s^k_t)$ and cmfs
-for the case of $m_k = 5$ (right).
+%through their Beta densities and cdfs (left)
+%and corresponding Beta-binomial probabilities $P(C^k_t = l_k\mid s^k_t)$ and cmfs
+for the case $m_k = 5$ (right).
 
-Due to symmetry, we see that both posteriors have the same variance or spread,
+Due to symmetry, we see that both posteriors have the same variance,
 although arising from two fundamentally different scenarios.
 Posterior 1 is based on data exactly according to prior expectations;
 the increase in confidence on $\ptk \approx 0.75$
-is reflected in a more pointed posterior density,
+is reflected in a more concentrated posterior density,
 and the posterior predictive is changed only slightly.
-It is quite disturbing to see the same degree of confidence in Posterior 2,
-being based on data in sharp conflict with prior expectations.
+However, it may be cause for concern to see the same degree of confidence in Posterior 2,
+which is based on data that is in sharp conflict with prior expectations.
 Posterior 2 places most probability weight around $0.25$,
 averaging between prior expectation and data,
-with the same variance or spread as Posterior 1.
-Instead of acknowledging the conflict between observed functioning probability zero
-and expected functioning probability $0.75$ by increased variance,
-Posterior 2 gives a false sense of certainty,
-also reflected in the posterior predictive,
-where both Posterior 1 and 2 have the same variance as well.
+with the same variance as Posterior 1.
+Accordingly, rather than conveying the conflict between observed
+and expected functioning probabilities with increased variance,
+Posterior 2 instead gives a false sense of certainty.
 
 \begin{figure}
 \includegraphics[width=\textwidth]{singleprior-pdc2}
 \caption{Beta densities (top left) and cdfs (bottom left),
-with the corresponding Beta-binomial probability mass functions (top right) and cumulative mass functions (bottom right),
+with the corresponding Beta-binomial posterior predictive probability mass functions (top right) and cumulative mass functions (bottom right),
 for a prior with $\nktz = 8, \yktz = 0.75$,
 and posteriors based on $n^k_t=16$ observations with $s^k_t=12$ (Posterior~1) and $s^k_t=0$ (Posterior~2), respectively.
 Data for Posterior~1 confirm prior assumptions,
@@ -492,9 +487,9 @@ such that Posterior 2 gives a false sense of certainty despite the massive confl
 \label{fig:singleprior-pdc}
 \end{figure}
 
-To counter this unwanted behaviour,
+To enable diagnosis of when this undesirable behaviour occurs,
 we propose to use an imprecise probability approach
-based on sets of Beta priors, described next.
+based on sets of Beta priors, described in the following section.
 
 
 \section{Sets of Beta Priors}
