@@ -464,10 +464,11 @@ so that the updated parameters are $\nktn = 24, \yktn=0.75$.
 However, in contrast, unexpectedly observing that no component functions at time $t$ instead
 leads to parameters $\nktn = 24, \yktn=0.25$.
 The prior and the posteriors based on these two scenarios
-are depicted in Figure~\ref{fig:singleprior-pdc}
+are depicted in the left panels of Figure~\ref{fig:singleprior-pdc},
 %through their Beta densities and cdfs (left)
 %and corresponding Beta-binomial probabilities $P(C^k_t = l_k\mid s^k_t)$ and cmfs
-for the case $m_k = 5$ (right).
+along with their corresponding predictive Beta-binomial pmf and cmf
+for the case $m_k = 5$ (right panels).
 
 Due to symmetry, we see that both posteriors have the same variance,
 although arising from two fundamentally different scenarios.
@@ -487,7 +488,7 @@ Posterior 2 instead gives a false sense of certainty.
 \begin{figure}
 \includegraphics[width=\textwidth]{singleprior-pdc2}
 \caption{Beta densities (top left) and cdfs (bottom left),
-with the corresponding Beta-binomial posterior predictive probability mass functions (top right) and cumulative mass functions (bottom right),
+with the corresponding Beta-binomial predictive probability mass functions (top right) and cumulative mass functions (bottom right),
 for a prior with $\nktz = 8, \yktz = 0.75$,
 and posteriors based on $n^k_t=16$ observations with $s^k_t=12$ (Posterior~1) and $s^k_t=0$ (Posterior~2), respectively.
 Data for Posterior~1 confirm prior assumptions,
