@@ -128,8 +128,6 @@ Prior-data conflict
 
 % ------------ manuscript -------------
 
-(author order to be discussed of course)
-
 \section{Introduction}
 
 (some sentences may be useful for the abstract instead)
@@ -148,23 +146,44 @@ Based on expert assumptions for component failure distribution and component tes
 we make predictive inference for a system with components that are exchangeable
 with the test components by calculating the system reliability function $\Rsys(t) = P(\Tsys > t)$.
 Considering a discrete grid of time points $\{t_1, \ldots, \tmax\}$,
-naturally a Bayesian model for the functioning probability at each time point arises.
-To account for uncertainty in the choice of prior and due to the inherent issue with prior-data conflict (see Section~***),
+naturally a Bayesian model for the functioning probability at each time point arises (see Section~\ref{sec:nonparamapproach}).
+To account for uncertainty in the choice of prior
+and due to the inherent issue with prior-data conflict (see below / Section~\ref{sec:reparam}),
 we propose an imprecise or interval probability approach
 based on sets of prior distributions defined through sets of canonical parameters.
 This approach also allows to adequately model weak or partial prior information.
-Especially prior near ignorance can be modelled much more meaningfully than through usual so-called noninformative priors. 
+In particular, prior near ignorance can be modelled much more naturally than through usual so-called noninformative priors. 
 
-*** prior-data conflict: more cautious probability statements
-(the reliability function is a collection of probability statements)
+Our imprecise probability approach leads to sets of system reliability functions,
+where the magnitude of the set, i.e., the width of the posterior predictive functioning probability interval
+reflects the precision of the reliability estimate:
+a short range will indicate that we can quantify the reliability of the system quite precisely,
+while a large range will indicate that our (probabilistic) knowledge is rather shaky --
+remember that the reliability function is in essence a collection of probability statements.
 
-*** Prior-data conflict has recently also been considered by \citet{2015:bickel},
-who, starting from a large class of reasonable models
-(which could be seen as stemming from a near-noninformative set of priors),
+A central advantage of our imprecise probability model is
+that it leads to more cautious probability statements
+in case of \emph{prior-data conflict} \cite[see, e.g.,][]{2006:evans}:
+From the viewpoint of the expert, the observed failure times seem very surprising,
+i.e., information from data is in conflict with prior assumptions.
+This is most relevant when there is not enough data to overrule the prior;
+as it is then unclear whether to put more trust to prior assumptions or to the observations,
+posterior inferences should clearly reflect this state of uncertainty.
+
+As we will show in Section~\ref{sec:reparam}, when taking the standard choice of a conjugate Beta prior,
+prior-data conflict is ignored, as the spread of the posterior distribution does not increase in case of such a conflict,
+ultimately conveying a false sense of certainty
+by communicating that we can quantify the reliability of the system quite precisely when in fact we can not.
+In contrast, our method will indicate prior-data conflict by wider bounds for $\Rsys(t)$.
+This behaviour is obtained by a specific choice for the set of priors (see Section~\ref{sec:setsofbetapriors})
+which leads to larger sets of posterior distributions when prior knowledge and data are in conflict.
+
+Prior-data conflict has recently also been considered by \citet{2015:bickel},
+who, starting from a large class of reasonable models,
 identifies a subset of adequate models,
-selected according to a model adequacy measure that rejects a prior if it leads to prior-data conflict.
+selected according to a model adequacy measure that allows to reject a prior if it leads to prior-data conflict.
 
- proposes a different approach
+
 
 Our method produces a set of discrete system reliability functions,
 or, for each time point $t$, an interval for the system survival probability,
@@ -380,6 +399,7 @@ In total, values for $2 \times |{\cal T}| \times K$ parameters must be chosen.
 
 
 \section{Reparametrisation of the Beta Distribution}
+\label{sec:reparam}
 
 The parametrisation of the Beta distribution used above is common,
 and allows $\alpha^k_t$ and $\beta^k_t$ to be interpreted as
@@ -532,7 +552,7 @@ to balance desirable model properties and ease of elicitation
 For each component type $k$ and time point $t$,
 one need only specify the four parameters $\nktzl, \nktzu, \yktzl, \yktzu$
 (so in total $4 \times |{\cal T}|$ parameters are needed to define the set of prior distributions
-on the survival function of each component.)
+on the survival function of each component).
 %notwithstanding this, the model has favourable inference properties.
 
 \begin{figure}
