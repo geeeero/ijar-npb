@@ -142,24 +142,29 @@ for systems with complex layouts and multiple component types.
 It separates the (time-invariant) system structure from the time-dependent failure probabilities of components,
 by partitioning the event $\Tsys > t$ according to the number of components of each type functioning at time $t$.
 
-Based on expert assumptions for component failure distribution and component test data,
+Based on expert assumptions for component failure distributions and component test data,
 we make predictive inference for a system with components that are exchangeable
 with the test components by calculating the system reliability function $\Rsys(t) = P(\Tsys > t)$.
 Considering a discrete grid of time points $\{t_1, \ldots, \tmax\}$,
 naturally a Bayesian model for the functioning probability at each time point arises (see Section~\ref{sec:nonparamapproach}).
 To account for uncertainty in the choice of prior
 and due to the inherent issue with prior-data conflict (see below / Section~\ref{sec:reparam}),
-we propose an imprecise or interval probability approach
+we propose an imprecise probability approach
 based on sets of prior distributions defined through sets of canonical parameters.
 This approach also allows to adequately model weak or partial prior information.
 In particular, prior near ignorance can be modelled much more naturally than through usual so-called noninformative priors. 
 
-Our imprecise probability approach leads to sets of system reliability functions,
-where the magnitude of the set, i.e., the width of the posterior predictive functioning probability interval
-reflects the precision of the reliability estimate:
-a short range will indicate that we can quantify the reliability of the system quite precisely,
-while a large range will indicate that our (probabilistic) knowledge is rather shaky --
-remember that the reliability function is in essence a collection of probability statements.
+%Our imprecise probability approach leads to sets of system reliability functions,
+%where the magnitude of the set, i.e., the width of the posterior predictive functioning probability interval
+%reflects the precision of the reliability estimate:
+%a short range will indicate that we can quantify the reliability of the system quite precisely,
+%while a large range will indicate that our (probabilistic) knowledge is rather shaky --
+%remember that the reliability function is in essence a collection of probability statements.
+Our imprecise probability approach leads, for each $t$ in some grid of time points ${\cal T}$,
+to a posterior predictive probability interval for the event that the system will function at time $t$.
+The width of these intervals reflects the precision of the probability statement:
+a short range will indicate that we can quantify the system functioning probability quite precisely,
+while a large range will indicate that our (probabilistic) knowledge is indeterminate.
 
 A central advantage of our imprecise probability model is
 that it leads to more cautious probability statements
@@ -173,7 +178,7 @@ posterior inferences should clearly reflect this state of uncertainty.
 As we will show in Section~\ref{sec:reparam}, when taking the standard choice of a conjugate Beta prior,
 prior-data conflict is ignored, as the spread of the posterior distribution does not increase in case of such a conflict,
 ultimately conveying a false sense of certainty
-by communicating that we can quantify the reliability of the system quite precisely when in fact we can not.
+by communicating that we can quantify the reliability of the system quite precisely when in fact we cannot do so.
 In contrast, our method will indicate prior-data conflict by wider bounds for $\Rsys(t)$.
 This behaviour is obtained by a specific choice for the set of priors (see Section~\ref{sec:setsofbetapriors})
 which leads to larger sets of posterior distributions when prior knowledge and data are in conflict.
@@ -300,24 +305,8 @@ as e.g.\ done by \citet{CCMA14} within the nonparametric predictive inference (N
 where lower and upper probabilities for the events $C_k = l_k$
 are inferred from test data on components of the same types as those in the system.
 This is an approach that is also followed in the current paper, but with the use of generalized Bayesian inference instead of NPI.
-***This step is less trivial here as we must ensure to have probability distributions for these events,
-thus summing to one over $l_k=0,1,\ldots,m_k$ for each type $k$.
-***covered because of parametric distribution, min and max over parameter sets (see section 6)***
-***For coherent systems this is not very complicated due to the monotonicity of the survival signature,
-see \citet{CCMA14} where the method for dealing with imprecision on the random quantities $C_k$ is presented.***
-\td{Leave out the sentences framed with `***'?}
-Recently, \citet{CCM16} suggested the generalization of the structure function from a binary function to a probability,
-to reflect uncertainty about system functioning for known states of its components.
-A further suggestion was to generalize this to lower and upper structure functions,
-within the theory of imprecise probability \citep{itip,CU11}.
-These suggestions are also easy to incorporate into system reliability with the use of the survival signature,
-which in the latter case also becomes an imprecise probability.  
-
-The survival signature is a powerful but rather basic concept.
-As such, further generalizations are conceptually easy,
-for example one can straightforwardly generalize the survival signature to multi-state systems
-such that it again summarizes the structure function
-in a manner that is sufficient for a range of uncertainty quantifications for the system reliability. 
+Like \citet{CCMA14}, we will utilize the monotonicity of the survival signature for coherent systems
+to simplify computations.
 
 
 \section{Nonparametric Bayesian Approach for Component Reliability}
@@ -1074,12 +1063,22 @@ Upscaling the survival signature to large real-world systems and networks, consi
 However, even for such systems the fact that one only needs to derive the survival signature once for a system is an advantage,
 and also the monotonicity of the survival signature for coherent systems is very useful if one can only derive it partially.  
 
+The survival signature and its use for uncertainty quantification for system
+reliability can be generalized quite straightforwardly, mainly due to the simplicity of this concept.
+For example, one may generalize the system structure function from a binary function to a probability, %\citep[see]{CCM16},
+to reflect uncertainty about system functioning for known states of its components, with a further
+generalization to imprecise probabilities possible. It is also conceptually easy to generalize the
+survival signature to multi-state systems such that it again summarizes the structure function
+in a manner that is sufficient for a range of uncertainty quantifications for the system reliability. 
+
 
 ***Extend the model to deal with right-censored observations which are common in the reliability setting.
-We believe that a minimal assumption (component can fail immediately after censoring or live forever)
-will be simple to implememt but will lead to high imprecision,
+The minimal assumption that a component can either fail immediately after censoring or live forever
+will be simple to implement but will lead to high imprecision,
 whereas assuming exchangeability with other surviving components at moment of censoring
 will be more complex to accomodate but will lead to less imprecision.
+This excangeability assumption lies at the core of the Kaplan-Meier estimator \citep{1958:kaplan-meier},
+and has already been adopted by \citet{2004:coolen-yan} in an imprecise probability context.
 
 ***right-censoring will also allow to use data from running system,
 to calculate its remaining useful life (RUL).
