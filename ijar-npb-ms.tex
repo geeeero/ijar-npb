@@ -1256,18 +1256,18 @@ to calculate its remaining useful life (RUL).
   \]
   After extensive routine algebra, this can be conveniently expressed as
   \begin{align*}
-    (\nu - \nl)[y (N + m) - s - y] - l (\nu - \nl)>0.
+    (\nu - \nl)[y (N + m - 1) - s] - l (\nu - \nl)>0.
   \end{align*}
   This limit is hardest to satisfy for $l=m$ since $\nu-\nl>0$.
   Thus, for monotonicity to hold for all $l$, we require
   \begin{align*}
-    (\nu - \nl)[y (N + m) - s - y] - m (\nu - \nl) &>0 \\
-    \implies (\nu - \nl)[y (N + m - 1) - s - y] &>0
+    (\nu - \nl)[y (N + m - 1) - s] - m (\nu - \nl) &>0 \\
+    \implies (\nu - \nl)[y (N + m - 1) - s - m] &>0
   \end{align*}
   Since $\nu-\nl>0$ by definition, we have a monotonically increasing 
-  likelihood ratio only when \[ y (N + m - 1) - s - y > 0. \]  Likewise 
+  likelihood ratio only when \[ y (N + m - 1) - s - m > 0. \]  Likewise 
   the likelihood ratio is only monotonically decreasing when
-  \[ y (N + m - 1) - s - y < 0. \]
+  \[ y (N + m - 1) - s - m < 0. \]
   Thus,
   \[ y(N+m-1)-s-m > 0 \implies \beta_{\nu} \ge_{\mathrm{lr}} \beta_{\nl} \implies \beta_{\nu} \ge_{\mathrm{st}} \beta_{\nl} \]
   and 
