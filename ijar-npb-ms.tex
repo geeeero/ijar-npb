@@ -1060,12 +1060,12 @@ with failure times later as expected for component type T3.}
 \label{fig:bridge-late}
 \end{figure}
 
-***Another example: simplified automotive breaking system, Figure~\ref{fig:breakingsystem}.
+***Another example: simplified automotive brake system, Figure~\ref{fig:brakesystem}.
 Prior sets and data exemplary only, prior bounds more smooth curves?
-The master breaking cylinder (M) activates all four wheel braking cylinders (C1 -- C4),
+The master brake cylinder (M) activates all four wheel brake cylinders (C1 -- C4),
 which in turn actuate a braking pad assembly each (P1 -- P4).
-The hand break mechanism (H) goes directly to two brake pad assemblies P3 and P4;
-the car breaks when at least one brake pad assembly is actuated.***
+The hand brake mechanism (H) goes directly to two brake pad assemblies P3 and P4;
+the car brakes when at least one brake pad assembly is actuated.***
 
 \begin{figure}
 \begin{tikzpicture}
@@ -1076,7 +1076,7 @@ the car breaks when at least one brake pad assembly is actuated.***
  cross/.style={cross out,draw=red,very thick,minimum width=7mm, minimum height=5mm},
  hv path/.style={thick, to path={-| (\tikztotarget)}},
  vh path/.style={thick, to path={|- (\tikztotarget)}}]
-\node at (0,0) {\includegraphics[width=\textwidth]{breakingsystem-2}};
+\node at (0,0) {\includegraphics[width=\textwidth]{brakingsystem-2}};
 \begin{scope}[scale=1.00,xshift=3.4cm,yshift=-1.1cm]
 \node[typeM] (M)    at ( 0  , 0  ) {M};
 \node[typeC] (C1)   at ( 1  , 1.5) {C1};
@@ -1117,9 +1117,9 @@ the car breaks when at least one brake pad assembly is actuated.***
                   edge[hv path] (P4.north);
 \end{scope}
 \end{tikzpicture}
-\caption{Prior and posterior sets of reliability functions for a simplified automotive breaking system
+\caption{Prior and posterior sets of reliability functions for a simplified automotive brake system
 with layout as depicted in the lower right panel.}
-\label{fig:breakingsystem}
+\label{fig:brakesystem}
 \end{figure}
 
 
