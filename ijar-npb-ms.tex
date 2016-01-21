@@ -24,6 +24,11 @@
 
 % ------------ custom defs -------------
 
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+
 \newcommand{\reals}{\mathbb{R}}
 \newcommand{\posreals}{\reals_{>0}}
 \newcommand{\posrealszero}{\reals_{\ge 0}}
@@ -685,30 +690,36 @@ Naturally, one cannot have prior-data conflict in cases of near prior ignorance.
 \section{Sets of System Reliability Functions}
 \label{sec:setsofrel}
 
+The elements reviewed and extended above culminate hereinafter in the primary contribution of the current work,
+providing a framework in which the nonparametric Bayesian system reliability approach developed in \cite{2015:bayessurvsign}
+is extended to incorporate the sets of priors approach of \citet{2009:WalterAugustin},
+enabling diagnoses of prior-data conflict which is consequential at the system
+level, via sets of system reliability functions.
+
 To obtain the lower and upper bound for the system reliability function $\Rsys(t)$,
 we now need to minimise and maximise Equation~\eqref{eq:rsyswithsurvsign} over $\PtZi{1}, \ldots, \PtZi{K}$ for each $t$,
 where the posterior predictive probabilities for $C^k_t$ are given by the Beta-Binomial pmf \eqref{eq:postpredCny}.
-It turns out that we need to optimise over $\ntz{1}, \ldots, \ntz{K}$ only, %$\nktz$ ($k=1,\ldots,K$) only,
-as lower and upper bounds for $\Rsys(t)$ are obtained for $\yktzl$ and $\yktzu$, respectively.
-
-To see this,
-remember that $\yktz$ gives the prior expected functioning probability for a component of type $k$ at time $t$.
-From Equation~\eqref{eq:nyupdate} (right) we see that $\yktn$ is increasing in $\yktz$,
-%the posterior parameter set bounds are the transformed prior parameter set bounds,
-%i.e., $\yktzu$ corresponds to the upper bound of $\PktN$, for all $\nktz \in \PktZ$,
-such that for each fixed $\nktz$, $\yktzu$ will maximise the posterior expected functioning probability $\yktn$.
+%It turns out that we need to optimise over $\ntz{1}, \ldots, \ntz{K}$ only, %$\nktz$ ($k=1,\ldots,K$) only,
+%as lower and upper bounds for $\Rsys(t)$ are obtained for $\yktzl$ and $\yktzu$, respectively.
 %
-Now, a higher posterior expected functioning probability means
-higher probability for many components out of $m_k$ surviving,
-i.e., probabilities for the larger $l_k$'s are higher, and in turn for the lower $l_k$'s are lower.
-Indeed, the Beta-Binomial distribution is stochastically ordered for varying $\yktn$, i.e.,
-its cmf \eqref{eq:postpredCnycmf} is decreasing in $\yktn$ for all $l_k$,
-such that the cmfs for different values of $\yktn$ do not cross each other.
-This means that for each fixed $\nktz$, the Beta-Binomial cmf \eqref{eq:postpredCnycmf} is minimized for $\yktzu$ in all $l_k$,
-such that the probability weights given to high values of $l_k$ are maximised. %for $\yktzu$.
-For coherent systems, $\Phi$ is non-decreasing in each of its arguments $l_1,\ldots,l_K$,
-thus $\Rsys(t)$ is maximised by putting most probability weight on the highest $l_k$ values for each $k$,
-which is in turn obtained for $\yktzu$, $k=1,\ldots,K$.
+%To see this,
+%remember that $\yktz$ gives the prior expected functioning probability for a component of type $k$ at time $t$.
+%From Equation~\eqref{eq:nyupdate} (right) we see that $\yktn$ is increasing in $\yktz$,
+%%the posterior parameter set bounds are the transformed prior parameter set bounds,
+%%i.e., $\yktzu$ corresponds to the upper bound of $\PktN$, for all $\nktz \in \PktZ$,
+%such that for each fixed $\nktz$, $\yktzu$ will maximise the posterior expected functioning probability $\yktn$.
+%%
+%Now, a higher posterior expected functioning probability means
+%higher probability for many components out of $m_k$ surviving,
+%i.e., probabilities for the larger $l_k$'s are higher, and in turn for the lower $l_k$'s are lower.
+%Indeed, the Beta-Binomial distribution is stochastically ordered for varying $\yktn$, i.e.,
+%its cmf \eqref{eq:postpredCnycmf} is decreasing in $\yktn$ for all $l_k$,
+%such that the cmfs for different values of $\yktn$ do not cross each other.
+%This means that for each fixed $\nktz$, the Beta-Binomial cmf \eqref{eq:postpredCnycmf} is minimized for $\yktzu$ in all $l_k$,
+%such that the probability weights given to high values of $l_k$ are maximised. %for $\yktzu$.
+%For coherent systems, $\Phi$ is non-decreasing in each of its arguments $l_1,\ldots,l_K$,
+%thus $\Rsys(t)$ is maximised by putting most probability weight on the highest $l_k$ values for each $k$,
+%which is in turn obtained for $\yktzu$, $k=1,\ldots,K$.
 We therefore have
 %
 %for a certain $k$, a high probability on high $l_k$'s is never worse than a high probability on lower $l_k$'s,
@@ -717,14 +728,89 @@ We therefore have
 \begin{align}
 \lefteqn{\lRsys(t \mid \vec{t}^1, \ldots, \vec{t}^K)} \nonumber \\
  &= \min_{\PtZi{1}, \ldots, \PtZi{K}} \Rsys(t \mid \PtZi{1}, \ldots, \PtZi{K}, \vec{t}^1, \ldots, \vec{t}^K) \nonumber \\
- &= \min_{\nz_{1,t},\ldots,\nz_{K,t}} 
+ &= \min_{\PtZi{1}, \ldots, \PtZi{K}} 
     \sum_{l_1=0}^{m_1} \cdots \sum_{l_K=0}^{m_K} \Phi(l_1, \ldots, l_K)
-                                                 \prod_{k=1}^K P(C^k_t = l_k \mid \yktzl, \nktz, s^k_t) \nonumber \\
- &= \min_{\nz_{1,t},\ldots,\nz_{K,t}} 
+                                                 \prod_{k=1}^K P(C^k_t = l_k \mid \yktz, \nktz, s^k_t) \nonumber \\
+ &= \min_{\PtZi{1}, \ldots, \PtZi{K}} 
     \sum_{l_1=0}^{m_1} \cdots \sum_{l_K=0}^{m_K} \Phi(l_1, \ldots, l_K) \times \nonumber \\ & \hspace*{12ex}
-    \prod_{k=1}^K {m_k \choose l_k} \frac{B(l_k + \nn_{k,t}\ynl_{k,t}, m_k - l_k + \nn_{k,t}(1-\ynl_{k,t}))}
-                                         {B(\nn_{k,t}\ynl_{k,t}, \nn_{k,t}(1-\ynl_{k,t}))} \,. \label{eq:LwrSysPost}
+    \prod_{k=1}^K {m_k \choose l_k} \frac{B(l_k + \nn_{k,t}\yn_{k,t}, m_k - l_k + \nn_{k,t}(1-\yn_{k,t}))}
+                                         {B(\nn_{k,t}\yn_{k,t}, \nn_{k,t}(1-\yn_{k,t}))} \nonumber \\
+ &= \min_{\PtZi{1}, \ldots, \PtZi{K}} 
+    \sum_{l_1=0}^{m_1} \cdots \sum_{l_K=0}^{m_K} \Phi(l_1, \ldots, l_K) \times \nonumber \\ & \hspace*{8ex}
+    \prod_{k=1}^K {m_k \choose l_k} \frac{B(l_k + \nktz\yktz + s^k_t, m_k - l_k + \nktz(1-\yktz) + n_k - s^k_t)}{B(\nktz\yktz + s^k_t, \nktz(1-\yktz) + n_k - s^k_t)}
+    \,, \label{eq:LwrSysPostA}
 \end{align}
+and similarly maximising for $\uRsys(\cdot)$.
+
+Note that $\Phi(\cdot)$ is non-decreasing in each of its arguments $l_1,\ldots,l_K$,
+thus if there is first-order stochastic ordering on $P(C^k_t = l_k \mid \yktz, \nktz, s^k_t)$
+for each $k$, then this ordering can be used to determine the elements of $\PtZi{k}$
+which minimise and maximise the overall system reliability function without
+resorting to computationally expensive exhaustive searches or numerical optimisation.
+
+We therefore start by proving the following result, where indices are suppressed for readability.
+We use $\ge_{\mathrm{st}}$ to denote first-order stochastic dominance.
+
+\begin{theorem}
+  \label{thm:y}
+  Let $\beta_y$ denote the Beta-Binomial distribution with probability mass function parameterised as:
+  \[ p(l \mid y, n, m, s, N) \propto \frac{B(l + ny + s, m - l + n(1-y) + N - s)}{B(ny + s, n(1-y) + N - s)}, \]
+  with $n, m, s,$ and $N$ fixed and unknown.
+  
+  Then $\beta_{\yu} \ge_{\mathrm{st}} \beta_{\yl} \ \forall \ \yu > \yl$ with $\yu, \yl \in (0,1)$.
+\end{theorem}
+The proof is provided in Appendix \ref{ap:proofs}, p.\pageref{prf:y}.
+
+Consequently, for each component, the posterior predictive Beta Binomial distributions 
+with larger prior functioning probability stochastically dominate those
+with smaller prior functioning probability, providing rigorous proof 
+which accords with intuition. Applying this result to the sets of system reliability 
+functions, together with the monotonicity in the survival signature, means that
+$\lRsys(\cdot)$ is attained when $\yktz = \yktzl$ and $\uRsys(\cdot)$
+is attained when $\yktz = \yktzu$ for all possible $\nktz$ values.
+
+The analogous result for $\nktz$ is more subtle, because stochastic 
+dominance is not guaranteed at a single value.  The following Theorem 
+provides the conditions under which an upper or lower limit has first-order stochastic dominance.
+
+\begin{theorem}
+  \label{thm:n}
+  Let $\beta_n$ denote the Beta-Binomial distribution with probability mass function parameterised as:
+  \[ p(l \mid y, n, m, s, N) \propto \frac{B(l + ny + s, m - l + n(1-y) + N - s)}{B(ny + s, n(1-y) + N - s)}, \]
+  with $y, m, s,$ and $N$ fixed and unknown.  
+  Then,
+  \[ y > \frac{s + m}{N + m - 1} \implies \beta_{\nu} \ge_{\mathrm{st}} \beta_{\nl} \]
+  and 
+  \[ y < \frac{s}{N + m - 1} \implies \beta_{\nu} \le_{\mathrm{st}} \beta_{\nl} \]
+  If $\frac{s}{N + m - 1} < y < \frac{s + m}{N + m - 1}$ then first-order stochastic dominance is not guaranteed.
+\end{theorem}
+The proof is provided in Appendix \ref{ap:proofs}, p.\pageref{prf:n}.
+
+These first-order stochastic domination results now gives the exact 
+solution for $\lRsys(\cdot)$ and $\uRsys(\cdot)$.  Thus,
+%For $\lRsys(\cdot)$, the minimum is achieved at
+%$\nktzu$ if $\yktzl(n_k+m_k-1)-s^k_t-m_k < 0$ and is achieved at 
+%$\nktzl$ if $\yktzl(n_k+m_k-1)-s^k_t-m_k > 0$.
+%Conversely, for $\uRsys(\cdot)$, the maximum is achieved at 
+%$\nktzu$ if $\yktzu(n_k+m_k-1)-s^k_t-m_k > 0$ and is achieved at 
+%$\nktzl$ if $\yktzu(n_k+m_k-1)-s^k_t-m_k < 0$.
+\begin{align}
+\lefteqn{\lRsys(t \mid \vec{t}^1, \ldots, \vec{t}^K)} \nonumber \\
+ &= \min_{\PtZi{1}, \ldots, \PtZi{K}} 
+    \sum_{l_1=0}^{m_1} \cdots \sum_{l_K=0}^{m_K} \Phi(l_1, \ldots, l_K) \times \nonumber \\ & \hspace*{8ex}
+    \prod_{k=1}^K {m_k \choose l_k} \frac{B(l_k + \nktz\yktz + s^k_t, m_k - l_k + \nktz(1-\yktz) + n_k - s^k_t)}{B(\nktz\yktz + s^k_t, \nktz(1-\yktz) + n_k - s^k_t)}
+    \nonumber\\
+ &= \sum_{l_1=0}^{m_1} \cdots \sum_{l_K=0}^{m_K} \Phi(l_1, \ldots, l_K) \times \nonumber \\ & \hspace*{8ex}
+    \prod_{k=1}^K {m_k \choose l_k} \frac{B(l_k + \nktzo\yktzl + s^k_t, m_k - l_k + \nktzo(1-\yktzl) + n_k - s^k_t)}{B(\nktzo\yktzl + s^k_t, \nktzo(1-\yktzl) + n_k - s^k_t)} \label{eq:LwrSysPost}\\
+ &\qquad \qquad \mbox{where } \nktzo = \left\{ \begin{aligned}
+   \nktzu & \quad\mbox{if}\quad \yktzl < \frac{s}{N + m - 1} \\
+   \nktzl & \quad\mbox{if}\quad \yktzl > \frac{s + m}{N + m - 1} \\
+   \mathrm{optimised} & \quad\mbox{if}\quad \frac{s}{N + m - 1} < \yktzl < \frac{s + m}{N + m - 1}
+ \end{aligned} \right. \nonumber
+\end{align}
+
+\td{*** Louis: I've edited to here so far, will continue editing rest of this section if we are happy with the above! ***}
+
 In the following, we will give some guidelines on how to choose the parameter sets $\PkZi{1}, \ldots, \PkZi{\tmax}$
 which define the set of prior discrete reliability functions for components of type $k$.
 We think this is much easier in terms of $\nz$ and $\yz$ than it would be in terms of $\alpha$ and $\beta$.
@@ -1096,6 +1182,104 @@ to calculate its remaining useful life (RUL).
 \section*{Appendix}
 \appendix
 \renewcommand*{\thesection}{\Alph{section}}
+
+\section{Proofs}
+\label{ap:proofs}
+
+\begin{proof}[\textbf{Proof of Theorem \ref{thm:y}, p\pageref{thm:y}}]
+  \label{prf:y}
+  Consider the likelihood ratio for the two Beta Binomial distributions $\beta_{\yu}$ and $\beta_{\yl}$,
+  \begin{align*}
+    \lefteqn{\mathcal{L}(l) := \frac{p(l \mid \yu, n, m, s, N)}{p(l \mid \yl, n, m, s, N)}} \\
+    &= \frac{B(l + n \yu + s, m - l + n (1 - \yu) + N - s) B(n \yl + s, n (1 - \yl) + N - s)}
+            {B(n \yu + s, n (1 - \yu) + N - s) B(l + n \yl + s, m - l + n (1 - \yl) + N - s)} \\
+    &= \frac{\Gamma(l + n \yu + s) \Gamma(m - l + n (1 - \yu) + N - s) \Gamma(n \yl + s) \Gamma(n (1 - \yl) + N - s)}
+            {\Gamma(l + n \yl + s) \Gamma(m - l + n (1 - \yl) + N - s) \Gamma(n \yu + s) \Gamma(n (1 - \yu) + N - s)} \\
+    &= \left\{ \begin{aligned}
+         \frac{\prod_{x=0}^{m-1} (x + n (1 - \yu) + N - s)}
+              {\prod_{x=0}^{m-1} (x + n (1 - \yl) + N - s)} &\quad\mbox{ for } l=0 \\
+         \frac{\prod_{x=0}^{l-1} (x + n \yu + s) \prod_{x=0}^{m-l-1} (x + n (1 - \yu) + N - s)}
+              {\prod_{x=0}^{l-1} (x + n \yl + s) \prod_{x=0}^{m-l-1} (x + n (1 - \yl) + N - s)} &\quad\mbox{ for } 0<l<m \\
+         \frac{\prod_{x=0}^{m-1} (x + n \yu + s)}
+              {\prod_{x=0}^{m-1} (x + n \yl + s)} &\quad\mbox{ for } l=m
+       \end{aligned} \right.
+  \end{align*}
+  since $\Gamma(x+1)=x \Gamma(x)$.
+  
+  Thus,
+  \begin{align*}
+    \frac{\mathcal{L}(l+1)}{\mathcal{L}(l)} &=
+      \frac{(l + n \yu + s) (m - l - 1 + n (1 - \yl) + N - s)}
+           {(l + n \yl + s) (m - l - 1 + n (1 - \yu) + N - s)} \\
+    &> 1 \quad\mbox{when}\quad 0 \le \yl < \yu \le 1
+  \end{align*}
+    
+  Hence, $\mathcal{L}(\cdot)$ is monotone increasing for $0 < \yl < \yu < 1$, so that $\beta_{\yu}$ is larger than or equal to $\beta_{\yl}$ in monotone likelihood ratio order ($\beta_{\yu} \ge_\mathrm{lr} \beta_{\yl}$).  But, $\beta_{\yu} \ge_\mathrm{lr} \beta_{\yl} \implies \beta_{\yu} \ge_\mathrm{st} \beta_{\yl}$ (\cite[Theorem 1.C.1, p.43]{shaked2007}) giving the required result.
+\end{proof}
+
+\begin{proof}[\textbf{Proof of Theorem \ref{thm:n}, p\pageref{thm:n}}]
+  \label{prf:n}
+  Consider the likelihood ratio for the two Beta Binomial distributions $\beta_{\nu}$ and $\beta_{\nl}$,
+  \begin{align*}
+    \lefteqn{\mathcal{L}(l) := \frac{p(l \mid y, \nu, m, s, N)}{p(l \mid y, \nl, m, s, N)}} \\
+    &= \frac{B(l + \nu y + s, m - l + \nu (1 - y) + N - s) B(\nl y + s, \nl (1 - y) + N - s)}
+            {B(\nu y + s, \nu (1 - y) + N - s) B(l + \nl y + s, m - l + \nl (1 - y) + N - s)} \\
+    &= \frac{\Gamma(l + \nu y + s) \Gamma(m - l + \nu (1 - y) + N - s)}
+            {\Gamma(l + \nl y + s) \Gamma(m - l + \nl (1 - y) + N - s)} \\
+    &\quad \times \frac{\Gamma(\nl y + s) \Gamma(\nl (1 - y) + N - s) \Gamma(\nu+N) \Gamma(m+\nl+N)}
+                       {\Gamma(\nu y + s) \Gamma(\nu (1 - y) + N - s)\Gamma(\nl+N) \Gamma(m+\nu+N)} \\
+    &= \left\{ \begin{aligned}
+         \frac{\prod_{x=0}^{m-1} (x + \nu (1 - y) + N - s) \prod_{x=0}^{m-1} (x + \nl + N)}
+              {\prod_{x=0}^{m-1} (x + \nl (1 - y) + N - s) \prod_{x=0}^{m-1} (x + \nu + N)} &\quad\mbox{ for } l=0 \\
+         \frac{\prod_{x=0}^{l-1} (x + \nu y + s) \prod_{x=0}^{m-l-1} (x + \nu (1 - y) + N - s)}
+              {\prod_{x=0}^{l-1} (x + \nl y + s) \prod_{x=0}^{m-l-1} (x + \nl (1 - y) + N - s)} \\
+         \quad \times \frac{\prod_{x=0}^{m-1} (x + \nl + N)}{\prod_{x=0}^{m-1} (x + \nu + N)} &\quad\mbox{ for } 0<l<m \\
+         \frac{\prod_{x=0}^{m-1} (x + \nu y + s) \prod_{x=0}^{m-1} (x + \nl + N)}
+              {\prod_{x=0}^{m-1} (x + \nl y + s) \prod_{x=0}^{m-1} (x + \nu + N)} &\quad\mbox{ for } l=m
+       \end{aligned} \right.
+  \end{align*}
+  since $\Gamma(x+1)=x \Gamma(x)$.
+  
+  Thus,
+  \[ \frac{\mathcal{L}(l+1)}{\mathcal{L}(l)} =
+      \frac{(l + \nu y + s) (m - l - 1 + \nl (1 - y) + N - s)}
+           {(l + \nl y + s) (m - l - 1 + \nu (1 - y) + N - s)}
+  \]
+  
+  However, unlike the case for the $y$ parameter in Theorem \ref{thm:y}, neither $\beta_{\nl}$ 
+  nor $\beta_{\nu}$ can be guaranteed to dominate for all possible values 
+  for the other parameters, so that necessary conditions for
+  monotonicity (either increasing or decreasing) must be established.
+  We require,
+  \[ \frac{(l + \nu y + s) (m - l - 1 + \nl (1 - y) + N - s)}
+          {(l + \nl y + s) (m - l - 1 + \nu (1 - y) + N - s)}
+     >1
+  \]
+  After extensive routine algebra, this can be conveniently expressed as
+  \begin{align*}
+    (\nu - \nl)[y (N + m - 1) - s] - l (\nu - \nl)>0.
+  \end{align*}
+  This limit is hardest to satisfy for $l=m$ since $\nu-\nl>0$.
+  Thus, for monotonicity to hold for all $l$, we require
+  \begin{align*}
+    (\nu - \nl)[y (N + m - 1) - s] - m (\nu - \nl) &>0 \\
+    \implies (\nu - \nl)[y (N + m - 1) - s - m] &>0
+  \end{align*}
+  Since $\nu-\nl>0$ by definition, we have a monotonically increasing 
+  likelihood ratio only when \[ y (N + m - 1) - s - m > 0. \]
+  By a similar argument, the likelihood ratio is only monotonically decreasing when
+  \[ y (N + m - 1) - s < 0. \]
+  Thus,
+  \[ y > \frac{s + m}{N + m - 1} \implies \beta_{\nu} \ge_{\mathrm{lr}} \beta_{\nl} \implies \beta_{\nu} \ge_{\mathrm{st}} \beta_{\nl} \]
+  and 
+  \[ y < \frac{s}{N + m - 1} \implies \beta_{\nu} \le_{\mathrm{lr}} \beta_{\nl} \implies \beta_{\nu} \le_{\mathrm{st}} \beta_{\nl} \]
+  by \cite[Theorem 1.C.1, p.43]{shaked2007}.  In the intermediate case,
+  \[ \frac{s}{N+m-1} < y < \frac{s+m}{N+m-1} \]
+  we cannot definitively state the stochastic ordering on $\beta_{\nu}$ and $\beta_{\nl}$.
+\end{proof}
+
+
+
 \section{Software details}
 \label{ap:software}
 
