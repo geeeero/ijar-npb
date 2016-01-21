@@ -790,9 +790,10 @@ provides the conditions under which an upper or lower limit has first-order stoc
   \[ p(l \mid y, n, m, s, N) \propto \frac{B(l + ny + s, m - l + n(1-y) + N - s)}{B(ny + s, n(1-y) + N - s)}, \]
   with $y, m, s,$ and $N$ fixed and unknown.  
   Then,
-  \[ y(N+m-1)-s-m > 0 \implies \beta_{\nu} \ge_{\mathrm{st}} \beta_{\nl} \]
+  \[ y > \frac{s + m}{N + m - 1} \implies \beta_{\nu} \ge_{\mathrm{st}} \beta_{\nl} \]
   and 
-  \[ y(N+m-1)-s-m < 0 \implies \beta_{\nu} \le_{\mathrm{st}} \beta_{\nl} \]
+  \[ y < \frac{s}{N + m - 1} \implies \beta_{\nu} \le_{\mathrm{st}} \beta_{\nl} \]
+  If $\frac{s}{N + m - 1} < y < \frac{s + m}{N + m - 1}$ then first-order stochastic dominance is not guaranteed.
 \end{theorem}
 The proof is provided in Appendix \ref{ap:proofs}, p.\pageref{prf:n}.
 
@@ -813,8 +814,9 @@ solution for $\lRsys(\cdot)$ and $\uRsys(\cdot)$.  Thus,
  &= \sum_{l_1=0}^{m_1} \cdots \sum_{l_K=0}^{m_K} \Phi(l_1, \ldots, l_K) \times \nonumber \\ & \hspace*{8ex}
     \prod_{k=1}^K {m_k \choose l_k} \frac{B(l_k + \nktzo\yktzl + s^k_t, m_k - l_k + \nktzo(1-\yktzl) + n_k - s^k_t)}{B(\nktzo\yktzl + s^k_t, \nktzo(1-\yktzl) + n_k - s^k_t)} \label{eq:LwrSysPost}\\
  &\qquad \qquad \mbox{where } \nktzo = \left\{ \begin{aligned}
-   \nktzu & \quad\mbox{if}\quad \yktzl(n_k+m_k-1)-s^k_t-m_k < 0 \\
-   \nktzl & \quad\mbox{if}\quad \yktzl(n_k+m_k-1)-s^k_t-m_k > 0 \\
+   \nktzu & \quad\mbox{if}\quad \yktzl < \frac{s}{N + m - 1} \\
+   \nktzl & \quad\mbox{if}\quad \yktzl > \frac{s + m}{N + m - 1} \\
+   \mathrm{optimised} & \quad\mbox{if}\quad \frac{s}{N + m - 1} < \yktzl < \frac{s + m}{N + m - 1}
  \end{aligned} \right. \nonumber
 \end{align}
 
@@ -1208,8 +1210,8 @@ to calculate its remaining useful life (RUL).
   Thus,
   \begin{align*}
     \frac{\mathcal{L}(l+1)}{\mathcal{L}(l)} &=
-      \frac{(l + n \yu) (m - l - 1 + n (1 - \yl) + N - s)}
-           {(l + n \yl) (m - l - 1 + n (1 - \yu) + N - s)} \\
+      \frac{(l + n \yu + s) (m - l - 1 + n (1 - \yl) + N - s)}
+           {(l + n \yl + s) (m - l - 1 + n (1 - \yu) + N - s)} \\
     &> 1 \quad\mbox{when}\quad 0 \le \yl < \yu \le 1
   \end{align*}
     
@@ -1241,8 +1243,8 @@ to calculate its remaining useful life (RUL).
   
   Thus,
   \[ \frac{\mathcal{L}(l+1)}{\mathcal{L}(l)} =
-      \frac{(l + \nu y) (m - l - 1 + \nl (1 - y) + N - s)}
-           {(l + \nl y) (m - l - 1 + \nu (1 - y) + N - s)}
+      \frac{(l + \nu y + s) (m - l - 1 + \nl (1 - y) + N - s)}
+           {(l + \nl y + s) (m - l - 1 + \nu (1 - y) + N - s)}
   \]
   
   However, unlike the case for the $y$ parameter in Theorem \ref{thm:y}, neither $\beta_{\nl}$ 
@@ -1265,14 +1267,16 @@ to calculate its remaining useful life (RUL).
     \implies (\nu - \nl)[y (N + m - 1) - s - m] &>0
   \end{align*}
   Since $\nu-\nl>0$ by definition, we have a monotonically increasing 
-  likelihood ratio only when \[ y (N + m - 1) - s - m > 0. \]  Likewise 
-  the likelihood ratio is only monotonically decreasing when
-  \[ y (N + m - 1) - s - m < 0. \]
+  likelihood ratio only when \[ y (N + m - 1) - s - m > 0. \]
+  By a similar argument, the likelihood ratio is only monotonically decreasing when
+  \[ y (N + m - 1) - s < 0. \]
   Thus,
-  \[ y(N+m-1)-s-m > 0 \implies \beta_{\nu} \ge_{\mathrm{lr}} \beta_{\nl} \implies \beta_{\nu} \ge_{\mathrm{st}} \beta_{\nl} \]
+  \[ y > \frac{s + m}{N + m - 1} \implies \beta_{\nu} \ge_{\mathrm{lr}} \beta_{\nl} \implies \beta_{\nu} \ge_{\mathrm{st}} \beta_{\nl} \]
   and 
-  \[ y(N+m-1)-s-m < 0 \implies \beta_{\nu} \le_{\mathrm{lr}} \beta_{\nl} \implies \beta_{\nu} \le_{\mathrm{st}} \beta_{\nl} \]
-  by \cite[Theorem 1.C.1, p.43]{shaked2007}.
+  \[ y < \frac{s}{N + m - 1} \implies \beta_{\nu} \le_{\mathrm{lr}} \beta_{\nl} \implies \beta_{\nu} \le_{\mathrm{st}} \beta_{\nl} \]
+  by \cite[Theorem 1.C.1, p.43]{shaked2007}.  In the intermediate case,
+  \[ \frac{s}{N+m-1} < y < \frac{s+m}{N+m-1} \]
+  we cannot definitively state the stochastic ordering on $\beta_{\nu}$ and $\beta_{\nl}$.
 \end{proof}
 
 
