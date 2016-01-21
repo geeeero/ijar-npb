@@ -153,9 +153,9 @@ pdf("singleprior-pdc.pdf", width=8, height=3)
 grid.arrange(betadens2, pdcillu, nrow=1, ncol=2, widths=c(1,1.2))
 dev.off()
 
-betapdfcdf      <- betapdfcdf    + theme(plot.margin = unit(c(0,0.5,0,-0.75), "lines"))
+betapdfcdf      <- betapdfcdf    + theme(plot.margin = unit(c(0,0.5,0,-0.75), "lines")) + theme_bw()
 pdcillupmfcmf   <- pdcillupmfcmf + theme(plot.margin = unit(c(0,0,  0,-0.75), "lines"),
-                                    legend.margin = unit(-0.5, "cm"))
+                                    legend.margin = unit(-0.5, "cm")) + theme_bw()
 pdf("singleprior-pdc2.pdf", width=8, height=5)
 grid.arrange(betapdfcdf, pdcillupmfcmf, nrow=1, ncol=2, widths=c(1,1.2))
 dev.off()
@@ -236,67 +236,21 @@ betapos2corners <- sapply(luck4cny(setpos2, posterior=TRUE), function(x){
   pbetany(betavec, x)
 })
 
-betasetdf <- rbind(data.frame(x=betavec, Lower=betapriolow, Upper=betaprioupp, betapriocorners, Item="Prior", Facet="Prior & Posterior 1"),
-                   data.frame(x=betavec, Lower=betapos1low, Upper=betapos1upp, betapos1corners, Item="Posterior 1", Facet="Prior & Posterior 1"),
-                   data.frame(x=betavec, Lower=betapriolow, Upper=betaprioupp, betapriocorners, Item="Prior", Facet="Prior & Posterior 2"),
-                   data.frame(x=betavec, Lower=betapos2low, Upper=betapos2upp, betapos2corners, Item="Posterior 2", Facet="Prior & Posterior 2"))
+betasetdf <- rbind(data.frame(x=betavec, Lower=betapriolow, Upper=betaprioupp, betapriocorners, Facet="Prior & Posterior 1", Item="Prior", Item2="Prior"),
+                   data.frame(x=betavec, Lower=betapos1low, Upper=betapos1upp, betapos1corners, Facet="Prior & Posterior 1", Item="Posterior 1", Item2="Posterior"),
+                   data.frame(x=betavec, Lower=betapriolow, Upper=betaprioupp, betapriocorners, Facet="Prior & Posterior 2", Item="Prior", Item2="Prior"),
+                   data.frame(x=betavec, Lower=betapos2low, Upper=betapos2upp, betapos2corners, Facet="Prior & Posterior 2", Item="Posterior 2", Item2="Posterior"))
 betasetdf$Item <- ordered(betasetdf$Item, levels=c("Prior", "Posterior 1", "Posterior 2"))
+betasetdf$Item2 <- ordered(betasetdf$Item2, levels=c("Prior", "Posterior"))
 
-betaset1 <- ggplot(betasetdf) + geom_ribbon(aes(x=x, ymin=Lower, ymax=Upper, group=Item, colour=Item, fill=Item), alpha=0.3)
-betaset1 <- betaset1 +
-  geom_line(aes(x=x, y=c1, group=Item, colour=Item)) +
-  geom_line(aes(x=x, y=c2, group=Item, colour=Item)) +
-  geom_line(aes(x=x, y=c3, group=Item, colour=Item)) +
-  geom_line(aes(x=x, y=c4, group=Item, colour=Item))
+betaset1 <- ggplot(betasetdf) + geom_ribbon(aes(x=x, ymin=Lower, ymax=Upper, group=Item2, colour=Item2, fill=Item2), alpha=0.3)
+betaset1 <- betaset1 + scale_fill_manual(values = c("#b2df8a", "#1f78b4")) + scale_colour_manual(values = c("#b2df8a", "#1f78b4")) +
+  geom_line(aes(x=x, y=c1, group=Item2, colour=Item2)) +
+  geom_line(aes(x=x, y=c2, group=Item2, colour=Item2)) +
+  geom_line(aes(x=x, y=c3, group=Item2, colour=Item2)) +
+  geom_line(aes(x=x, y=c4, group=Item2, colour=Item2))
 betaset1 <- betaset1 + facet_grid(Facet ~ .) + rightlegend + xlab(expression(p[t]^k)) + ylab("cdf")
 betaset1
-
-# parameter sets
-
-n0vec <- seq(n0(setpr)[1], n0(setpr)[2], length.out=201)
-prioparam <- data.frame(n0=n0vec, Lower=y0(setpr)[1], Upper=y0(setpr)[2])
-pos1param <- data.frame(n0=updateLuckN(n0vec, n(data(setpos1))),
-                        Lower=updateLuckY(n0vec, y0(setpos1)[1], tau(data(setpos1)), n(data(setpos1))),
-                        Upper=updateLuckY(n0vec, y0(setpos1)[2], tau(data(setpos1)), n(data(setpos1))))
-pos2param <- data.frame(n0=updateLuckN(n0vec, n(data(setpos2))),
-                        Lower=updateLuckY(n0vec, y0(setpos2)[1], tau(data(setpos2)), n(data(setpos2))),
-                        Upper=updateLuckY(n0vec, y0(setpos2)[2], tau(data(setpos2)), n(data(setpos2))))
-
-paramsetdf <- rbind(data.frame(prioparam, Item="Prior", Facet="Prior & Posterior 1"),
-                    data.frame(pos1param, Item="Posterior 1", Facet="Prior & Posterior 1"),
-                    data.frame(prioparam, Item="Prior", Facet="Prior & Posterior 2"),
-                    data.frame(pos2param, Item="Posterior 2", Facet="Prior & Posterior 2"))
-
-paramset1 <- ggplot(paramsetdf) + geom_ribbon(aes(x=n0, ymin=Lower, ymax=Upper, group=Item, colour=Item, fill=Item), alpha=0.3)
-paramset1 <- paramset1 + facet_grid(Facet ~ .) + guides(linetype="none", colour="none", fill="none")
-paramset1 <- paramset1 + xlab(expression(n^(0))) + ylab(expression(y^(0)))
-paramset1
-
-paramset1 <- paramset1 + theme(plot.margin = unit(c(0,0.5,0,-0.25), "lines"))
-betaset1  <- betaset1  + theme(plot.margin = unit(c(0,0,  0,-0.25), "lines"),
-                                         legend.margin = unit(-0.5, "cm"))
-# parameter sets and cdf sets in one plot
-pdf("priorset.pdf", width=8, height=5)
-grid.arrange(paramset1, betaset1, nrow=1, ncol=2, widths=c(1,1.2))
-dev.off()
-
-paramset2 <- ggplot(paramsetdf) + geom_ribbon(aes(x=n0, ymin=Lower, ymax=Upper, group=Item, colour=Item, fill=Item), alpha=0.3)
-paramset2 <- paramset2 + xlab(expression(n^(0))) + ylab(expression(y^(0)))
-paramset2
-
-# plot with parameter sets only
-pdf("paramsets.pdf", width=6, height=5)
-paramset2 + theme(plot.margin = unit(c(0,0.5,0,-0.25), "lines"), legend.margin = unit(-0.5, "cm"))
-dev.off()
-
-# in two separate facets
-paramset3 <- ggplot(paramsetdf) + geom_ribbon(aes(x=n0, ymin=Lower, ymax=Upper, group=Item, colour=Item, fill=Item), alpha=0.3)
-paramset3 <- paramset3 + facet_grid(. ~ Facet) + xlab(expression(n^(0))) + ylab(expression(y^(0))) + rightlegend
-
-pdf("paramsets.pdf", width=6, height=2.5) # plot.margin: t r b f
-paramset3 + theme(plot.margin = unit(c(0,0.5,0,0), "lines"), legend.margin = unit(-0.0, "cm"))
-dev.off()
-
 
 # sets of Beta-Binomial cmfs
 m <- 5
@@ -362,14 +316,15 @@ bebinpos2corners <- sapply(luck4cny(setpr), function(x){
   pbebinvec(nyupdate(pr=x, data=c(tau(data(setpos2)), n(data(setpos2)))), m=m)
 })
 
-bebinsetdf <- rbind(data.frame(x=lvec, Lower=bebinpriolow, Upper=bebinprioupp, bebinpriocorners, Item="Prior", Facet="Prior & Posterior 1"),
-                    data.frame(x=lvec, Lower=bebinpos1low, Upper=bebinpos1upp, bebinpos1corners, Item="Posterior 1", Facet="Prior & Posterior 1"),
-                    data.frame(x=lvec, Lower=bebinpriolow, Upper=bebinprioupp, bebinpriocorners, Item="Prior", Facet="Prior & Posterior 2"),
-                    data.frame(x=lvec, Lower=bebinpos2low, Upper=bebinpos2upp, bebinpos2corners, Item="Posterior 2", Facet="Prior & Posterior 2"))
+bebinsetdf <- rbind(data.frame(x=lvec, Lower=bebinpriolow, Upper=bebinprioupp, bebinpriocorners, Facet="Prior & Posterior 1", Item="Prior", Item2="Prior"),
+                    data.frame(x=lvec, Lower=bebinpos1low, Upper=bebinpos1upp, bebinpos1corners, Facet="Prior & Posterior 1", Item="Posterior 1", Item2="Posterior"),
+                    data.frame(x=lvec, Lower=bebinpriolow, Upper=bebinprioupp, bebinpriocorners, Facet="Prior & Posterior 2", Item="Prior", Item2="Prior"),
+                    data.frame(x=lvec, Lower=bebinpos2low, Upper=bebinpos2upp, bebinpos2corners, Facet="Prior & Posterior 2", Item="Posterior 2", Item2="Posterior"))
 bebinsetdf$Item <- ordered(bebinsetdf$Item, levels=c("Prior", "Posterior 1", "Posterior 2"))
+bebinsetdf$Item2 <- ordered(bebinsetdf$Item2, levels=c("Prior", "Posterior"))
 
-bebinset1 <- ggplot(bebinsetdf, aes(group=Item, colour=Item)) + geom_ribbon(aes(x=x, ymin=Lower, ymax=Upper, fill=Item), alpha=0.3)
-bebinset1 <- bebinset1 + #geom_point() +
+bebinset1 <- ggplot(bebinsetdf, aes(group=Item2, colour=Item2)) + geom_ribbon(aes(x=x, ymin=Lower, ymax=Upper, fill=Item2), alpha=0.3)
+bebinset1 <- bebinset1 + scale_fill_manual(values = c("#b2df8a", "#1f78b4")) + scale_colour_manual(values = c("#b2df8a", "#1f78b4")) +
   geom_line(aes(x=x, y=c1)) + geom_point(aes(x=x, y=c1)) +
   geom_line(aes(x=x, y=c2)) + geom_point(aes(x=x, y=c2)) +
   geom_line(aes(x=x, y=c3)) + geom_point(aes(x=x, y=c3)) +
@@ -378,9 +333,9 @@ bebinset1 <- bebinset1 + facet_grid(Facet ~ .) + rightlegend + xlab(expression(l
 bebinset1
 
 # plot.margin: t r b l
-betaset1  <- betaset1  + theme(plot.margin = unit(c(0,0.5,0,-0.0), "lines")) + 
+betaset1  <- betaset1 + theme_bw() + theme(plot.margin = unit(c(0,0.5,0,-0.0), "lines")) + 
   guides(linetype="none", fill="none", group="none", colour="none")
-bebinset1 <- bebinset1 + theme(plot.margin = unit(c(0,0,  0,-0.0), "lines"),
+bebinset1 <- bebinset1 + theme_bw() + theme(plot.margin = unit(c(0,0,  0,-0.0), "lines"),
                                          legend.margin = unit(-0.0, "cm"))
 pdf("betaset-binomset1.pdf", width=8, height=5)
 grid.arrange(betaset1, bebinset1, nrow=1, ncol=2, widths=c(1,1.2))
@@ -390,5 +345,53 @@ dev.off()
 subset(bebinsetdf, (x==2) & (Facet=="Prior & Posterior 1") & (Item=="Prior"))
 subset(bebinsetdf, (x==2) & (Facet=="Prior & Posterior 1") & (Item=="Posterior 1"))
 subset(bebinsetdf, (x==2) & (Facet=="Prior & Posterior 2") & (Item=="Posterior 2"))
+
+
+# parameter sets
+
+n0vec <- seq(n0(setpr)[1], n0(setpr)[2], length.out=201)
+prioparam <- data.frame(n0=n0vec, Lower=y0(setpr)[1], Upper=y0(setpr)[2])
+pos1param <- data.frame(n0=updateLuckN(n0vec, n(data(setpos1))),
+                        Lower=updateLuckY(n0vec, y0(setpos1)[1], tau(data(setpos1)), n(data(setpos1))),
+                        Upper=updateLuckY(n0vec, y0(setpos1)[2], tau(data(setpos1)), n(data(setpos1))))
+pos2param <- data.frame(n0=updateLuckN(n0vec, n(data(setpos2))),
+                        Lower=updateLuckY(n0vec, y0(setpos2)[1], tau(data(setpos2)), n(data(setpos2))),
+                        Upper=updateLuckY(n0vec, y0(setpos2)[2], tau(data(setpos2)), n(data(setpos2))))
+
+paramsetdf <- rbind(data.frame(prioparam, Facet="Prior & Posterior 1", Item="Prior", Item2="Prior"),
+                    data.frame(pos1param, Facet="Prior & Posterior 1", Item="Posterior 1", Item2="Posterior"),
+                    data.frame(prioparam, Facet="Prior & Posterior 2", Item="Prior", Item2="Prior"),
+                    data.frame(pos2param, Facet="Prior & Posterior 2", Item="Posterior 2", Item2="Posterior"))
+
+paramset1 <- ggplot(paramsetdf) + geom_ribbon(aes(x=n0, ymin=Lower, ymax=Upper, group=Item, colour=Item, fill=Item), alpha=0.3)
+paramset1 <- paramset1 + facet_grid(Facet ~ .) + guides(linetype="none", colour="none", fill="none")
+paramset1 <- paramset1 + xlab(expression(n^(0))) + ylab(expression(y^(0)))
+paramset1
+
+paramset1 <- paramset1 + theme(plot.margin = unit(c(0,0.5,0,-0.25), "lines"))
+betaset1  <- betaset1  + theme(plot.margin = unit(c(0,0,  0,-0.25), "lines"),
+                               legend.margin = unit(-0.5, "cm"))
+# parameter sets and cdf sets in one plot
+pdf("priorset.pdf", width=8, height=5)
+grid.arrange(paramset1, betaset1, nrow=1, ncol=2, widths=c(1,1.2))
+dev.off()
+
+paramset2 <- ggplot(paramsetdf) + geom_ribbon(aes(x=n0, ymin=Lower, ymax=Upper, group=Item, colour=Item, fill=Item), alpha=0.3)
+paramset2 <- paramset2 + xlab(expression(n^(0))) + ylab(expression(y^(0)))
+paramset2
+
+# plot with parameter sets only
+pdf("paramsets.pdf", width=6, height=5)
+paramset2 + theme(plot.margin = unit(c(0,0.5,0,-0.25), "lines"), legend.margin = unit(-0.5, "cm"))
+dev.off()
+
+# in two separate facets
+paramset3 <- ggplot(paramsetdf) + geom_ribbon(aes(x=n0, ymin=Lower, ymax=Upper, group=Item2, colour=Item2, fill=Item2), alpha=0.3)
+paramset3 <- paramset3 + scale_fill_manual(values = c("#b2df8a", "#1f78b4")) + scale_colour_manual(values = c("#b2df8a", "#1f78b4"))
+paramset3 <- paramset3 + facet_grid(. ~ Facet) + xlab(expression(n^(0))) + ylab(expression(y^(0)))
+
+pdf("paramsets.pdf", width=6, height=2.5) # plot.margin: t r b f
+paramset3 + theme(plot.margin = unit(c(0,0.5,0,0), "lines"), legend.margin = unit(-0.0, "cm")) + theme_bw()  + rightlegend
+dev.off()
 
 #
