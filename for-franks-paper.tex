@@ -1,0 +1,173 @@
+\documentclass[12pt, a4paper]{elsarticle}
+
+% ------------ packages -------------
+
+\usepackage[utf8]{inputenc}
+\usepackage[OT1]{fontenc}
+\usepackage{graphicx}
+\usepackage[english]{babel}
+
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{amsthm}
+
+\usepackage[usenames,dvipsnames]{xcolor}
+\usepackage{booktabs}
+\usepackage{todonotes}
+\usepackage{etoolbox}
+\usepackage{url}
+%\usepackage{tikz}
+%\usetikzlibrary{shapes.misc,fit}
+
+\usepackage[bookmarks]{hyperref}
+
+% ------------ custom defs -------------
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+
+\newcommand{\reals}{\mathbb{R}}
+\newcommand{\posreals}{\reals_{>0}}
+\newcommand{\posrealszero}{\reals_{\ge 0}}
+\newcommand{\naturals}{\mathbb{N}}
+
+\newcommand{\mbf}[1]{\mathbf{#1}}
+\newcommand{\bs}[1]{\boldsymbol{#1}}
+\renewcommand{\vec}[1]{{\bs#1}}
+
+\newcommand{\uz}{^{(0)}} % upper zero
+\newcommand{\un}{^{(n)}} % upper n
+\newcommand{\ui}{^{(i)}} % upper i
+
+\newcommand{\ul}[1]{\underline{#1}}
+\newcommand{\ol}[1]{\overline{#1}}
+
+\newcommand{\Rsys}{R_\text{sys}}
+\newcommand{\lRsys}{\ul{R}_\text{sys}}
+\newcommand{\uRsys}{\ol{R}_\text{sys}}
+
+\newcommand{\Fsys}{F_\text{sys}}
+\newcommand{\lFsys}{\ul{F}_\text{sys}}
+\newcommand{\uFsys}{\ol{F}_\text{sys}}
+
+\def\Tsys{T_\text{sys}}
+
+\newcommand{\E}{\operatorname{E}}
+\newcommand{\V}{\operatorname{Var}}
+
+\newcommand{\indic}{\mathbb{I}}
+
+\newcommand{\ber}{\operatorname{Bernoulli}} 
+\newcommand{\bin}{\operatorname{Binomial}}
+\newcommand{\be}{\operatorname{Beta}} 
+\newcommand{\bebin}{\operatorname{Beta-Binomial}} 
+
+\def\tmax{t_\text{max}}
+\def\tnow{t_\text{now}}
+\def\tpnow{t^+_\text{now}}
+
+\newcommand{\ptk}{p^k_t}
+
+\input{nydefs.tex}
+
+\begin{document}
+
+As example to illustrate the potential of our model,
+we consider a simplified automotive brake system.
+The master brake cylinder (M) activates all four wheel brake cylinders (C1 -- C4),
+which in turn actuate a braking pad assembly each (P1 -- P4).
+The hand brake mechanism (H) goes directly to the brake pad assemblies P3 and P4;
+the car brakes when at least one brake pad assembly is actuated.
+The system layout is depicted in Figure~\ref{fig:brakesystem},
+together with prior and posterior sets of reliability functions for the four component types and the complete system.
+Observed lifetimes from test data are indicated by tick marks in each of the four component type panels,
+where $n_\text{M}=5$, $n_\text{H}=10$, $n_\text{C}=15$, and $n_\text{P}=20$.
+We assume $[\ntzl{\text{M}},\ntzu{\text{M}}] = [1,8]\ \forall t$,
+and $[\nktzl, \nktzu] = [1,2]$ for $k \in \{\text{H, C, P}\}$ and all $t$.
+Prior functioning probability bounds for M are based on
+a Weibull cdf with shape $2.5$ and scales $6$ and $8$ for the lower and upper bound, respectively.
+The prior bounds for P can be seen as the least committal bounds
+derived from an expert statement of $\ytz{\text{P}} \in [0.5, 0.65]$ for $t=5$ only.
+
+***We see that posterior lower and upper functioning probabilities drop at those times $t$
+for which there is a failure time in the test data,
+or a drop in the prior functioning probability bounds.
+The lower bound for prior system reliability drops to zero at $t=5$
+since the prior lower bound for P drops to zero at $t=5$;
+for the system to function, at least one brake pad assembly must function.***
+
+For H, near-noninformative prior functioning probability bounds have been selected;
+with the upper bound for P being approximately one for $t \le 5$ as well,
+the prior upper system reliability bound for $t \le 5$ is close to one, too,
+since the system can function on H and one of P1 -- P4 alone.
+Note that the posterior functioning probability interval for M
+is wide not only due to the limited number of observations,
+but also because $\ntzu{\text{M}} = 8$ and the prior-data conflict reaction.
+
+Posterior functioning probability bounds for the complete system
+are much more precise than the prior system bounds,
+reflecting the information gained from component test data.
+The posterior system bounds can be also seen to reflect location and precision of the component bounds;
+for example, the system bounds drop drastically between $t=2.5$ and $t=3.5$
+mainly due to the drop of the bounds for P at that time.
+
+
+\begin{figure}
+\begin{tikzpicture}
+[typeM/.style={rectangle,draw,fill=black!20,thick,inner sep=0pt,minimum size=5mm,font=\footnotesize},
+ typeC/.style={rectangle,draw,fill=black!20,thick,inner sep=0pt,minimum size=5mm,font=\footnotesize},
+ typeP/.style={rectangle,draw,fill=black!20,thick,inner sep=0pt,minimum size=5mm,font=\footnotesize},
+ typeH/.style={rectangle,draw,fill=black!20,thick,inner sep=0pt,minimum size=5mm,font=\footnotesize},
+ cross/.style={cross out,draw=red,very thick,minimum width=7mm, minimum height=5mm},
+ hv path/.style={thick, to path={-| (\tikztotarget)}},
+ vh path/.style={thick, to path={|- (\tikztotarget)}}]
+\node at (0,0) {\includegraphics[width=\textwidth]{brakingsystem-2}};
+\begin{scope}[scale=1.00,xshift=3.4cm,yshift=-1.1cm]
+\node[typeM] (M)    at ( 0  , 0  ) {M};
+\node[typeC] (C1)   at ( 1  , 1.5) {C1};
+\node[typeC] (C2)   at ( 1  , 0.5) {C2};
+\node[typeC] (C3)   at ( 1  ,-0.5) {C3};
+\node[typeC] (C4)   at ( 1  ,-1.5) {C4};
+\node[typeP] (P1)   at ( 2  , 1.5) {P1};
+\node[typeP] (P2)   at ( 2  , 0.5) {P2};
+\node[typeP] (P3)   at ( 2  ,-0.5) {P3};
+\node[typeP] (P4)   at ( 2  ,-1.5) {P4};
+\node[typeH] (H)    at ( 0  ,-1  ) {H};
+\coordinate (start)  at (-0.7, 0);
+\coordinate (startC) at ( 0.5, 0);
+\coordinate (startH) at (-0.4, 0);
+\coordinate (Hhop1)  at ( 0.4,-1);
+\coordinate (Hhop2)  at ( 0.6,-1);
+\coordinate (endP)   at ( 2.5, 0);
+\coordinate (end)    at ( 2.8, 0);
+\path (start)     edge[hv path] (M.west)
+      (M.east)    edge[hv path] (startC)
+      (startC)    edge[vh path] (C1.west)
+                  edge[vh path] (C2.west)
+                  edge[vh path] (C3.west)
+                  edge[vh path] (C4.west)
+      (C1.east)   edge[hv path] (P1.west)
+      (C2.east)   edge[hv path] (P2.west)
+      (C3.east)   edge[hv path] (P3.west)
+      (C4.east)   edge[hv path] (P4.west)
+      (endP)      edge[vh path] (P1.east)
+                  edge[vh path] (P2.east)
+                  edge[vh path] (P3.east)
+                  edge[vh path] (P4.east)
+                  edge[hv path] (end)
+      (startH)    edge[vh path] (H.west)
+      (H.east)    edge[hv path] (Hhop1)
+      (Hhop1)     edge[thick,out=90,in=90] (Hhop2)
+      (Hhop2)     edge[hv path] (P3.south)
+                  edge[hv path] (P4.north);
+\end{scope}
+\end{tikzpicture}
+\caption{Prior and posterior sets of reliability functions for a simplified automotive brake system
+with layout as depicted in the lower right panel.}
+\label{fig:brakesystem}
+\end{figure}
+
+\end{document}
