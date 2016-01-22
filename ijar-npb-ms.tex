@@ -1060,12 +1060,45 @@ with failure times later as expected for component type T3.}
 \label{fig:bridge-late}
 \end{figure}
 
-***Another example: simplified automotive brake system, Figure~\ref{fig:brakesystem}.
-Prior sets and data exemplary only, prior bounds more smooth curves?
+As example to illustrate the potential of our model,
+we consider a simplified automotive brake system.
 The master brake cylinder (M) activates all four wheel brake cylinders (C1 -- C4),
 which in turn actuate a braking pad assembly each (P1 -- P4).
-The hand brake mechanism (H) goes directly to two brake pad assemblies P3 and P4;
-the car brakes when at least one brake pad assembly is actuated.***
+The hand brake mechanism (H) goes directly to the brake pad assemblies P3 and P4;
+the car brakes when at least one brake pad assembly is actuated.
+The system layout is depicted in Figure~\ref{fig:brakesystem},
+together with prior and posterior sets of reliability functions for the four component types and the complete system.
+Observed lifetimes from test data are indicated by tick marks in each of the four component type panels,
+where $n_\text{M}=5$, $n_\text{H}=10$, $n_\text{C}=15$, and $n_\text{P}=20$.
+We assume $[\ntzl{\text{M}},\ntzu{\text{M}}] = [1,8]\ \forall t$,
+and $[\nktzl, \nktzu] = [1,2]$ for $k \in \{\text{H, C, P}\}$ and all $t$.
+Prior functioning probability bounds for M are based on
+a Weibull cdf with shape $2.5$ and scales $6$ and $8$ for the lower and upper bound, respectively.
+The prior bounds for P can be seen as the least committal bounds
+derived from an expert statement of $\ytz{\text{P}} \in [0.5, 0.65]$ for $t=5$ only.
+
+***We see that posterior lower and upper functioning probabilities drop at those times $t$
+for which there is a failure time in the test data,
+or a drop in the prior functioning probability bounds.
+The lower bound for prior system reliability drops to zero at $t=5$
+since the prior lower bound for P drops to zero at $t=5$;
+for the system to function, at least one brake pad assembly must function.***
+
+For H, near-noninformative prior functioning probability bounds have been selected;
+with the upper bound for P being approximately one for $t \le 5$ as well,
+the prior upper system reliability bound for $t \le 5$ is close to one, too,
+since the system can function on H and one of P1 -- P4 alone.
+Note that the posterior functioning probability interval for M
+is wide not only due to the limited number of observations,
+but also because $\ntzu{\text{M}} = 8$ and the prior-data conflict reaction.
+
+Posterior functioning probability bounds for the complete system
+are much more precise than the prior system bounds,
+reflecting the information gained from component test data.
+The posterior system bounds can be also seen to reflect location and precision of the component bounds;
+for example, the system bounds drop drastically between $t=2.5$ and $t=3.5$
+mainly due to the drop of the bounds for P at that time.
+
 
 \begin{figure}
 \begin{tikzpicture}

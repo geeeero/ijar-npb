@@ -55,15 +55,25 @@ abdat <- melt(abtestdata); names(abdat) <- c("x", "Part")
 abdat$Part <- ordered(abdat$Part, levels=c("M", "H", "C", "P", "System"))
 absig <- computeSystemSurvivalSignature(ab)
 abt <- seq(0, 10, length.out=301)
+#MpriorU <- 1-pexp(abt, rate=0.15)
+MpriorU <- 1-pweibull(abt, shape=2.5, scale=8)
+MpriorU[MpriorU==1] <- 1-1e-6
+#MpriorL <- 1-pexp(abt, rate=0.5)
+MpriorL <- 1-pweibull(abt, shape=2.5, scale=6)
+MpriorL[MpriorL==1] <- 1-1e-6
 # priors
 abnL <- data.frame(M=rep(1,301), H=rep(1,301), C=rep(1,301), P=rep(1,301))
 abnU <- data.frame(M=rep(8,301), H=rep(2,301), C=rep(2,301), P=rep(2,301))
-abyL <- data.frame(M=c(rep(0.8, 150), rep(0.6, 60), rep(0.2, 30), rep(0.1, 61)),
-                   H=c(rep(0.5, 150), rep(0.25, 60), rep(0.01, 91)),
+abyL <- data.frame(M=MpriorL,
+                   #M=c(rep(0.8, 150), rep(0.6, 60), rep(0.2, 30), rep(0.1, 61)),
+                   H=rep(0.0001, 301),
+                   #H=c(rep(0.5, 150), rep(0.25, 60), rep(0.01, 91)),
                    C=c(rep(c(0.75, 0.73, 0.71, 0.70, 0.60, 0.45, 0.30, 0.23, 0.21, 0.20), each=30), 0.20),
                    P=c(rep(c(0.5, 0.01), each=150), 0.01))
-abyU <- data.frame(M=c(rep(0.99, 180), rep(0.9, 60), rep(0.6, 30), rep(0.4, 31)),
-                   H=c(rep(0.99, 90), rep(0.9, 90), rep(0.7, 30), rep(0.5, 30), rep(0.3,61)),
+abyU <- data.frame(M=MpriorU,
+                   #M=c(rep(0.99, 180), rep(0.9, 60), rep(0.6, 30), rep(0.4, 31)),
+                   H=rep(0.9999, 301),
+                   #H=c(rep(0.99, 90), rep(0.9, 90), rep(0.7, 30), rep(0.5, 30), rep(0.3,61)),
                    C=c(rep(c(0.99, 0.98, 0.96, 0.95, 0.90, 0.65, 0.50, 0.45, 0.43, 0.42), each=30), 0.42),
                    P=c(rep(c(0.99, 0.65), each=150), 0.65))
 #posteriors
