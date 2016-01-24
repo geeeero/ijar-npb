@@ -55,15 +55,25 @@ abdat <- melt(abtestdata); names(abdat) <- c("x", "Part")
 abdat$Part <- ordered(abdat$Part, levels=c("M", "H", "C", "P", "System"))
 absig <- computeSystemSurvivalSignature(ab)
 abt <- seq(0, 10, length.out=301)
+#MpriorU <- 1-pexp(abt, rate=0.15)
+MpriorU <- 1-pweibull(abt, shape=2.5, scale=8)
+MpriorU[MpriorU==1] <- 1-1e-6
+#MpriorL <- 1-pexp(abt, rate=0.5)
+MpriorL <- 1-pweibull(abt, shape=2.5, scale=6)
+MpriorL[MpriorL==1] <- 1-1e-6
 # priors
 abnL <- data.frame(M=rep(1,301), H=rep(1,301), C=rep(1,301), P=rep(1,301))
 abnU <- data.frame(M=rep(8,301), H=rep(2,301), C=rep(2,301), P=rep(2,301))
-abyL <- data.frame(M=c(rep(0.8, 150), rep(0.6, 60), rep(0.2, 30), rep(0.1, 61)),
-                   H=c(rep(0.5, 150), rep(0.25, 60), rep(0.01, 91)),
+abyL <- data.frame(M=MpriorL,
+                   #M=c(rep(0.8, 150), rep(0.6, 60), rep(0.2, 30), rep(0.1, 61)),
+                   H=rep(0.0001, 301),
+                   #H=c(rep(0.5, 150), rep(0.25, 60), rep(0.01, 91)),
                    C=c(rep(c(0.75, 0.73, 0.71, 0.70, 0.60, 0.45, 0.30, 0.23, 0.21, 0.20), each=30), 0.20),
                    P=c(rep(c(0.5, 0.01), each=150), 0.01))
-abyU <- data.frame(M=c(rep(0.99, 180), rep(0.9, 60), rep(0.6, 30), rep(0.4, 31)),
-                   H=c(rep(0.99, 90), rep(0.9, 90), rep(0.7, 30), rep(0.5, 30), rep(0.3,61)),
+abyU <- data.frame(M=MpriorU,
+                   #M=c(rep(0.99, 180), rep(0.9, 60), rep(0.6, 30), rep(0.4, 31)),
+                   H=rep(0.9999, 301),
+                   #H=c(rep(0.99, 90), rep(0.9, 90), rep(0.7, 30), rep(0.5, 30), rep(0.3,61)),
                    C=c(rep(c(0.99, 0.98, 0.96, 0.95, 0.90, 0.65, 0.50, 0.45, 0.43, 0.42), each=30), 0.42),
                    P=c(rep(c(0.99, 0.65), each=150), 0.65))
 #posteriors
@@ -80,13 +90,30 @@ abdf <- rbind(data.frame(abM, Part="M"), data.frame(abH, Part="H"), data.frame(a
 abdf$Item <- ordered(abdf$Item, levels=c("Prior", "Posterior"))
 abdf$Part <- ordered(abdf$Part, levels=c("M", "H", "C", "P", "System"))
 #the plot
-ab1 <- ggplot(abdf, aes(x=Time))
+ab1 <- ggplot(abdf, aes(x=Time)) + theme_bw()
+ab1 <- ab1 + scale_fill_manual(values = c("#b2df8a", "#1f78b4")) + scale_colour_manual(values = c("#b2df8a", "#1f78b4"))
 ab1 <- ab1 +  geom_line(aes(y=Upper, group=Item, colour=Item)) + geom_line(aes(y=Lower, group=Item, colour=Item))
-ab1 <- ab1 + geom_ribbon(aes(ymin=Lower, ymax=Upper, group=Item, colour=Item, fill=Item), alpha=0.3)
+ab1 <- ab1 + geom_ribbon(aes(ymin=Lower, ymax=Upper, group=Item, colour=Item, fill=Item), alpha=0.5)
 ab1 <- ab1 + facet_wrap(~Part, nrow=2) + geom_rug(aes(x=x), data=abdat) + xlab("Time") + ylab("Survival Probability")
 ab1 <- ab1 + bottomlegend
 
-pdf("breakingsystem-2.pdf", width=8, height=5)
+pdf("brakingsystem-2.pdf", width=8, height=5)
 ab1
 dev.off()
+
+absigtable <- subset(absig, M == 1 | H == 1)
+absigtable <- subset(absigtable, P > 0)
+absigtable <- subset(absig, Probability != 0 & Probability != 1)
+absigtable$C <- as.factor(absigtable$C)
+absigtable$H <- as.factor(absigtable$H)
+absigtable$M <- as.factor(absigtable$M)
+absigtable$P <- as.factor(absigtable$P)
+absigtable2 <- data.frame(M=absigtable$M,
+                          H=absigtable$H,
+                          C=absigtable$C,
+                          P=absigtable$P, Probability=absigtable$Probability)
+
+absigxtable <- xtable(absigtable2)
+print(absigxtable, include.rownames=F)
+
 #

@@ -149,24 +149,29 @@ for systems with complex layouts and multiple component types.
 It separates the (time-invariant) system structure from the time-dependent failure probabilities of components,
 by partitioning the event $\Tsys > t$ according to the number of components of each type functioning at time $t$.
 
-Based on expert assumptions for component failure distribution and component test data,
+Based on expert assumptions for component failure distributions and component test data,
 we make predictive inference for a system with components that are exchangeable
 with the test components by calculating the system reliability function $\Rsys(t) = P(\Tsys > t)$.
 Considering a discrete grid of time points $\{t_1, \ldots, \tmax\}$,
 naturally a Bayesian model for the functioning probability at each time point arises (see Section~\ref{sec:nonparamapproach}).
 To account for uncertainty in the choice of prior
 and due to the inherent issue with prior-data conflict (see below / Section~\ref{sec:reparam}),
-we propose an imprecise or interval probability approach
+we propose an imprecise probability approach
 based on sets of prior distributions defined through sets of canonical parameters.
 This approach also allows to adequately model weak or partial prior information.
 In particular, prior near ignorance can be modelled much more naturally than through usual so-called noninformative priors. 
 
-Our imprecise probability approach leads to sets of system reliability functions,
-where the magnitude of the set, i.e., the width of the posterior predictive functioning probability interval
-reflects the precision of the reliability estimate:
-a short range will indicate that we can quantify the reliability of the system quite precisely,
-while a large range will indicate that our (probabilistic) knowledge is rather shaky --
-remember that the reliability function is in essence a collection of probability statements.
+%Our imprecise probability approach leads to sets of system reliability functions,
+%where the magnitude of the set, i.e., the width of the posterior predictive functioning probability interval
+%reflects the precision of the reliability estimate:
+%a short range will indicate that we can quantify the reliability of the system quite precisely,
+%while a large range will indicate that our (probabilistic) knowledge is rather shaky --
+%remember that the reliability function is in essence a collection of probability statements.
+Our imprecise probability approach leads, for each $t$ in some grid of time points ${\cal T}$,
+to a posterior predictive probability interval for the event that the system will function at time $t$.
+The width of these intervals reflects the precision of the probability statement:
+a short range will indicate that we can quantify the system functioning probability quite precisely,
+while a large range will indicate that our (probabilistic) knowledge is indeterminate.
 
 A central advantage of our imprecise probability model is
 that it leads to more cautious probability statements
@@ -180,7 +185,7 @@ posterior inferences should clearly reflect this state of uncertainty.
 As we will show in Section~\ref{sec:reparam}, when taking the standard choice of a conjugate Beta prior,
 prior-data conflict is ignored, as the spread of the posterior distribution does not increase in case of such a conflict,
 ultimately conveying a false sense of certainty
-by communicating that we can quantify the reliability of the system quite precisely when in fact we can not.
+by communicating that we can quantify the reliability of the system quite precisely when in fact we cannot do so.
 In contrast, our method will indicate prior-data conflict by wider bounds for $\Rsys(t)$.
 This behaviour is obtained by a specific choice for the set of priors (see Section~\ref{sec:setsofbetapriors})
 which leads to larger sets of posterior distributions when prior knowledge and data are in conflict.
@@ -307,24 +312,8 @@ as e.g.\ done by \citet{CCMA14} within the nonparametric predictive inference (N
 where lower and upper probabilities for the events $C_k = l_k$
 are inferred from test data on components of the same types as those in the system.
 This is an approach that is also followed in the current paper, but with the use of generalized Bayesian inference instead of NPI.
-***This step is less trivial here as we must ensure to have probability distributions for these events,
-thus summing to one over $l_k=0,1,\ldots,m_k$ for each type $k$.
-***covered because of parametric distribution, min and max over parameter sets (see section 6)***
-***For coherent systems this is not very complicated due to the monotonicity of the survival signature,
-see \citet{CCMA14} where the method for dealing with imprecision on the random quantities $C_k$ is presented.***
-\td{Leave out the sentences framed with `***'?}
-Recently, \citet{CCM16} suggested the generalization of the structure function from a binary function to a probability,
-to reflect uncertainty about system functioning for known states of its components.
-A further suggestion was to generalize this to lower and upper structure functions,
-within the theory of imprecise probability \citep{itip,CU11}.
-These suggestions are also easy to incorporate into system reliability with the use of the survival signature,
-which in the latter case also becomes an imprecise probability.  
-
-The survival signature is a powerful but rather basic concept.
-As such, further generalizations are conceptually easy,
-for example one can straightforwardly generalize the survival signature to multi-state systems
-such that it again summarizes the structure function
-in a manner that is sufficient for a range of uncertainty quantifications for the system reliability. 
+Like \citet{CCMA14}, we will utilize the monotonicity of the survival signature for coherent systems
+to simplify computations.
 
 
 \section{Nonparametric Bayesian Approach for Component Reliability}
@@ -1021,6 +1010,25 @@ reproducibility.  \ref{ap:software} details how to use this software.
 
 As a toy example, consider a `bridge' type system layout with three types of components T1, T2 and T3,
 as depicted in Figure~\ref{fig:bridge-layout}.
+The survival signature for this system is given in Table~\ref{tab:bridge-survsign}.
+All rows with T3 $=0$ have been omitted; without T3, the system cannot function, thus $\Phi = 0$.
+\begin{table}
+\centering
+\begin{tabular}{ccclccccl}
+  \toprule
+T1 & T2 & T3 & $\Phi$ & \quad & T1 & T2 & T3 & $\Phi$\\ 
+  \midrule
+0 & 0 & 1 & 0    & & 0 & 1 & 1 & 0 \\ 
+1 & 0 & 1 & 0    & & 1 & 1 & 1 & 0 \\ 
+2 & 0 & 1 & 0.33 & & 2 & 1 & 1 & 0.67 \\ 
+3 & 0 & 1 & 1    & & 3 & 1 & 1 & 1 \\ 
+4 & 0 & 1 & 1    & & 4 & 1 & 1 & 1 \\ 
+   \bottomrule
+\end{tabular}
+\caption{Survival signature for the bridge system from Figure~\ref{fig:bridge-layout},
+omitting all rows with T3 $=0$, since $\Phi=0$ for these.}
+\label{tab:bridge-survsign}
+\end{table}
 For component types T1 and T2, we consider a near-noninformative set of prior reliability functions.
 For components of type T3, we consider an informative set of prior reliability functions
 as given in Table~\ref{tab:bridge-T3prior}.
@@ -1042,7 +1050,7 @@ $\ytzl{3}$ & 0.625 & 0.375 & 0.250 & 0.125 & 0.010 \\
 $\ytzu{3}$ & 0.999 & 0.875 & 0.500 & 0.375 & 0.250 \\
 \bottomrule
 \end{tabular}
-\caption{Lower and upper prior functioning probability bounds for component type T3 in the `bridge' system.}
+\caption{Lower and upper prior functioning probability bounds for component type T3 in the `bridge' system example.}
 \label{tab:bridge-T3prior}
 \end{table}
 
@@ -1108,12 +1116,68 @@ with failure times later as expected for component type T3.}
 \label{fig:bridge-late}
 \end{figure}
 
-***Another example: simplified automotive breaking system, Figure~\ref{fig:breakingsystem}.
-Prior sets and data exemplary only, prior bounds more smooth curves?
-The master breaking cylinder (M) activates all four wheel braking cylinders (C1 -- C4),
+As example to illustrate the potential of our model,
+we consider a simplified automotive brake system.
+The master brake cylinder (M) activates all four wheel brake cylinders (C1 -- C4),
 which in turn actuate a braking pad assembly each (P1 -- P4).
-The hand break mechanism (H) goes directly to two brake pad assemblies P3 and P4;
-the car breaks when at least one brake pad assembly is actuated.***
+The hand brake mechanism (H) goes directly to the brake pad assemblies P3 and P4;
+the car brakes when at least one brake pad assembly is actuated.
+All values for $\Phi \not\in \{0,1\}$ are given in Table~\ref{tab:brake-survsign}.
+\begin{table}
+\centering
+\begin{tabular}{cccclcccccl}
+  \toprule
+M & H & C & P & $\Phi$ & \quad & M & H & C & P & $\Phi$\\ 
+  \midrule
+1 & 0 & 1 & 1 & 0.25 & & 1 & 0 & 2 & 1 & 0.50 \\ 
+1 & 0 & 1 & 2 & 0.50 & & 1 & 0 & 2 & 2 & 0.83 \\ 
+1 & 0 & 1 & 3 & 0.75 & & 1 & 0 & 3 & 1 & 0.75 \\ 
+0 & 1 & 0 & 1 & 0.50 & & 1 & 1 & 0 & 1 & 0.50 \\ 
+0 & 1 & 0 & 2 & 0.83 & & 1 & 1 & 0 & 2 & 0.83 \\ 
+0 & 1 & 1 & 1 & 0.62 & & 1 & 1 & 1 & 1 & 0.62 \\ 
+0 & 1 & 1 & 2 & 0.92 & & 1 & 1 & 1 & 2 & 0.92 \\ 
+0 & 1 & 2 & 1 & 0.75 & & 1 & 1 & 2 & 1 & 0.75 \\ 
+0 & 1 & 2 & 2 & 0.97 & & 1 & 1 & 2 & 2 & 0.97 \\ 
+0 & 1 & 3 & 1 & 0.88 & & 1 & 1 & 3 & 1 & 0.88 \\ 
+   \bottomrule
+\end{tabular}
+\caption{Survival signature values $\not\in \{0,1\}$ for the simplified automotive brake system depicted in Figure~\ref{fig:brakesystem}.
+}
+\label{tab:brake-survsign}
+\end{table}
+The system layout is depicted in Figure~\ref{fig:brakesystem},
+together with prior and posterior sets of reliability functions for the four component types and the complete system.
+Observed lifetimes from test data are indicated by tick marks in each of the four component type panels,
+where $n_\text{M}=5$, $n_\text{H}=10$, $n_\text{C}=15$, and $n_\text{P}=20$.
+We assume $[\ntzl{\text{M}},\ntzu{\text{M}}] = [1,8]\ \forall t$,
+and $[\nktzl, \nktzu] = [1,2]$ for $k \in \{\text{H, C, P}\}$ and all $t$.
+Prior functioning probability bounds for M are based on
+a Weibull cdf with shape $2.5$ and scales $6$ and $8$ for the lower and upper bound, respectively.
+The prior bounds for P can be seen as the least committal bounds
+derived from an expert statement of $\ytz{\text{P}} \in [0.5, 0.65]$ for $t=5$ only.
+
+***We see that posterior lower and upper functioning probabilities drop at those times $t$
+for which there is a failure time in the test data,
+or a drop in the prior functioning probability bounds.
+The lower bound for prior system reliability drops to zero at $t=5$
+since the prior lower bound for P drops to zero at $t=5$;
+for the system to function, at least one brake pad assembly must function.***
+
+For H, near-noninformative prior functioning probability bounds have been selected;
+with the upper bound for P being approximately one for $t \le 5$ as well,
+the prior upper system reliability bound for $t \le 5$ is close to one, too,
+since the system can function on H and one of P1 -- P4 alone.
+Note that the posterior functioning probability interval for M
+is wide not only due to the limited number of observations,
+but also because $\ntzu{\text{M}} = 8$ and the prior-data conflict reaction.
+
+Posterior functioning probability bounds for the complete system
+are much more precise than the prior system bounds,
+reflecting the information gained from component test data.
+The posterior system bounds can be also seen to reflect location and precision of the component bounds;
+for example, the system bounds drop drastically between $t=2.5$ and $t=3.5$
+mainly due to the drop of the bounds for P at that time.
+
 
 \begin{figure}
 \begin{tikzpicture}
@@ -1124,7 +1188,7 @@ the car breaks when at least one brake pad assembly is actuated.***
  cross/.style={cross out,draw=red,very thick,minimum width=7mm, minimum height=5mm},
  hv path/.style={thick, to path={-| (\tikztotarget)}},
  vh path/.style={thick, to path={|- (\tikztotarget)}}]
-\node at (0,0) {\includegraphics[width=\textwidth]{breakingsystem-2}};
+\node at (0,0) {\includegraphics[width=\textwidth]{brakingsystem-2}};
 \begin{scope}[scale=1.00,xshift=3.4cm,yshift=-1.1cm]
 \node[typeM] (M)    at ( 0  , 0  ) {M};
 \node[typeC] (C1)   at ( 1  , 1.5) {C1};
@@ -1165,9 +1229,9 @@ the car breaks when at least one brake pad assembly is actuated.***
                   edge[hv path] (P4.north);
 \end{scope}
 \end{tikzpicture}
-\caption{Prior and posterior sets of reliability functions for a simplified automotive breaking system
+\caption{Prior and posterior sets of reliability functions for a simplified automotive brake system
 with layout as depicted in the lower right panel.}
-\label{fig:breakingsystem}
+\label{fig:brakesystem}
 \end{figure}
 
 
@@ -1197,12 +1261,22 @@ Upscaling the survival signature to large real-world systems and networks, consi
 However, even for such systems the fact that one only needs to derive the survival signature once for a system is an advantage,
 and also the monotonicity of the survival signature for coherent systems is very useful if one can only derive it partially.  
 
+The survival signature and its use for uncertainty quantification for system
+reliability can be generalized quite straightforwardly, mainly due to the simplicity of this concept.
+For example, one may generalize the system structure function from a binary function to a probability, %\citep[see]{CCM16},
+to reflect uncertainty about system functioning for known states of its components, with a further
+generalization to imprecise probabilities possible. It is also conceptually easy to generalize the
+survival signature to multi-state systems such that it again summarizes the structure function
+in a manner that is sufficient for a range of uncertainty quantifications for the system reliability. 
+
 
 ***Extend the model to deal with right-censored observations which are common in the reliability setting.
-We believe that a minimal assumption (component can fail immediately after censoring or live forever)
-will be simple to implememt but will lead to high imprecision,
+The minimal assumption that a component can either fail immediately after censoring or live forever
+will be simple to implement but will lead to high imprecision,
 whereas assuming exchangeability with other surviving components at moment of censoring
 will be more complex to accomodate but will lead to less imprecision.
+This excangeability assumption lies at the core of the Kaplan-Meier estimator \citep{1958:kaplan-meier},
+and has already been adopted by \citet{2004:coolen-yan} in an imprecise probability context.
 
 ***right-censoring will also allow to use data from running system,
 to calculate its remaining useful life (RUL).

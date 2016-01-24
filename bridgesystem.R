@@ -6,6 +6,8 @@
 library("ReliabilityTheory")
 library(ggplot2)
 library(reshape2)
+library(RColorBrewer)
+library(xtable)
 
 bottomlegend <- theme(legend.position = 'bottom', legend.direction = 'horizontal', legend.title = element_blank())
 rightlegend <- theme(legend.title = element_blank())
@@ -66,14 +68,23 @@ b3df <- rbind(data.frame(b3T1, Part="T1"), data.frame(b3T2, Part="T2"), data.fra
 b3df$Item <- ordered(b3df$Item, levels=c("Prior", "Posterior"))
 b3df$Part <- ordered(b3df$Part, levels=c("T1", "T2", "T3", "System"))
 
-p3 <- ggplot(b3df, aes(x=Time)) + rightlegend
+# + scale_colour_manual(values = c("red","blue"))
+# + scale_fill_brewer(palette="Set3")
+p3 <- ggplot(b3df, aes(x=Time)) + rightlegend + theme_bw()
+p3 <- p3 + scale_fill_manual(values = c("#b2df8a", "#1f78b4")) + scale_colour_manual(values = c("#b2df8a", "#1f78b4"))
 p3 <- p3 + geom_line(aes(y=Upper, group=Item, colour=Item)) + geom_line(aes(y=Lower, group=Item, colour=Item))
-p3 <- p3 + geom_ribbon(aes(ymin=Lower, ymax=Upper, group=Item, colour=Item, fill=Item), alpha=0.3)
+p3 <- p3 + geom_ribbon(aes(ymin=Lower, ymax=Upper, group=Item, colour=Item, fill=Item), alpha=0.5)
 p3 <- p3  + facet_wrap(~Part, nrow=2) + geom_rug(aes(x=x), data=b3dat) + xlab("Time") + ylab("Survival Probability")
 pdf("bridge-latefailures.pdf", width=8, height=5)
 pdf("bridge-earlyfailures.pdf", width=8, height=5)
 pdf("bridge-fittingfailures.pdf", width=8, height=5)
 p3
 dev.off()
+
+b3sigtable <- b3sig[b3sig$T3 == 1,]
+b3sigtable$T1 <- as.factor(b3sigtable$T1)
+b3sigtable$T2 <- as.factor(b3sigtable$T2)
+b3sigtable$T3 <- as.factor(b3sigtable$T3)
+xtable(b3sigtable)
 
 #
