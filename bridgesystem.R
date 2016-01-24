@@ -7,6 +7,7 @@ library("ReliabilityTheory")
 library(ggplot2)
 library(reshape2)
 library(RColorBrewer)
+library(xtable)
 
 bottomlegend <- theme(legend.position = 'bottom', legend.direction = 'horizontal', legend.title = element_blank())
 rightlegend <- theme(legend.title = element_blank())
@@ -79,5 +80,11 @@ pdf("bridge-earlyfailures.pdf", width=8, height=5)
 pdf("bridge-fittingfailures.pdf", width=8, height=5)
 p3
 dev.off()
+
+b3sigtable <- b3sig[b3sig$T3 == 1,]
+b3sigtable$T1 <- as.factor(b3sigtable$T1)
+b3sigtable$T2 <- as.factor(b3sigtable$T2)
+b3sigtable$T3 <- as.factor(b3sigtable$T3)
+xtable(b3sigtable)
 
 #

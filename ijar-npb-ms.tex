@@ -973,6 +973,25 @@ reproducibility.  \ref{ap:software} details how to use this software.
 
 As a toy example, consider a `bridge' type system layout with three types of components T1, T2 and T3,
 as depicted in Figure~\ref{fig:bridge-layout}.
+The survival signature for this system is given in Table~\ref{tab:bridge-survsign}.
+All rows with T3 $=0$ have been omitted; without T3, the system cannot function, thus $\Phi = 0$.
+\begin{table}
+\centering
+\begin{tabular}{ccclccccl}
+  \toprule
+T1 & T2 & T3 & $\Phi$ & \quad & T1 & T2 & T3 & $\Phi$\\ 
+  \midrule
+0 & 0 & 1 & 0    & & 0 & 1 & 1 & 0 \\ 
+1 & 0 & 1 & 0    & & 1 & 1 & 1 & 0 \\ 
+2 & 0 & 1 & 0.33 & & 2 & 1 & 1 & 0.67 \\ 
+3 & 0 & 1 & 1    & & 3 & 1 & 1 & 1 \\ 
+4 & 0 & 1 & 1    & & 4 & 1 & 1 & 1 \\ 
+   \bottomrule
+\end{tabular}
+\caption{Survival signature for the bridge system from Figure~\ref{fig:bridge-layout},
+omitting all rows with T3 $=0$, since $\Phi=0$ for these.}
+\label{tab:bridge-survsign}
+\end{table}
 For component types T1 and T2, we consider a near-noninformative set of prior reliability functions.
 For components of type T3, we consider an informative set of prior reliability functions
 as given in Table~\ref{tab:bridge-T3prior}.
@@ -994,7 +1013,7 @@ $\ytzl{3}$ & 0.625 & 0.375 & 0.250 & 0.125 & 0.010 \\
 $\ytzu{3}$ & 0.999 & 0.875 & 0.500 & 0.375 & 0.250 \\
 \bottomrule
 \end{tabular}
-\caption{Lower and upper prior functioning probability bounds for component type T3 in the `bridge' system.}
+\caption{Lower and upper prior functioning probability bounds for component type T3 in the `bridge' system example.}
 \label{tab:bridge-T3prior}
 \end{table}
 
