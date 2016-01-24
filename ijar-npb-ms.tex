@@ -24,6 +24,8 @@
 
 % ------------ custom defs -------------
 
+\usepackage{mathtools}
+
 \newtheorem{theorem}{Theorem}
 \newtheorem{lemma}[theorem]{Lemma}
 \newtheorem{proposition}[theorem]{Proposition}
@@ -782,7 +784,9 @@ is attained when $\yktz = \yktzu$ for all possible $\nktz$ values.
 
 The analogous result for $\nktz$ is more subtle, because stochastic 
 dominance is not guaranteed at a single value.  The following Theorem 
-provides the conditions under which an upper or lower limit has first-order stochastic dominance.
+provides simple sufficient conditions under which an upper or lower 
+limit has first-order stochastic dominance and has virtually no 
+computational overhead to test.
 
 \begin{theorem}
   \label{thm:n}
@@ -790,15 +794,47 @@ provides the conditions under which an upper or lower limit has first-order stoc
   \[ p(l \mid y, n, m, s, N) \propto \frac{B(l + ny + s, m - l + n(1-y) + N - s)}{B(ny + s, n(1-y) + N - s)}, \]
   with $y, m, s,$ and $N$ fixed and unknown.  
   Then,
-  \[ y > \frac{s + m}{N + m - 1} \implies \beta_{\nu} \ge_{\mathrm{st}} \beta_{\nl} \]
+  \[ y > \frac{s + m - 1}{N + m - 1} \implies \beta_{\nu} \ge_{\mathrm{st}} \beta_{\nl} \]
   and 
   \[ y < \frac{s}{N + m - 1} \implies \beta_{\nu} \le_{\mathrm{st}} \beta_{\nl} \]
-  If $\frac{s}{N + m - 1} < y < \frac{s + m}{N + m - 1}$ then first-order stochastic dominance is not guaranteed.
 \end{theorem}
 The proof is provided in Appendix \ref{ap:proofs}, p.\pageref{prf:n}.
 
-These first-order stochastic domination results now gives the exact 
-solution for $\lRsys(\cdot)$ and $\uRsys(\cdot)$.  Thus,
+If $\frac{s}{N + m - 1} < y < \frac{s + m - 1}{N + m - 1}$ then 
+Theorem 2 cannot determine stochastic dominance.  The following slightly
+more computationally costly Lemma may be able to determine first-order
+stochastic dominance in such situations.
+\begin{lemma}
+  \label{lem:n}
+  Let $\beta_n$ denote the Beta-Binomial distribution as in Theorem \ref{thm:n}.  Define
+  \[ \mathcal{L}_{\nu,\nl}(l) := \frac{p(l \mid y, \nu, m, s, N)}{p(l \mid y, \nl, m, s, N)} \]
+  Then,
+  \[ \left. \begin{aligned}
+       \mathcal{L}_{\nu,\nl}(0) \le 1 \\
+       \mathcal{L}_{\nu,\nl}(m) \ge 1 \\
+    \end{aligned} \right\}
+    \implies \beta_{\nu} \ge_{\mathrm{st}} \beta_{\nl} \]
+  and
+  \[ \left. \begin{aligned}
+       \mathcal{L}_{\nu,\nl}(0) \ge 1 \\
+       \mathcal{L}_{\nu,\nl}(m) \le 1 \\
+    \end{aligned} \right\}
+    \implies \beta_{\nu} \le_{\mathrm{st}} \beta_{\nl} \]
+\end{lemma}
+The proof is provided in Appendix \ref{ap:proofs}, p.\pageref{prf:n2}.
+In the cases where neither Theorem \ref{thm:n} or Lemma \ref{lem:n} apply,
+the entire posterior system reliability function must be optimised to 
+find the minima/maxima.
+In practise, in the examples to be presented in the sequel, Theorem 
+\ref{thm:n} and Lemma \ref{lem:n} do provide guarantees of first-order
+stochastic dominance for the vast majority of time points, $t$,
+substantially lowering the computational costs of performing the
+minimisation/maximisation involved in finding the sets of system 
+reliability functions compared to either numerical optimisation or
+an exhaustive grid search (which would get exponentially slower in 
+the number of different components).
+
+Thus,
 %For $\lRsys(\cdot)$, the minimum is achieved at
 %$\nktzu$ if $\yktzl(n_k+m_k-1)-s^k_t-m_k < 0$ and is achieved at 
 %$\nktzl$ if $\yktzl(n_k+m_k-1)-s^k_t-m_k > 0$.
@@ -813,10 +849,11 @@ solution for $\lRsys(\cdot)$ and $\uRsys(\cdot)$.  Thus,
     \nonumber\\
  &= \sum_{l_1=0}^{m_1} \cdots \sum_{l_K=0}^{m_K} \Phi(l_1, \ldots, l_K) \times \nonumber \\ & \hspace*{8ex}
     \prod_{k=1}^K {m_k \choose l_k} \frac{B(l_k + \nktzo\yktzl + s^k_t, m_k - l_k + \nktzo(1-\yktzl) + n_k - s^k_t)}{B(\nktzo\yktzl + s^k_t, \nktzo(1-\yktzl) + n_k - s^k_t)} \label{eq:LwrSysPost}\\
- &\qquad \qquad \mbox{where } \nktzo = \left\{ \begin{aligned}
-   \nktzu & \quad\mbox{if}\quad \yktzl < \frac{s}{N + m - 1} \\
-   \nktzl & \quad\mbox{if}\quad \yktzl > \frac{s + m}{N + m - 1} \\
-   \mathrm{optimised} & \quad\mbox{if}\quad \frac{s}{N + m - 1} < \yktzl < \frac{s + m}{N + m - 1}
+ &\mathrm{where} \nonumber \\
+ &\nktzo = \left\{ \begin{aligned}
+   \nktzu & \quad\mbox{if}\ \yktzl < \frac{s^k_t}{n_k + m_k - 1} \vee \Big( \mathcal{L}_{\nktzu,\nktzl}(0) \ge 1 \wedge \mathcal{L}_{\nktzu,\nktzl}(m) \le 1 \Big) \\
+   \nktzl & \quad\mbox{if}\ \yktzl > \frac{s^k_t + m_k - 1}{n_k + m_k - 1} \vee \Big( \mathcal{L}_{\nktzu,\nktzl}(0) \le 1 \wedge \mathcal{L}_{\nktzu,\nktzl}(m) \ge 1 \Big) \\
+   & \quad\mbox{optimised otherwise}
  \end{aligned} \right. \nonumber
 \end{align}
 
@@ -1218,6 +1255,19 @@ to calculate its remaining useful life (RUL).
   Hence, $\mathcal{L}(\cdot)$ is monotone increasing for $0 < \yl < \yu < 1$, so that $\beta_{\yu}$ is larger than or equal to $\beta_{\yl}$ in monotone likelihood ratio order ($\beta_{\yu} \ge_\mathrm{lr} \beta_{\yl}$).  But, $\beta_{\yu} \ge_\mathrm{lr} \beta_{\yl} \implies \beta_{\yu} \ge_\mathrm{st} \beta_{\yl}$ (\cite[Theorem 1.C.1, p.43]{shaked2007}) giving the required result.
 \end{proof}
 
+%\begin{lemma}
+%  \label{lm:ineq}
+%  Let $a, b > 0$.  Then, \[ b > a \quad \iff \quad \frac{a}{b} < \frac{a \xi + \varepsilon}{b \xi + \varepsilon} \quad \forall \  \xi, \varepsilon > 0 \]
+%\end{lemma}
+%\begin{proof}
+%  Since everything is strictly positive, the proof follows trivially:
+%  \begin{align*}
+%    \frac{a}{b} &< \frac{a \xi + \varepsilon}{b \xi + \varepsilon} \\
+%    \iff \quad a b \xi + a \varepsilon &< a b \xi + b \varepsilon \\
+%    \iff \quad a &< b
+%  \end{align*}
+%\end{proof}
+
 \begin{proof}[\textbf{Proof of Theorem \ref{thm:n}, p\pageref{thm:n}}]
   \label{prf:n}
   Consider the likelihood ratio for the two Beta Binomial distributions $\beta_{\nu}$ and $\beta_{\nl}$,
@@ -1260,24 +1310,169 @@ to calculate its remaining useful life (RUL).
   \begin{align*}
     (\nu - \nl)[y (N + m - 1) - s] - l (\nu - \nl)>0.
   \end{align*}
-  This limit is hardest to satisfy for $l=m$ since $\nu-\nl>0$.
+  This limit is hardest to satisfy for $l=m-1$ since $\nu-\nl>0$ (note $l\ne m$ since we are evaluating $\mathcal{L}(l+1)/\mathcal{L}(l)$, so $m-1$ is the maximal value $l$ can take).
   Thus, for monotonicity to hold for all $l$, we require
   \begin{align*}
-    (\nu - \nl)[y (N + m - 1) - s] - m (\nu - \nl) &>0 \\
-    \implies (\nu - \nl)[y (N + m - 1) - s - m] &>0
+    (\nu - \nl)[y (N + m - 1) - s] - (m - 1) (\nu - \nl) &>0 \\
+    \implies (\nu - \nl)[y (N + m - 1) - s - m + 1] &>0
   \end{align*}
   Since $\nu-\nl>0$ by definition, we have a monotonically increasing 
-  likelihood ratio only when \[ y (N + m - 1) - s - m > 0. \]
+  likelihood ratio only when \[ y (N + m - 1) - s - m + 1 > 0. \]
   By a similar argument, the likelihood ratio is only monotonically decreasing when
   \[ y (N + m - 1) - s < 0. \]
   Thus,
-  \[ y > \frac{s + m}{N + m - 1} \implies \beta_{\nu} \ge_{\mathrm{lr}} \beta_{\nl} \implies \beta_{\nu} \ge_{\mathrm{st}} \beta_{\nl} \]
+  \begin{equation}
+    y > \frac{s + m - 1}{N + m - 1} \implies \beta_{\nu} \ge_{\mathrm{lr}} \beta_{\nl} \implies \beta_{\nu} \ge_{\mathrm{st}} \beta_{\nl}
+    \label{eq:nuDOMnl}
+  \end{equation}
   and 
-  \[ y < \frac{s}{N + m - 1} \implies \beta_{\nu} \le_{\mathrm{lr}} \beta_{\nl} \implies \beta_{\nu} \le_{\mathrm{st}} \beta_{\nl} \]
+  \begin{equation}
+    y < \frac{s}{N + m - 1} \implies \beta_{\nu} \le_{\mathrm{lr}} \beta_{\nl} \implies \beta_{\nu} \le_{\mathrm{st}} \beta_{\nl} 
+    \label{eq:nlDOMnu}
+  \end{equation}
   by \cite[Theorem 1.C.1, p.43]{shaked2007}.  In the intermediate case,
-  \[ \frac{s}{N+m-1} < y < \frac{s+m}{N+m-1} \]
-  we cannot definitively state the stochastic ordering on $\beta_{\nu}$ and $\beta_{\nl}$.
+  \[ \frac{s}{N+m-1} < y < \frac{s+m-1}{N+m-1} \]
+  standard likelihood ratio ordering theory cannot definitively state
+  the stochastic ordering on $\beta_{\nu}$ and $\beta_{\nl}$.
 \end{proof}
+
+\begin{proof}[\textbf{Proof of Lemma \ref{lem:n}, p\pageref{lem:n}}]
+  \label{prf:n2}
+  \eqref{eq:nuDOMnl} and \eqref{eq:nlDOMnu}
+  are sufficient but not necessary conditions.  Using theory in 
+  \cite{klenke2010} we can sharpen these conditions to provide
+  first-order stochastic dominance conditions for a larger range of
+  parameter values.
+  
+  Proposition 2.1, p.399 of \cite{klenke2010} proves that half-monotone
+  likelihood ratio ordering --- i.e.\ monotonicity of $\mathcal{L}(l+1) / \mathcal{L}(l)$ ---
+  together with left and right tail conditions on $\mathcal{L}(\cdot)$
+  imply first order stochastic dominance.
+  
+  \medskip
+  \noindent{\emph{Half-monotonicity of $\mathcal{L}(\cdot)$}}
+  
+  Although there exist parameters for which $\mathcal{L}(\cdot)$ is
+  not monotone, it is half-monotone.  That is, $\mathcal{L}(l+1) / \mathcal{L}(l)$ is itself monotone.  For simplicity, write
+  \begin{align*}
+    \frac{\mathcal{L}(l+1)}{\mathcal{L}(l)} = \frac{(l + \pu)(\el - l)}{(l + \pl)(\eu - l)}
+    \quad \mbox{where} \left\{\begin{aligned}
+      \pu &= \nu y + s \\
+      \pl &= \nl y + s \\
+      \eu &= m - 1 + \nu (1 - y) + N - s \\
+      \el &= m - 1 + \nl (1 - y) + N - s
+    \end{aligned} \right.
+  \end{align*}
+  Then,
+  \begin{align*}
+    \frac{\mathcal{L}(l+2)/\mathcal{L}(l+1)}{\mathcal{L}(l+1)/\mathcal{L}(l)} =
+    \frac{(\pl + l)(\pu + l + 1)(\el - l - 1)(\eu - l)}
+           {(\pl + l + 1)(\pu + l)(\el -
+l)(\eu - l - 1)}
+    &> 1 \\
+    \iff \qquad \frac{\pl + l}{\pu + l} \cdot \frac{\el - l - 1}{\eu - l - 1} 
+    &> \frac{\pl + l + 1}{\pu + l + 1} \cdot \frac{\el -
+l}{\eu - l}
+  \end{align*}
+  But, $\pu > \pl > 0$, $\eu > \el > 0$, $l > 0$, %and Lemma \ref{lm:ineq} (p.\pageref{lm:ineq}) with $\xi=\varepsilon=1$ imply
+  so it is trivial to prove
+  \[
+    \frac{\pl + l}{\pu + l} > \frac{\pl + l + 1}{\pu + l + 1} \qquad\mbox{and}\qquad \frac{\el - l - 1}{\eu - l - 1} > \frac{\el -
+l}{\eu - l} \qquad \forall\ l \in \{0,\dots,m\}
+  \]
+  Thus we can conclude that $\mathcal{L}(\cdot)$ is half monotone increasing.
+
+  \medskip
+  \noindent{\emph{Tail conditions on $\mathcal{L}(\cdot)$}}
+  
+  It is not difficult to derive the same loose bounds as in Theorem \ref{thm:n}
+  using the tail conditions.  However, it is also easy to see that 
+  these are sufficient but not necessary.  Sharpening these bounds
+  in terms of the other parameter values involves seemingly intractable
+  algebra, so we leave the tail condition as the alternative slightly 
+  more costly numerical check when the conditions of Theorem
+  \ref{thm:n} are not satisfied.  Evaluation of $\mathcal{L}(\cdot)$ 
+  at two values is still orders of magnitude less costly than 
+  reevaluation of $\lRsys(\cdot)$ or $\uRsys(\cdot)$.
+\end{proof}
+%  \medskip
+%  \noindent{\emph{ii) Left tail condition $\mathcal{L}(0) \le 1$}}
+%
+%  The second condition is that
+%  \begin{align*}
+%    \mathcal{L}(0) 
+%    &= \frac{\Gamma(m + \nu (1 - y) + N - s) \Gamma(\nl (1 - y) + N - s)}
+%            {\Gamma(m + \nl (1 - y) + N - s) \Gamma(\nu (1 - y) + N - s)} \\
+%    &\qquad \times \frac{\Gamma(\nu+N) \Gamma(m+\nl+N)}
+%                       {\Gamma(\nl+N) \Gamma(m+\nu+N)} \le 1
+%  \end{align*}
+%  
+%  Let, $m=1$, it's minimal possible value.  Then,
+%  \begin{align*}
+%    &\frac{\Gamma(1 + \nu (1 - y) + N - s) \Gamma(\nl (1 - y) + N - s) \Gamma(\nu + N) \Gamma(1 + \nl + N)}
+%            {\Gamma(1 + \nl (1 - y) + N - s) \Gamma(\nu (1 - y) + N - s) \Gamma(\nl + N) \Gamma(1 + \nu + N)} \\
+%    &= \frac{(\nu (1 - y) + N - s) (\nl + N)}{(\nl (1 - y) + N - s) (\nu + N)}
+%  \end{align*}
+%  But,
+%  \[ \frac{(\nu (1 - y) + N - s) (\nl + N)}{(\nl (1 - y) + N - s) (\nu + N)} \le 1 \quad\iff\quad y \le \frac{s}{N} \]
+%  
+%  Assume $y \le s / N$ and $\mathcal{L}(0 \mid m = k) \le 1$.  Then, for $m=k+1$
+%  \begin{align*}
+%    &\frac{\Gamma(k+1 + \nu (1 - y) + N - s) \Gamma(\nl (1 - y) + N - s) \Gamma(\nu + N) \Gamma(k+1 + \nl + N)}
+%            {\Gamma(k+1 + \nl (1 - y) + N - s) \Gamma(\nu (1 - y) + N - s) \Gamma(\nl + N) \Gamma(k+1 + \nu + N)} \\
+%    &= \frac{(k + \nu (1 - y) + N - s) (k + \nl + N)}{(k + \nl (1 - y) + N - s) (k + \nu + N)}\,\mathcal{L}(0 \mid m = k)
+%  \end{align*}
+%  So a sufficient condition (but maybe not necessary, since it is possible that $\mathcal{L}(0 \mid m = k) \ll 1$) is
+%  \begin{align*}
+%    \frac{(m-1 + \nu (1 - y) + N - s) (m-1 + \nl + N)}{(m-1 + \nl (1 - y) + N - s) (m-1 + \nu + N)} &\le 1 \\
+%    \iff \quad (\nl - \nu) (y (N + m - 1) - s) &\le 1 \\
+%    \iff \quad y &\le \frac{s}{N + m - 1}
+%  \end{align*}
+%  
+%  This sufficient condition does not provide sharper bounds than 
+%  those implied by likelihood ratio ordering.
+%  
+%  \medskip
+%  \noindent{\emph{iii) Right tail condition $\mathcal{L}(m) \ge 1$}}
+%  
+%  The second condition is that
+%  \begin{align*}
+%    \mathcal{L}(m) 
+%    &= \frac{\Gamma(m + \nu y + s) \Gamma(\nl y + s) \Gamma(\nu+N) \Gamma(m+\nl+N)}
+%            {\Gamma(m + \nl y + s) \Gamma(\nu y + s) \Gamma(\nl+N) \Gamma(m+\nu+N)} \ge 1 \\
+%  \end{align*}
+%
+%  Again, letting, $m=1$, it's minimal possible value,
+%  \begin{align*}
+%    &\frac{\Gamma(1 + \nu y + s) \Gamma(\nl y + s) \Gamma(\nu+N) \Gamma(1+\nl+N)}
+%            {\Gamma(1 + \nl y + s) \Gamma(\nu y + s) \Gamma(\nl+N) \Gamma(1+\nu+N)} \\
+%    &= \frac{(\nu y + s)(\nl + N)}{(\nl y + s)(\nu + N)}
+%  \end{align*}
+%  But,
+%  \[ \frac{(\nu y + s)(\nl + N)}{(\nl y + s)(\nu + N)} \ge 1 \quad\iff\quad y \ge \frac{s}{N} \]
+%  
+%  Assume $y \ge s / N$ and $\mathcal{L}(m \mid m = k) \ge 1$.  Then, for $m=k+1$
+%  \begin{align*}
+%    &\frac{\Gamma(k+1 + \nu y + s) \Gamma(\nl y + s) \Gamma(\nu+N) \Gamma(k+1+\nl+N)}
+%            {\Gamma(k+1 + \nl y + s) \Gamma(\nu y + s) \Gamma(\nl+N) \Gamma(k+1+\nu+N)} \\
+%    &= \frac{(k + \nu y + s) (k+\nl+N)}{(k + \nl y + s) (k+\nu+N)}\,\mathcal{L}(m \mid m = k)
+%  \end{align*}
+%  So a sufficient condition (but maybe not necessary, since it is possible that $\mathcal{L}(m \mid m = k) \gg 1$) is
+%  \begin{align*}
+%    \frac{(m-1 + \nu y + s) (m-1+\nl+N)}{(m-1 + \nl y + s) (m-1+\nu+N)} &\ge 1 \\
+%    \iff \quad (\nu - \nl) (y (N + m - 1) - s - m + 1) &\le 1 \\
+%    \iff \quad y &\le \frac{s + m - 1}{N + m - 1}
+%  \end{align*}
+%  
+%  This sufficient condition does not provide sharper bounds than 
+%  those implied by likelihood ratio ordering.
+%  
+%  \medskip
+%  \noindent{\emph{Conclusion}}
+%
+%  Thus,
+%  \[ \frac{s}{N+m-1} < y < \frac{s+m+1}{N+m-1} \implies \beta_{\nl} \sim_{\mathrm{hmlr}} \beta_{\nu} \implies \beta_{\nu} \ge_{\mathrm{st}} \beta_{\nl} \]
+%  by \cite[Proposition 2.1, p.399]{klenke2010}.
 
 
 
