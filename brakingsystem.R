@@ -100,4 +100,20 @@ ab1 <- ab1 + bottomlegend
 pdf("brakingsystem-2.pdf", width=8, height=5)
 ab1
 dev.off()
+
+absigtable <- subset(absig, M == 1 | H == 1)
+absigtable <- subset(absigtable, P > 0)
+absigtable <- subset(absig, Probability != 0 & Probability != 1)
+absigtable$C <- as.factor(absigtable$C)
+absigtable$H <- as.factor(absigtable$H)
+absigtable$M <- as.factor(absigtable$M)
+absigtable$P <- as.factor(absigtable$P)
+absigtable2 <- data.frame(M=absigtable$M,
+                          H=absigtable$H,
+                          C=absigtable$C,
+                          P=absigtable$P, Probability=absigtable$Probability)
+
+absigxtable <- xtable(absigtable2)
+print(absigxtable, include.rownames=F)
+
 #
