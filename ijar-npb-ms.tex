@@ -1443,18 +1443,18 @@ to calculate its remaining useful life (RUL).
     \frac{(\pl + l)(\pu + l + 1)(\el - l - 1)(\eu - l)}
            {(\pl + l + 1)(\pu + l)(\el -
 l)(\eu - l - 1)}
-    &> 1 \\
+    &< 1 \\
     \iff \qquad \frac{\pl + l}{\pu + l} \cdot \frac{\el - l - 1}{\eu - l - 1} 
-    &> \frac{\pl + l + 1}{\pu + l + 1} \cdot \frac{\el -
+    &< \frac{\pl + l + 1}{\pu + l + 1} \cdot \frac{\el -
 l}{\eu - l}
   \end{align*}
   But, $\pu > \pl > 0$, $\eu > \el > 0$, $l > 0$, %and Lemma \ref{lm:ineq} (p.\pageref{lm:ineq}) with $\xi=\varepsilon=1$ imply
   so it is trivial to prove
   \[
-    \frac{\pl + l}{\pu + l} > \frac{\pl + l + 1}{\pu + l + 1} \qquad\mbox{and}\qquad \frac{\el - l - 1}{\eu - l - 1} > \frac{\el -
+    \frac{\pl + l}{\pu + l} < \frac{\pl + l + 1}{\pu + l + 1} \qquad\mbox{and}\qquad \frac{\el - l - 1}{\eu - l - 1} < \frac{\el -
 l}{\eu - l} \qquad \forall\ l \in \{0,\dots,m\}
   \]
-  Thus we can conclude that $\mathcal{L}(\cdot)$ is half monotone increasing.
+  Thus we can conclude that $\mathcal{L}(\cdot)$ is half monotone decreasing.
 
   \medskip
   \noindent{\emph{Tail conditions on $\mathcal{L}(\cdot)$}}
