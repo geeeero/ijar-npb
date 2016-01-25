@@ -70,7 +70,7 @@ b3df$Part <- ordered(b3df$Part, levels=c("T1", "T2", "T3", "System"))
 
 # + scale_colour_manual(values = c("red","blue"))
 # + scale_fill_brewer(palette="Set3")
-p3 <- ggplot(b3df, aes(x=Time)) + rightlegend + theme_bw()
+p3 <- ggplot(b3df, aes(x=Time)) + theme_bw()
 p3 <- p3 + scale_fill_manual(values = c("#b2df8a", "#1f78b4")) + scale_colour_manual(values = c("#b2df8a", "#1f78b4"))
 p3 <- p3 + geom_line(aes(y=Upper, group=Item, colour=Item)) + geom_line(aes(y=Lower, group=Item, colour=Item))
 p3 <- p3 + geom_ribbon(aes(ymin=Lower, ymax=Upper, group=Item, colour=Item, fill=Item), alpha=0.5)
@@ -78,7 +78,7 @@ p3 <- p3  + facet_wrap(~Part, nrow=2) + geom_rug(aes(x=x), data=b3dat) + xlab("T
 pdf("bridge-latefailures.pdf", width=8, height=5)
 pdf("bridge-earlyfailures.pdf", width=8, height=5)
 pdf("bridge-fittingfailures.pdf", width=8, height=5)
-p3
+p3 + rightlegend
 dev.off()
 
 b3sigtable <- b3sig[b3sig$T3 == 1,]
