@@ -117,10 +117,21 @@
 ``Coordinated Advanced Maintenance and Logistics Planning for the Process Industries'' (CAMPI).}
 
 \begin{abstract}
-Imprecise Bayesian nonparametric approach to system reliability with multiple types of components,
-sets of priors through sets of canonical parameters,
-leading to sets of system reliability functions,
-reflection of prior-data conflict
+An imprecise Bayesian nonparametric approach
+to system reliability with multiple types of components
+is developed.
+This allows modelling partial or imperfect prior knowledge on component failure distributions
+in a flexible way through bounds on the functioning probability.
+Given component level test data these bounds are propagated 
+to bounds on the posterior predictive distribution for the reliability of
+a new system containing components exchangeable with those 
+used in testing.  The method further enables identification 
+of prior data conflict at the system level based on component level test data.
+
+There are new results on first-order stochastic dominance for the Beta-Binomial distribution
+which make the technique computationally tractable.  These methodological contributions can be immediately used in
+applications by reliability practitioners using the freely available
+software tools which are provided.
 \end{abstract}
 
 \begin{keyword}
@@ -137,12 +148,57 @@ Prior-data conflict
 
 \section{Introduction}
 
-(some sentences may be useful for the abstract instead)
+A critique of the methodological approach to a reliability 
+analysis may often encompass a few common concerns.
+First, in a parametric 
+setting, there may be no particularly strong reason to
+believe that the small part of component model
+space covered by a particular probability distribution 
+necessarily contains the `true' component lifetime distribution.
+Further, Bayesian methods may be invoked in order to 
+incorporate expert opinion or other knowledge which falls
+outside the specific testing data under consideration.  The 
+classic concern here is in whether one can truly express 
+ones beliefs with the exactness a prior requires.  Finally,
+it would be valuable in application to have a means of identifying when the
+prior choice is having a strong effect and when not.  Any method 
+hoping to address these concerns must do so whilst enabling 
+realistic system models (with heterogeneous component types)
+and remain computationally tractable.
 
-System with components of $k=1,\ldots,K$ different types.
-There are $m_k$ components of type $k$ in the system.
-Components of the same type are i.i.d.\ and independent of components of other types.
-Arbitrary system layout, i.e.\ any series / parallel combination, $k$ out of $n$ etc.
+Herein, we make steps toward addressing these concerns by developing
+a nonparametric method which utilises imprecise probability 
+to encapsulate more vague or imperfect prior beliefs using
+upper and lower probabilities.  This overcomes the concern
+about component lifetimes being outside a particular 
+parametric family, uses a more flexible prior modelling 
+framework and leads to an easy method of detecting prior-data
+conflict which should be of concern at the system level.  
+
+Furthermore, the method is based on the survival signature, a 
+recent development which naturally accommodates 
+heterogeneous component types laid out in any arbitrary
+manner which maintains coherency of the system.  As will be 
+seen in the sequel, the method remains computationally tractable.
+
+\td{*** Some more words on the benefits?}
+
+In Section \ref{sec:survsign} we review the survival 
+signature and in Section \ref{sec:nonparamapproach} we 
+review the nonparametric approach to Bayesian reliability analysis
+upon which our work builds 
+\cite{2015:bayessurvsign}.  Section \ref{sec:reparam} details
+the reparameterisation of that approach which enables the natural
+formulation of the system reliability bounds and which leads to
+nice closed form results in some later theory.
+Section \ref{sec:setsofbetapriors} lays the ground work to incorporate imprecise probability,
+culminating in the main results and contributions of this 
+work, detailed in Section \ref{sec:setsofrel}.  Section 
+\ref{sec:examples} provides details on the software contributions
+of this work and shows two worked examples
+demonstrating the practicality and usefulness of the method.
+
+\td{*** LOUIS: Not sure if the above is too compact or ok and whether we need to be more expansive in the orange bit above?  Thoughts appreciated! I've left text below which you may want to draw from? ***}
 
 The survival signature allows for straightforward computation of system reliability
 for systems with complex layouts and multiple component types.
@@ -153,7 +209,7 @@ Based on expert assumptions for component failure distributions and component te
 we make predictive inference for a system with components that are exchangeable
 with the test components by calculating the system reliability function $\Rsys(t) = P(\Tsys > t)$.
 Considering a discrete grid of time points $\{t_1, \ldots, \tmax\}$,
-naturally a Bayesian model for the functioning probability at each time point arises (see Section~\ref{sec:nonparamapproach}).
+a Bayesian model for the functioning probability at each time point naturally arises (see Section~\ref{sec:nonparamapproach}).
 To account for uncertainty in the choice of prior
 and due to the inherent issue with prior-data conflict (see below / Section~\ref{sec:reparam}),
 we propose an imprecise probability approach
@@ -348,8 +404,6 @@ The time grid $\cal T$ can be chosen to be appropriately dense for the applicati
 with the natural extension between grid points by taking $R^k(\cdot)$ to be the right continuous step function induced by the grid values,
 $R^k(t) = p^k_{t_j}, t \in [t_j, t_{j+1})$,
 or by taking $p^k_{t_j}$ and $p^k_{t_{j+1}}$ as upper and lower bounds for $R^k(t)$, $t \in [t_j, t_{j+1})$.
-
-\td{***illustrate discrete distribution with a graph of R, f, h?***}
 
 The independence assumption for components of the same type immediately implies that 
 the number of functioning components of type $k$ in the system
@@ -955,7 +1009,7 @@ and then to further refine the obtained bounds as deemed necessary by the expert
 
 
 \section{Practical Usage and Examples}
-
+\label{sec:examples}
 %***code published in Louis' \textbf{R} package \texttt{ReliabilityTheory},
 
 \subsection{Software}
@@ -1294,7 +1348,7 @@ be relevant when propagated to the uncertainty in the whole system.
 
 In this paper we have contributed an imprecise Bayesian nonparametric approach
 to system reliability with multiple types of components.
-The approach allows modeling partial or imperfect prior knowledge on component failure distributions
+The approach allows modelling partial or imperfect prior knowledge on component failure distributions
 in a flexible way through bounds on the functioning probability for a grid of time points, 
 and combines this information with test data in an imprecise Bayesian framework.
 Component-wise predictions on the number of functioning components
