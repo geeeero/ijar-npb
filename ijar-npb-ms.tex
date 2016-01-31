@@ -695,7 +695,7 @@ Naturally, one cannot have prior-data conflict in cases of near prior ignorance.
 The elements reviewed and extended above culminate hereinafter in the primary contribution of the current work,
 providing a framework in which the nonparametric Bayesian system reliability approach developed in \cite{2015:bayessurvsign}
 is extended to incorporate the sets of priors approach of \citet{2009:WalterAugustin},
-enabling diagnoses of prior-data conflict which is consequential at the system
+enabling diagnosis of prior-data conflict which is consequential at the system
 level, via sets of system reliability functions.
 
 To obtain the lower and upper bound for the system reliability function $\Rsys(t)$,
@@ -750,7 +750,7 @@ for each $k$, then this ordering can be used to determine the elements of $\PtZi
 which minimise and maximise the overall system reliability function without
 resorting to computationally expensive exhaustive searches or numerical optimisation.
 
-We therefore start by proving the following result, where indices are suppressed for readability.
+We therefore start by providing the following result, where indices are suppressed for readability.
 We use $\ge_{\mathrm{st}}$ to denote first-order stochastic dominance.
 
 \begin{theorem}
@@ -790,8 +790,8 @@ computational overhead to test.
 The proof is provided in Appendix \ref{ap:proofs}, p.\pageref{prf:n}.
 
 If $\frac{s}{N + m - 1} < y < \frac{s + m - 1}{N + m - 1}$ then 
-Theorem 2 cannot determine stochastic dominance.  The following slightly
-more computationally costly Lemma may be able to determine first-order
+Theorem 2 cannot determine stochastic dominance.  The following Lemma which is slightly
+more computationally costly, but still much faster than an exhaustive search, may be able to determine first-order
 stochastic dominance in such situations.
 \begin{lemma}
   \label{lem:n}
@@ -846,57 +846,66 @@ Thus,
  \end{aligned} \right. \nonumber
 \end{align}
 
-\td{*** Louis: I've edited to here so far, will continue editing rest of this section if we are happy with the above! ***}
+The result for $\uRsys(\cdot)$ is completely analogous.  It is interesting
+to note that if $m_k=1$ the bounds are sharp on stochastic dominance.
+In particular, when $m_k=1$, $\yktzl < \frac{s^k_t}{n_k}$ indicates the 
+lower bound is not in conflict with the observed data, whilst
+$\yktzl > \frac{s^k_t}{n_k}$ is in conflict since the observed
+empirical probability of functioning at time $t$ is below the
+prior lower bound.  Consequently, note that $\nktzl$ is 
+used only when the prior comes into conflict with the data.
+Since $\nktz$ controls the prior certainty, this accords with
+the intuition that the least certain prior bound is invoked
+when in a conflict setting and the more certain prior bound used when the data agrees.
 
+\subsection{Prior parameter choice}
 In the following, we will give some guidelines on how to choose the parameter sets $\PkZi{1}, \ldots, \PkZi{\tmax}$
 which define the set of prior discrete reliability functions for components of type $k$.
-We think this is much easier in terms of $\nz$ and $\yz$ than it would be in terms of $\alpha$ and $\beta$.
-%***How to choose the sets of priors for the survival function of type $k$ components,
-%i.e. how to choose $\PkZi{1}, \ldots \PkZi{\tmax}$?***
+We advocate that this is much easier in terms of $\nz$ and $\yz$ than it would be in terms of $\alpha$ and $\beta$.
 
-As mentioned in Section~\ref{sec:nonparamapproach}, for the actual functioning probabilities $\ptk$
-it should hold that $p^k_{t_j} \ge p^k_{t_{j+1}}$. (***or $p^k_{t_i} \ge p^k_{t_i}$ for all $i < j$).
+As mentioned in Section~\ref{sec:nonparamapproach}, the functioning probabilities $\ptk$
+must satisfy $p^k_{t_j} \ge p^k_{t_{j+1}}$.% (***or $p^k_{t_i} \ge p^k_{t_i}$ for all $i < j$).
 %***not necessary to ensure $p^k_{t_j} \ge p^k_{t_{j+1}}$ via $\yzl_{k,t_j} \ge \yzu_{k,t_{j+1}}$
 %as for relatively dense $t$ grids, neighbouring intervals should be able to overlap***
 %(Prior guess for $p^k_t$ interpretation would say that $\yktz$ cannot increase,
 %but does this need to hold for the prior guess range bound $\yktzu$?)***
-This naturally translates to conditions on the prior guess for $\ptk$,
-such that we propose that 
+This naturally translates to conditions on the prior for $\ptk$,
+so that for example 
 $\yzu_{k,t_j} \ge \yzu_{k,t_{j+1}}$ and $\yzl_{k,t_j} \ge \yzl_{k,t_{j+1}}$ should hold.
-Due to $s^k_t/n_k$ decrasing in $t$ and the weighted average property of the update step for $\ykt$,
-this ensures that 
+Because $s^k_t/n_k$ is decreasing in $t$, the weighted average property of the update step in
+equation \eqref{eq:nyupdate} for $\ykt$ ensures that 
 $\ynu_{k,t_j} \ge \ynu_{k,t_{j+1}}$ and $\ynl_{k,t_j} \ge \ynl_{k,t_{j+1}}$.
-In a situation where we are quite sure about the functioning probability for low $t$,
-but are unsure about what happens for larger $t$ and so want to be maximally cautious for those $t$,
-then we can let $\yktzl$ drop to (almost) 0, but $\yktzu$ should not increase.
+In situations where one has a high degree of certainty about the functioning probability for low $t$,
+but less certainty about what happens for larger $t$,
+then one can let $\yktzl$ drop to (almost) 0, but clearly $\yktzu$ should not increase.
 %***Require $\yzu_{k,t_j} \ge \yzu_{k,t_{j+1}}$ and $\yzl_{k,t_j} \ge \yzl_{k,t_{j+1}}$.
 %If we know, e.g., pretty much what's going on for low $t$
 %but want to be much more cautious for high $t$,
 %then $\yktzl$ can drop to 0, but $\yktzu$ cannot increase.
 
-We think it is not advisable to express certainty about expected functioning probabilities
-with $\nktz$ bounds that vary strongly over $t$.
+It is inadvisable to express certainty in the expected functioning probabilities
+with $\nktz$ bounds that vary substantially over the range of $t$.
 %***Better to express certainty of prior guess via $\nktz$ bounds?\\
-With (strongly) differing $\nktz$ bounds, monotonicty for $\yktn$ bounds cannot be ensured.
+With (strongly) differing $\nktz$ bounds, monotonicity of the $\yktn$ bounds cannot be guaranteed.
 %it can happen that, e.g., $\ynu_{k,t_j} < \ynu_{k,t_{j+1}}$!\\
-E.g., when $\yzu_{k,t_j} = \yzu_{k,t_{j+1}}$, $\yzl_{k,t_j} = \yzl_{k,t_{j+1}}$,
-and $s^k_{t_j}/n_k \in [\yzl_{k,t_j}, \yzu_{k,t_j}]$ (so there is no prior-data conflict),
-and furthermore no failures happening in $[t_j, t_{j+1}]$, i.e., $s^k_{t_{j+1}}/n_k = s^k_{t_{j}}/n_k$, then
-\begin{itemize}
-\item for $\nzu_{k,t_j} < \nzu_{k,t_{j+1}}$ we get $\ynu_{k,t_j} < \ynu_{k,t_{j+1}}$, and
-\item for $\nzu_{k,t_j} > \nzu_{k,t_{j+1}}$ we get $\ynl_{k,t_j} < \ynl_{k,t_{j+1}}$.
-\end{itemize}
-Again, this follows from the weighted average property of $\yktn$;
-for constant $\yktz$, the lower $\nktz$ the closer $\yktn$ is to $s^k_t/n_k$.
-% one can think of the update between interval and precise value: the lower $n$, the 'faster' the interval will shrink!)\\
-It is possible to construct similar examples also with regard to the lower bound $\nzl_{k,t_j}$.
-Therefore, we propose to take the same $\nktz$ bounds for all $t$, or, at most, to let them change with $t$ gradually only.
+For example, if $\yzu_{k,t_j} = \yzu_{k,t_{j+1}}$, $\yzl_{k,t_j} = \yzl_{k,t_{j+1}}$,
+and $s^k_{t_j}/n_k \in [\yzl_{k,t_j}, \yzu_{k,t_j}]$ (meaning there is no prior-data conflict),
+then should there be no observed failures in $[t_j, t_{j+1}]$, so that $s^k_{t_{j+1}}/n_k = s^k_{t_{j}}/n_k$, then
+\begin{align*}
+  \nzu_{k,t_j} < \nzu_{k,t_{j+1}} \quad&\implies\quad\ynu_{k,t_j} < \ynu_{k,t_{j+1}} \quad\mbox{and} \\
+  \nzu_{k,t_j} > \nzu_{k,t_{j+1}} \quad&\implies\quad\ynl_{k,t_j} < \ynl_{k,t_{j+1}}
+\end{align*}
+Again, this follows from \eqref{eq:nyupdate}, the weighted average property.
+It is possible to construct similar examples with regard to the lower bound $\nzl_{k,t_j}$.
+Therefore, we advise taking the same $\nktz$ bounds for all $t$ as far as possible.
+If they do change, it must be very gradual and we recommend diagnosing 
+any problems as above.
 
 Generally, the interpretation as pseudocount or prior strength should guide the choice of bounds for $\nktz$; 
 low values for $\nktz$ as compared to the test sample size $n_k$
 give low weight to the prior expected functioning probability intervals $[\yktzl, \yktzu]$,
 and the location of posterior intervals $[\yktnl, \yktnu]$ will be dominated by the location of $s^k_t/n_k$.
-Furthermore, the length of $[\yktnl, \yktnu]$ is shorter for low $\nktz$ values;
+Furthermore, the length of $[\yktnl, \yktnu]$ is shorter for low $\nktz$ values.  Specifically, 
 in a no-conflict situation, when $\nktzu = n_k$ then $[\yktnl, \yktnu]$ has half the length of $[\yktzl, \yktzu]$.
 In contrast, high values for $\nktz$ will lead to slower learning and wider $\yktn$ intervals,
 which means more cautious posterior inferences.
@@ -911,17 +920,16 @@ while choosing $\nktzu$ with help of the half-width rule as described above.
 As mentioned in Section~\ref{sec:setsofbetapriors},
 it is not advisable to choose $\yktzl = 0$ and $\yktzu = 1$.
 For any $t \not\in \big(\min(\vec{t}^k), \max(\vec{t}^k)\big)$,
-this can lead to improper posterior predictive distributions
-due to zero arguments for the Beta functions in the denominator of \eqref{eq:LwrSysPost}.
+this can lead to improper posterior predictive distributions.
 %Generally, one should choose $\yktzl > 0$ and $\yktzu < 1$ for all $t \not\in \big(\min(\vec{t}^k), \max(\vec{t}^k)\big)$.
-But it is possible to choose values close to $0$ and $1$, respectively,
-and due to the linear update step for $\yktn$ (see Eq.~\eqref{eq:nyupdate}),
+However, it is possible to choose values close to $0$ and $1$, respectively,
+and due to the linear update step for $\yktn$ (see Equation~\eqref{eq:nyupdate}),
 posterior inferences are not overly sensitive to whether $\yktnu = 0.99$ or $\yktnu = 0.9999$.
 %***what to do in extreme tail of component distributions?
 %How sensitive is the method to choosing prior (lower, upper) mean near-zero (how near?) for $p^k_t$ at high $t$'s?***
-Likewise, our nonparametric method does not bring unintuitive tail behaviour
+Likewise, our nonparametric method does not cause unintuitive tail behaviour
 as some parametric methods do;
-there is no problem in, e.g., assigning $\yktnu$ near-zero for high $t$ if prior knowledge suggests so.
+there is no problem, for example, with assigning $\yktnu$ near-zero for high $t$ if prior knowledge suggests so.
 
 %***elicitation: we should also consider the case where $\yktz$ bounds are not given for all $t \in {\cal T}$,
 %as it will be too time-consuming to elicit $\yktz$ bounds for all $t$ in a dense grid.
@@ -930,8 +938,8 @@ in practice this will be often too time-consuming when ${\cal T}$ forms a dense 
 %(Calculating $\Rsys(t)$ for a too coarse grid only will waste information from data.)
 Switching to a coarser time grid will waste information from data,
 as then failure times in the test data are rounded up to the next $t \in {\cal T}$.
-We rather propose to elicit bounds for a subset of ${\cal T}$ only,
-and to fill up the time grid with the least committal bounds, i.e.,
+In the examples here we elicit bounds for a subset of ${\cal T}$
+and fill up the time grid with the least committal bounds, i.e.,
 taking $\yktzu$ equal to last (in the time sequence) elicited $\yktzu$,
 and likewise $\yktzl$ equal to next (in time sequence) elicited $\yktzl$.
 A possible elicitation procedure in this vein could be
