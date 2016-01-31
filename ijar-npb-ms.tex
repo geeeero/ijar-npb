@@ -694,9 +694,12 @@ Naturally, one cannot have prior-data conflict in cases of near prior ignorance.
 
 The elements reviewed and extended above culminate hereinafter in the primary contribution of the current work,
 providing a framework in which the nonparametric Bayesian system reliability approach developed in \cite{2015:bayessurvsign}
-is extended to incorporate the sets of priors approach of \citet{2009:WalterAugustin},
-enabling diagnosis of prior-data conflict which is consequential at the system
-level, via sets of system reliability functions.
+is extended to sets of system reliability functions
+by incorporating the sets of priors approach of \citet{2009:WalterAugustin}.
+This allows for partial or vague specification of prior component reliability functions,
+and enables diagnosis of prior-data conflict which is consequential at the system level.
+
+\subsection{Computation of bounds}
 
 To obtain the lower and upper bound for the system reliability function $\Rsys(t)$,
 we now need to minimise and maximise Equation~\eqref{eq:rsyswithsurvsign} over $\PtZi{1}, \ldots, \PtZi{K}$ for each $t$,
@@ -814,7 +817,7 @@ The proof is provided in Appendix \ref{ap:proofs}, p.\pageref{prf:n2}.
 In the cases where neither Theorem \ref{thm:n} or Lemma \ref{lem:n} apply,
 the entire posterior system reliability function must be optimised to 
 find the minima/maxima.
-In practise, in the examples to be presented in the sequel, Theorem 
+In practice, in the examples to be presented in the sequel, Theorem 
 \ref{thm:n} and Lemma \ref{lem:n} do provide guarantees of first-order
 stochastic dominance for the vast majority of time points, $t$,
 substantially lowering the computational costs of performing the
@@ -859,6 +862,7 @@ the intuition that the least certain prior bound is invoked
 when in a conflict setting and the more certain prior bound used when the data agrees.
 
 \subsection{Prior parameter choice}
+
 In the following, we will give some guidelines on how to choose the parameter sets $\PkZi{1}, \ldots, \PkZi{\tmax}$
 which define the set of prior discrete reliability functions for components of type $k$.
 We advocate that this is much easier in terms of $\nz$ and $\yz$ than it would be in terms of $\alpha$ and $\beta$.
@@ -873,7 +877,7 @@ This naturally translates to conditions on the prior for $\ptk$,
 so that for example 
 $\yzu_{k,t_j} \ge \yzu_{k,t_{j+1}}$ and $\yzl_{k,t_j} \ge \yzl_{k,t_{j+1}}$ should hold.
 Because $s^k_t/n_k$ is decreasing in $t$, the weighted average property of the update step in
-equation \eqref{eq:nyupdate} for $\ykt$ ensures that 
+Equation \eqref{eq:nyupdate} for $\ykt$ ensures that 
 $\ynu_{k,t_j} \ge \ynu_{k,t_{j+1}}$ and $\ynl_{k,t_j} \ge \ynl_{k,t_{j+1}}$.
 In situations where one has a high degree of certainty about the functioning probability for low $t$,
 but less certainty about what happens for larger $t$,
@@ -923,13 +927,13 @@ For any $t \not\in \big(\min(\vec{t}^k), \max(\vec{t}^k)\big)$,
 this can lead to improper posterior predictive distributions.
 %Generally, one should choose $\yktzl > 0$ and $\yktzu < 1$ for all $t \not\in \big(\min(\vec{t}^k), \max(\vec{t}^k)\big)$.
 However, it is possible to choose values close to $0$ and $1$, respectively,
-and due to the linear update step for $\yktn$ (see Equation~\eqref{eq:nyupdate}),
+and due to the linear update step \eqref{eq:nyupdate} for $\yktn$,
 posterior inferences are not overly sensitive to whether $\yktnu = 0.99$ or $\yktnu = 0.9999$.
 %***what to do in extreme tail of component distributions?
 %How sensitive is the method to choosing prior (lower, upper) mean near-zero (how near?) for $p^k_t$ at high $t$'s?***
 Likewise, our nonparametric method does not cause unintuitive tail behaviour
 as some parametric methods do;
-there is no problem, for example, with assigning $\yktnu$ near-zero for high $t$ if prior knowledge suggests so.
+there is no problem, for example, with assigning $\yktnu$ near-zero for large $t$ if prior knowledge suggests so.
 
 %***elicitation: we should also consider the case where $\yktz$ bounds are not given for all $t \in {\cal T}$,
 %as it will be too time-consuming to elicit $\yktz$ bounds for all $t$ in a dense grid.
