@@ -102,7 +102,7 @@
 \begin{frontmatter}
 \title{Bayesian Nonparametric System Reliability\\ using Sets of Priors}
 
-\author[ein]{Gero Walter\fnref{fn1}}
+\author[ein]{Gero Walter}
 \ead{g.m.walter@tue.nl}
 \author[oxf]{Louis J.M. Aslett}
 \ead{louis.aslett@stats.ox.ac.uk}
@@ -113,9 +113,6 @@
 \address[oxf]{Department of Statistics, University of Oxford, Oxford, UK}
 \address[dur]{Department of Mathematical Sciences, Durham University, Durham, UK}
 
-\fntext[fn1]{Gero Walter was supported by the Dinalog project
-``Coordinated Advanced Maintenance and Logistics Planning for the Process Industries'' (CAMPI).}
-
 \begin{abstract}
 An imprecise Bayesian nonparametric approach
 to system reliability with multiple types of components
@@ -123,22 +120,23 @@ is developed.
 This allows modelling partial or imperfect prior knowledge on component failure distributions
 in a flexible way through bounds on the functioning probability.
 Given component level test data these bounds are propagated 
-to bounds on the posterior predictive distribution for the reliability of
+to bounds on the posterior predictive distribution for the functioning probability of
 a new system containing components exchangeable with those 
 used in testing.  The method further enables identification 
-of prior data conflict at the system level based on component level test data.
-
-There are new results on first-order stochastic dominance for the Beta-Binomial distribution
-which make the technique computationally tractable.  These methodological contributions can be immediately used in
-applications by reliability practitioners using the freely available
-software tools which are provided.
+of prior-data conflict at the system level based on component level test data.
+%
+New results on first-order stochastic dominance for the Beta-Binomial distribution
+make the technique computationally tractable.
+Our methodological contributions can be immediately used in
+applications by reliability practitioners
+as we provide easy to use software tools.
 \end{abstract}
 
 \begin{keyword}
 System reliability \sep
 Survival signature \sep
 Imprecise probability \sep
-Bayesian Nonparametrics \sep
+Bayesian nonparametrics \sep
 Prior-data conflict
 \end{keyword}
 \end{frontmatter}
@@ -147,6 +145,11 @@ Prior-data conflict
 % ------------ manuscript -------------
 
 \section{Introduction}
+
+System reliability analysis is concerned with
+estimating the lifetime $\Tsys$ of complex systems.
+Usually, the goal is to determine the system reliability function $\Rsys(t) = P(\Tsys > t)$
+based on the lifetime distributions of system components.
 
 A critique of the methodological approach to a reliability 
 analysis may often encompass a few common concerns.
@@ -159,7 +162,7 @@ Further, Bayesian methods may be invoked in order to
 incorporate expert opinion or other knowledge which falls
 outside the specific testing data under consideration.  The 
 classic concern here is in whether one can truly express 
-ones beliefs with the exactness a prior requires.  Finally,
+ones beliefs with the exactness a prior distribution requires.  Finally,
 it would be valuable in application to have a means of identifying when the
 prior choice is having a strong effect and when not.  Any method 
 hoping to address these concerns must do so whilst enabling 
@@ -167,21 +170,47 @@ realistic system models (with heterogeneous component types)
 and remain computationally tractable.
 
 Herein, we make steps toward addressing these concerns by developing
-a nonparametric method which utilises imprecise probability 
-to encapsulate more vague or imperfect prior beliefs using
+a nonparametric method which utilises imprecise probability \cite{itip,1991:walley}
+to model more vague or imperfect prior beliefs using
 upper and lower probabilities.  This overcomes the concern
 about component lifetimes being outside a particular 
 parametric family, uses a more flexible prior modelling 
-framework and leads to an easy method of detecting prior-data
-conflict which should be of concern at the system level.  
+framework and leads to an easy method of detecting 
+conflicts between prior assumptions and observed failure times in test data.
+In the general context of Bayesian methods,
+this phenomenon is known as \emph{prior-data conflict},
+see, e.g., \cite{2006:evans} or \cite{2015:bickel}.
+% which should be of concern at the system level.  
 
-Furthermore, the method is based on the survival signature, a 
-recent development which naturally accommodates 
-heterogeneous component types laid out in any arbitrary
-manner which maintains coherency of the system.  As will be 
-seen in the sequel, the method remains computationally tractable.
+Furthermore, the method is based on the survival signature \cite{2012:survsign},
+a recent development which naturally accommodates 
+heterogeneous component types laid out in any arbitrary manner.
+%which maintains coherency of the system.
+By separating the (time-invariant) system structure from the time-dependent failure probabilities of components,
+it allows straightforward and efficient computation of $\Rsys(t)$.
+%by partitioning the event $\Tsys > t$ according to the number of functioning components of each type at time $t$.
 
-\td{*** Some more words on the benefits?}
+Our imprecise probability approach provides bounds for $\Rsys(t)$
+by computing, for each $t$ in an arbitrarily fine grid of time points ${\cal T}$,
+the posterior predictive probability interval for the event $\Tsys > t$. %that the system will function at time $t$.
+Assuming the number of functioning components for each type and time $t$ as binomially distributed, 
+the intervals are derived from an imprecise Bayesian model using sets of conjugate Beta priors
+which allow to specify weak or partial prior information in an intuitive way.
+The width of the resulting posterior predictive probability intervals
+reflects the precision of the corresponding probability statements:
+a short range indicates that the system functioning probability can be quantified quite precisely,
+while a large range will indicate that our (probabilistic) knowledge is indeterminate.
+In particular, prior-data conflict leads to more cautious probability statements:
+When there is not enough data to overrule the prior,
+it is unclear whether to put more trust to prior assumptions or to the observations,
+and posterior inferences clearly reflect this state of uncertainty by larger ranges.
+
+While the use of imprecise probability methods can often lead to tractability issues,
+new results on first-order stochastic dominance for the Beta-Binomial distribution
+keep the need for numerical optimization in our model to a minimum.
+%make the technique computationally tractable.
+%As will be seen in the sequel, the method remains computationally tractable.
+%\td{*** Some more words on the benefits?}
 
 In Section \ref{sec:survsign} we review the survival 
 signature and in Section \ref{sec:nonparamapproach} we 
@@ -189,7 +218,7 @@ review the nonparametric approach to Bayesian reliability analysis
 upon which our work builds 
 \cite{2015:bayessurvsign}.  Section \ref{sec:reparam} details
 the reparameterisation of that approach which enables the natural
-formulation of the system reliability bounds and which leads to
+formulation of the system reliability bounds, leading to
 nice closed form results in some later theory.
 Section \ref{sec:setsofbetapriors} lays the ground work to incorporate imprecise probability,
 culminating in the main results and contributions of this 
@@ -198,6 +227,8 @@ work, detailed in Section \ref{sec:setsofrel}.  Section
 of this work and shows two worked examples
 demonstrating the practicality and usefulness of the method.
 
+
+\iffalse
 \td{*** LOUIS: Not sure if the above is too compact or ok and whether we need to be more expansive in the orange bit above?  Thoughts appreciated! I've left text below which you may want to draw from? ***}
 
 The survival signature allows for straightforward computation of system reliability
@@ -251,8 +282,6 @@ who, starting from a large class of reasonable models,
 identifies a subset of adequate models,
 selected according to a model adequacy measure that allows to reject a prior if it leads to prior-data conflict.
 
-
-
 Our method produces a set of discrete system reliability functions,
 or, for each time point $t$, an interval for the system survival probability,
 that appropriately reflects uncertainty due to vague prior information, the amount of test data, and prior-data conflict.
@@ -267,7 +296,7 @@ and extends it to sets of priors.
 
 The paper is organised as follows.
 In Section~\ref{sec:survsign}, we describe ***
-
+\fi
 
 \section{Survival Signature}
 \label{sec:survsign}
@@ -428,7 +457,7 @@ The combination of a Binomial observation model with a Beta prior is often calle
 
 The posterior predictive distribution for the number of components surviving at time $t$
 in a new system, based on the lifetime data and the prior information,
-is then a so-called Beta-Binomial distribution,
+is then given by a so-called Beta-Binomial distribution,
 $C^k_t \mid s^k_t \sim \bebin(m_k, \alpha^k_t + s^k_t, \beta^k_t + n_k - s^k_t)$.
 That is, we have
 \begin{align*}
@@ -493,7 +522,7 @@ $p \mid s$ is Beta distributed with updated parameters
 Thus, after observing that $s$ out of $n$ components function (at time $t$),
 the posterior mean $\yn$ for $p$ is a weighted average of
 the prior mean $\yz$ and $s/n$ (the fraction of functioning components in the data),
-with weights $\nz$ and $n$, respectively.
+with weights proportional to $\nz$ and $n$, respectively.
 Therefore $\nz$ takes on the same role for the prior mean $\yz$
 as the sample size $n$ does for the observed mean $s/n$,
 leading to the notion of it being a pseudocount.
@@ -1681,7 +1710,10 @@ l}{\eu - l} \qquad \forall\ l \in \{0,\dots,m\}
 \section{Software details}
 \label{ap:software}
 
-Functions which make it easy to use the methods of this paper have been added to the \textbf{R} package \texttt{ReliabilityTheory} \citep{2015:aslett-RT}.  There are two functions of particular note: \texttt{computeSystemSurvivalSignature} and \texttt{nonParBayesSystemInferencePriorSets}
+Functions which make it easy to use the methods of this paper
+have been added to the \textbf{R} package \texttt{ReliabilityTheory} \citep{2015:aslett-RT}.
+There are two functions of particular note: \texttt{computeSystemSurvivalSignature}
+and, implementing the result from Appendix~\ref{ap:proofs} above, \texttt{nonParBayesSystemInferencePriorSets}.
 
 \subsection{Computing the survival signature}
 
