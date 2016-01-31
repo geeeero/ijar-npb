@@ -950,7 +950,7 @@ and then to further refine the obtained bounds as deemed necessary by the expert
 %then $\yktz$ bounds for $t$ smaller than `middle' $t$ (or halfway between 0 and `middle' $t$?) and for $t$ larger than `middle' $t$,
 
 
-\section{Computations \& Examples}
+\section{Practical Usage and Examples}
 
 %***code published in Louis' \textbf{R} package \texttt{ReliabilityTheory},
 
@@ -968,16 +968,20 @@ signature ($\Phi(\cdot)$), the component test data ($\vec{t}^1, \ldots,
 time ($\PtZi{k}$, via $\nzu_{k,t}, \nzl_{k,t}, \yzu_{k,t}$, and
 $\yzl_{k,t}$).  All computations of $\lRsys$
 and $\uRsys$ at different time points are performed in parallel
-automatically where the CPU has multiple cores.
+automatically where the CPU has multiple cores and making automatic
+use of the theoretical results in Section \ref{sec:setsofrel} where
+applicable, performing exhaustive search in the few cases they are not.
 
 Note that computation of the system signature itself can be simplified by
 expressing the structure of the system as an undirected graph using the
 \texttt{computeSystemSurvivalSignature()} function in the same package,
 leaving only data and prior to be handled.  These publicly available
 functions have been used in computing all the following examples for
-reproducibility.  \ref{ap:software} details how to use this software.
+reproducibility.  See Appendix \ref{ap:software} for further details of how to use this software.
 
 \subsection{Examples}
+
+\subsubsection{Toy example}
 
 \begin{figure}
 \centering
@@ -1066,14 +1070,14 @@ In Figure~\ref{fig:bridge-fitting},
 test data for component type T3 is $\vec{t}^3 = (0.5, 1.5, 2.5, 3.5)$,
 and so in line with expectations.
 The posterior set of reliability functions for each component type and the whole system
-is considerably smaller as compared to the prior set
+is considerably smaller compared to the prior set
 (due to the low prior strength intervals
 $[\ntzl{1},\ntzu{1}] = [\ntzl{2},\ntzu{2}] = [1,2]$, $[\ntzl{3},\ntzu{3}] = [1,4]$)
 and so giving more precise reliability statements.
 We see that posterior lower and upper functioning probabilities drop at those times $t$
 when there is a failure time in the test data,
 or a drop in the prior functioning probability bounds.
-Note that the lower bound for prior system reliability function is zero
+Note that the lower bound for the prior system reliability function is zero
 due to the prior lower bound of zero for T1;
 for the system to function, at least two components of type T1 must function.
 
@@ -1096,8 +1100,8 @@ For $t > 1$, it is clearly visible how $\ytnu{3}$ is halfway between $\ytzu{3}$ 
 while $\ytnl{3}$ is one-fifth of $\ytzl{3}$
 (weights $\ntzl{3} = 1$ and $n_3 = 4$).
 Note that the posterior system functioning probability is constant for $t \in [1,2]$
-because the prior functioning probability is constant for $t \in [1,2]$
-and there are no failure times $\in [1,2]$ in the test data.
+because in that interval the prior functioning probability is constant
+and there are no observed failures.
 
 \begin{figure}
 \includegraphics[width=\textwidth]{bridge-earlyfailures}
@@ -1115,7 +1119,15 @@ The width turns back to being half the prior width
 only after the four failures.
 The imprecision carries over to the system bounds,
 where we see wider bounds as compared to the other two scenarios
-especially between $t=2$ and $t=4$.
+especially between $t=2$ and $t=4$.  In particular, also note
+that at the system level prior data conflict ceases after
+$t \approx 2.6$, although the prior data conflict for the 
+individual component type T3 extends well beyond $t=4$.  This 
+demonstrates the power of this technique to identify prior
+data conflict which is actually consequential at the system 
+level, not just the component level --- in other words, for 
+mission times $t>2.6$, we can diagnose that the prior data conflict 
+need not be of concern for this system viewed as a whole.
 
 \begin{figure}
 \includegraphics[width=\textwidth]{bridge-latefailures}
@@ -1124,8 +1136,9 @@ with failure times later as expected for component type T3.}
 \label{fig:bridge-late}
 \end{figure}
 
-As example to illustrate the potential of our model,
-we consider a simplified automotive brake system.
+\subsubsection{Automotive brake system}
+
+We also consider a simplified automotive brake system.
 The master brake cylinder (M) activates all four wheel brake cylinders (C1 -- C4),
 which in turn actuate a braking pad assembly each (P1 -- P4).
 The hand brake mechanism (H) goes directly to the brake pad assemblies P3 and P4;
@@ -1164,13 +1177,6 @@ a Weibull cdf with shape $2.5$ and scales $6$ and $8$ for the lower and upper bo
 The prior bounds for P can be seen as the least committal bounds
 derived from an expert statement of $\ytz{\text{P}} \in [0.5, 0.65]$ for $t=5$ only.
 
-***We see that posterior lower and upper functioning probabilities drop at those times $t$
-for which there is a failure time in the test data,
-or a drop in the prior functioning probability bounds.
-The lower bound for prior system reliability drops to zero at $t=5$
-since the prior lower bound for P drops to zero at $t=5$;
-for the system to function, at least one brake pad assembly must function.***
-
 For H, near-noninformative prior functioning probability bounds have been selected;
 with the upper bound for P being approximately one for $t \le 5$ as well,
 the prior upper system reliability bound for $t \le 5$ is close to one, too,
@@ -1185,7 +1191,6 @@ reflecting the information gained from component test data.
 The posterior system bounds can be also seen to reflect location and precision of the component bounds;
 for example, the system bounds drop drastically between $t=2.5$ and $t=3.5$
 mainly due to the drop of the bounds for P at that time.
-
 
 \begin{figure}
 \begin{tikzpicture}
@@ -1242,6 +1247,15 @@ with layout as depicted in the lower right panel.}
 \label{fig:brakesystem}
 \end{figure}
 
+It is also interesting to note that the prior data conflict 
+which is consequential at the system level occurs over 
+roughly the same range in $t$ as there is prior data 
+conflict for component type P.  Indeed, this occurs despite there being 
+prior data conflict in both M and C over much larger ranges, 
+giving valuable insight into which prior requires further 
+expert attention --- thus the technique avoids wasted time 
+addressing prior data conflict in components which may not 
+be relevant when propagated to the uncertainty in the whole system.
 
 %***calculate and show $\Rsys(t)$ plots for a range of examples (keep system layout fixed?):
 %informative prior set for some component types, different degree of imprecision,
@@ -1252,43 +1266,69 @@ with layout as depicted in the lower right panel.}
 %***Vacuous prior sets $[\yktzl, \yktzu] = (0,1)$ for some component types,
 %informative prior sets for others. $[\nktzl, \nktzu]$ interval for all component types.***
 
-***Some extra illustrations? E.g. the effect of extra redundancy on $\Rsys(t)$ intervals like in Risk Analysis paper?
-(could nicely illustrate challenges in decision making with intervals:
-do I prefer adding redundancy such that there is a chance for a large effect, but high uncertainty for it,
-or do I rather add redundancy such that effect is smaller but more certain?***
-
-***Other interesting extra illustration:
-show effect of replacement of components in system at certain time points
-(could be corrective (component failed) or preventive replacement),
-replaced components constitute a new type with shifted component reliability function***
-
-
-\section{Conclusions and Outlook}
-
-Upscaling the survival signature to large real-world systems and networks, consisting of thousands of components, is a major challenge.
-However, even for such systems the fact that one only needs to derive the survival signature once for a system is an advantage,
-and also the monotonicity of the survival signature for coherent systems is very useful if one can only derive it partially.  
-
-The survival signature and its use for uncertainty quantification for system
-reliability can be generalized quite straightforwardly, mainly due to the simplicity of this concept.
-For example, one may generalize the system structure function from a binary function to a probability, %\citep[see]{CCM16},
-to reflect uncertainty about system functioning for known states of its components, with a further
-generalization to imprecise probabilities possible. It is also conceptually easy to generalize the
-survival signature to multi-state systems such that it again summarizes the structure function
-in a manner that is sufficient for a range of uncertainty quantifications for the system reliability. 
+%***Some extra illustrations? E.g. the effect of extra redundancy on $\Rsys(t)$ intervals like in Risk Analysis paper?
+%(could nicely illustrate challenges in decision making with intervals:
+%do I prefer adding redundancy such that there is a chance for a large effect, but high uncertainty for it,
+%or do I rather add redundancy such that effect is smaller but more certain?***
+%
+%***Other interesting extra illustration:
+%show effect of replacement of components in system at certain time points
+%(could be corrective (component failed) or preventive replacement),
+%replaced components constitute a new type with shifted component reliability function***
 
 
-***Extend the model to deal with right-censored observations which are common in the reliability setting.
-The minimal assumption that a component can either fail immediately after censoring or live forever
-will be simple to implement but will lead to high imprecision,
-whereas assuming exchangeability with other surviving components at moment of censoring
-will be more complex to accomodate but will lead to less imprecision.
-This excangeability assumption lies at the core of the Kaplan-Meier estimator \citep{1958:kaplan-meier},
-and has already been adopted by \citet{2004:coolen-yan} in an imprecise probability context.
+\section{Conclusions}
 
-***right-censoring will also allow to use data from running system,
-to calculate its remaining useful life (RUL).
+In this paper we have contributed an imprecise Bayesian nonparametric approach
+to system reliability with multiple types of components.
+The approach allows modeling partial or imperfect prior knowledge on component failure distributions
+in a flexible way through bounds on the functioning probability for a grid of time points, 
+and combines this information with test data in an imprecise Bayesian framework.
+Component-wise predictions on the number of functioning components
+are then combined to bounds for the system survival probability by means of the survival signature.
+New results on first-order stochastic dominance for the Beta-Binomial distribution
+enable closed-form solutions for these bounds in most cases and 
+avoid exponential growth in the complexity of computing the estimate
+as the number of components grows.
+The widths of the resulting system reliability bounds
+reflect the amount of test data, the precision of prior knowledge,
+and crucially provide an easily used method to identify 
+whether these two information sources are in conflict in a
+way which is of consequence to the whole system reliability
+estimate.
 
+These methodological contributions can be immediately used in
+applications by reliability practitioners as a result of the 
+easy to use software tools which have been provided.
+
+%% LOUIS: do we really want outlook?  I am inclined not to
+%% discuss this in a non-review/tutorial paper because we
+%% don't want to alert others and get scooped on future
+%% ideas!
+%Upscaling the survival signature to large real-world systems and networks, consisting of thousands of components, is a major challenge.
+%However, even for such systems the fact that one only needs to derive the survival signature once for a system is an advantage,
+%and also the monotonicity of the survival signature for coherent systems is very useful if one can only derive it partially.  
+%
+%The survival signature and its use for uncertainty quantification for system
+%reliability can be generalized quite straightforwardly, mainly due to the simplicity of this concept.
+%For example, one may generalize the system structure function from a binary function to a probability, %\citep[see]{CCM16},
+%to reflect uncertainty about system functioning for known states of its components, with a further
+%generalization to imprecise probabilities possible. It is also conceptually easy to generalize the
+%survival signature to multi-state systems such that it again summarizes the structure function
+%in a manner that is sufficient for a range of uncertainty quantifications for the system reliability. 
+%
+%
+%***Extend the model to deal with right-censored observations which are common in the reliability setting.
+%The minimal assumption that a component can either fail immediately after censoring or live forever
+%will be simple to implement but will lead to high imprecision,
+%whereas assuming exchangeability with other surviving components at moment of censoring
+%will be more complex to accomodate but will lead to less imprecision.
+%This excangeability assumption lies at the core of the Kaplan-Meier estimator \citep{1958:kaplan-meier},
+%and has already been adopted by \citet{2004:coolen-yan} in an imprecise probability context.
+%
+%***right-censoring will also allow to use data from running system,
+%to calculate its remaining useful life (RUL).
+%
 
 
 % ------------ bibliography -------------
