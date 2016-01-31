@@ -1094,7 +1094,7 @@ Test data failure times are denoted with tick marks near the time axis.}
 \end{figure}
 
 In Figure~\ref{fig:bridge-early},
-test data of component type T3 is instead $\vec{t}^3 = (0.6, 0.7, 0.8, 0.9)$,
+test data of component type T3 is $\vec{t}^3 = (0.6, 0.7, 0.8, 0.9)$,
 and so earlier than expected.
 Compared to Figure~\ref{fig:bridge-fitting},
 posterior functioning intervals for T3 are wider between $t=1$ and $t=3.5$,
@@ -1115,7 +1115,7 @@ with failure times earlier as expected for component type T3.}
 \end{figure}
 
 In Figure~\ref{fig:bridge-late}, 
-test data of component type T3 is now $\vec{t}^3 = (4.1, 4.2, 4.3, 4.4)$,
+test data of component type T3 is $\vec{t}^3 = (4.1, 4.2, 4.3, 4.4)$,
 and so observed failures are later than expected.
 Here we see that for $t \in [2,4]$,
 posterior functioning bounds for T3 are even wider than prior functioning bounds.
@@ -1123,15 +1123,20 @@ The width turns back to being half the prior width
 only after the four failures.
 The imprecision carries over to the system bounds,
 where we see wider bounds as compared to the other two scenarios
-especially between $t=2$ and $t=4$.  In particular, also note
-that at the system level prior data conflict ceases after
-$t \approx 2.6$, although the prior data conflict for the 
+especially between $t=2$ and $t=4$. In particular, also note
+%that at the system level prior data conflict ceases after
+that at the system level posterior bounds are a subset of prior bounds after
+$t = 2.6$, although prior-data conflict for the 
 individual component type T3 extends well beyond $t=4$.  This 
-demonstrates the power of this technique to identify prior
-data conflict which is actually consequential at the system 
+demonstrates the power of this technique to identify prior-data conflict
+which is actually consequential at the system 
 level, not just the component level --- in other words, for 
-mission times $t>2.6$, we can diagnose that the prior data conflict 
-need not be of concern for this system viewed as a whole.
+mission times $t>2.6$, we can diagnose that the prior-data conflict 
+need not be of elevated concern for this system viewed as a whole.
+%mission times $t>2.6$, we see that posterior system reliability bounds
+%are in line with prior expectations and so need not be of elevated concern. 
+Nevertheless, the posterior system reliability bounds are wider than in the no-conflict case for $t \in [1, 4.4]$,
+signalising the general need for caution in this scenario.
 
 \begin{figure}
 \includegraphics[width=\textwidth]{bridge-latefailures}
@@ -1180,7 +1185,7 @@ Prior functioning probability bounds for M are based on
 a Weibull cdf with shape $2.5$ and scales $6$ and $8$ for the lower and upper bound, respectively.
 The prior bounds for P can be seen as the least committal bounds
 derived from an expert statement of $\ytz{\text{P}} \in [0.5, 0.65]$ for $t=5$ only.
-
+%
 For H, near-noninformative prior functioning probability bounds have been selected;
 with the upper bound for P being approximately one for $t \le 5$ as well,
 the prior upper system reliability bound for $t \le 5$ is close to one, too,
@@ -1251,14 +1256,18 @@ with layout as depicted in the lower right panel.}
 \label{fig:brakesystem}
 \end{figure}
 
-It is also interesting to note that the prior data conflict 
+It is also interesting to note that the prior-data conflict 
 which is consequential at the system level occurs over 
-roughly the same range in $t$ as there is prior data 
-conflict for component type P.  Indeed, this occurs despite there being 
-prior data conflict in both M and C over much larger ranges, 
+roughly the same range in $t$ as there is prior-data 
+conflict for component type P.
+%It is also interesting to note that the range in $t$
+%for which posterior system reliability bounds are not a subset of prior bounds
+%is roughly the same as there is prior-data conflict for component type P.
+Indeed, this occurs despite there being 
+prior-data conflict in both M and C over much larger ranges, 
 giving valuable insight into which prior requires further 
 expert attention --- thus the technique avoids wasted time 
-addressing prior data conflict in components which may not 
+addressing prior-data conflict in components which may not 
 be relevant when propagated to the uncertainty in the whole system.
 
 %***calculate and show $\Rsys(t)$ plots for a range of examples (keep system layout fixed?):
