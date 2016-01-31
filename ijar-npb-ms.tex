@@ -1346,6 +1346,7 @@ be relevant when propagated to the uncertainty in the whole system.
 
 \section{Conclusions}
 
+%\subsection{Summary}
 In this paper we have contributed an imprecise Bayesian nonparametric approach
 to system reliability with multiple types of components.
 The approach allows modelling partial or imperfect prior knowledge on component failure distributions
@@ -1365,37 +1366,43 @@ way which is of consequence to the whole system reliability
 estimate.
 
 These methodological contributions can be immediately used in
-applications by reliability practitioners as a result of the 
-easy to use software tools which have been provided.
+applications by reliability practitioners as %a result of the 
+%easy to use software tools which have been provided.
+we provide easy to use software tools.
+%for the computation of the survival signature and system reliability bounds.
 
 %% LOUIS: do we really want outlook?  I am inclined not to
 %% discuss this in a non-review/tutorial paper because we
 %% don't want to alert others and get scooped on future
 %% ideas!
-%Upscaling the survival signature to large real-world systems and networks, consisting of thousands of components, is a major challenge.
-%However, even for such systems the fact that one only needs to derive the survival signature once for a system is an advantage,
-%and also the monotonicity of the survival signature for coherent systems is very useful if one can only derive it partially.  
-%
-%The survival signature and its use for uncertainty quantification for system
-%reliability can be generalized quite straightforwardly, mainly due to the simplicity of this concept.
-%For example, one may generalize the system structure function from a binary function to a probability, %\citep[see]{CCM16},
-%to reflect uncertainty about system functioning for known states of its components, with a further
-%generalization to imprecise probabilities possible. It is also conceptually easy to generalize the
+%\subsection{Outlook}
+%On further avenues for research,
+An important next step is to extend the model to include right-censored observations which are common in the reliability setting.
+In particular, this allows to use component failure observations from a running system
+to calculate its remaining useful life.
+%For treatment of censored observations
+We see two potential approaches.
+First, to obtain lower and upper system reliability bounds 
+one can assume that a component either fails immediately after censoring or
+continues to function during the entire time horizon.
+This minimal assumption will be simple to implement but will lead to high imprecision.
+Alternatively, one can assume exchangeability with other surviving components at the moment of censoring.
+This approach will be more complex to accomodate but will lead to less imprecision.
+Indeed, this assumption lies at the core of the Kaplan-Meier estimator \citep{1958:kaplan-meier},
+and has already been adopted by \citet{2004:coolen-yan} in an imprecise probability context.
+
+Upscaling the survival signature to large real-world systems and networks, consisting of thousands of components, is a major challenge.
+However, even for such systems the fact that one only needs to derive the survival signature once for a system is an advantage,
+and also the monotonicity of the survival signature for coherent systems is very useful if one can only derive it partially.  
+
+The survival signature and its use for uncertainty quantification for system
+reliability can be generalized quite straightforwardly, mainly due to the simplicity of this concept.
+For example, one may generalize the system structure function from a binary function to a probability, %\citep[see]{CCM16},
+to reflect uncertainty about system functioning for known states of its components, with a further
+generalization to imprecise probabilities possible.
+% It is also conceptually easy to generalize the
 %survival signature to multi-state systems such that it again summarizes the structure function
 %in a manner that is sufficient for a range of uncertainty quantifications for the system reliability. 
-%
-%
-%***Extend the model to deal with right-censored observations which are common in the reliability setting.
-%The minimal assumption that a component can either fail immediately after censoring or live forever
-%will be simple to implement but will lead to high imprecision,
-%whereas assuming exchangeability with other surviving components at moment of censoring
-%will be more complex to accomodate but will lead to less imprecision.
-%This excangeability assumption lies at the core of the Kaplan-Meier estimator \citep{1958:kaplan-meier},
-%and has already been adopted by \citet{2004:coolen-yan} in an imprecise probability context.
-%
-%***right-censoring will also allow to use data from running system,
-%to calculate its remaining useful life (RUL).
-%
 
 \section*{Acknowledgements}
 
