@@ -1,0 +1,5 @@
+* System reliability bounds for arbitrarily complex system layouts
+* Nonparametric modelling of component reliability functions
+* Vague and partial specification of prior component reliability functions possible
+* Wider reliability bounds on component and system level in case of prior-data conflict
+* Freely available and easy to use software: implemented in R package ReliabilityTheory
