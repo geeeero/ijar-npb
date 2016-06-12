@@ -400,6 +400,15 @@ This is an approach that is also followed in the current paper, but with the use
 Like \citet{CCMA14}, we will utilize the monotonicity of the survival signature for coherent systems
 to simplify computations.
 
+While there are, as mentioned above, no restrictions on dependence of failure times of components of different types that can be reflected by the survival signature method, some possible dependencies will require thoughtful consideration.
+For example, it may be the case that components that are near to each other in the system have a stronger dependency of their failure times than components that are further apart.
+If this is the case there are several options, the two main ones are as follows.
+First, if there is detailed knowledge about such dependence (as e.g. modelled in popular spatial statistics approaches) then there are probably no components that can be grouped, hence one has to use the full structure function.
+In practice, this may be feasible for small systems, but for large systems one would probably still wish to make some exchangeability assumptions in order to enable analysis, where it is understood that this is only approximate.
+The second case results from this, namely that one can still define groups of components which have exchangeable failure times and which are related in the same way to other groups of components to facilitate the dependence modelling.
+For example, one might consider components in a large electricity network to have differing failure time characteristics depending on physical location, e.g. windturbines near hills or at sea, while apart from the location aspect one would consider their failure times exchangeable.
+In such cases, these are represented by different groups in the survival signature approach.
+
 
 \section{Nonparametric Bayesian Approach for Component Reliability}
 \label{sec:nonparamapproach}
