@@ -1,0 +1,162 @@
+\documentclass[12pt, a4paper]{elsarticle}
+
+\usepackage[utf8]{inputenc}
+\usepackage[OT1]{fontenc}
+\usepackage{graphicx}
+\usepackage[english]{babel}
+
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{amsthm}
+
+\usepackage[usenames,dvipsnames]{xcolor}
+\usepackage{booktabs}
+\usepackage{todonotes}
+\usepackage{etoolbox}
+\usepackage{url}
+%\usepackage{tikz}
+%\usetikzlibrary{shapes.misc,fit}
+
+\usepackage[bookmarks]{hyperref}
+
+% ------------ custom defs -------------
+
+\usepackage{mathtools}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+
+\newcommand{\reals}{\mathbb{R}}
+\newcommand{\posreals}{\reals_{>0}}
+\newcommand{\posrealszero}{\reals_{\ge 0}}
+\newcommand{\naturals}{\mathbb{N}}
+
+\newcommand{\mbf}[1]{\mathbf{#1}}
+\newcommand{\bs}[1]{\boldsymbol{#1}}
+\renewcommand{\vec}[1]{{\bs#1}}
+
+\newcommand{\uz}{^{(0)}} % upper zero
+\newcommand{\un}{^{(n)}} % upper n
+\newcommand{\ui}{^{(i)}} % upper i
+
+\newcommand{\ul}[1]{\underline{#1}}
+\newcommand{\ol}[1]{\overline{#1}}
+
+\newcommand{\Rsys}{R_\text{sys}}
+\newcommand{\lRsys}{\ul{R}_\text{sys}}
+\newcommand{\uRsys}{\ol{R}_\text{sys}}
+
+\newcommand{\Fsys}{F_\text{sys}}
+\newcommand{\lFsys}{\ul{F}_\text{sys}}
+\newcommand{\uFsys}{\ol{F}_\text{sys}}
+
+\def\Tsys{T_\text{sys}}
+
+\newcommand{\E}{\operatorname{E}}
+\newcommand{\V}{\operatorname{Var}}
+
+\newcommand{\indic}{\mathbb{I}}
+
+\newcommand{\ber}{\operatorname{Bernoulli}} 
+\newcommand{\bin}{\operatorname{Binomial}}
+\newcommand{\be}{\operatorname{Beta}} 
+\newcommand{\bebin}{\operatorname{Beta-Binomial}} 
+
+\def\tmax{t_\text{max}}
+\def\tnow{t_\text{now}}
+\def\tpnow{t^+_\text{now}}
+
+\newcommand{\ptk}{p^k_t}
+
+\input{nydefs.tex}
+
+%\newcommand{\comments}[1]{{\small\color{gray} #1}}
+\newtoggle{td}
+\newcommand{\td}[1]{%
+  \iftoggle{td}{%
+    \todo[inline]{#1}%
+  }{}%
+}
+
+% ------------ options -------------
+
+\allowdisplaybreaks
+
+\toggletrue{td} % show todo's
+%\togglefalse{td} % hide todo's
+
+%\biboptions{longnamesfirst,angle,semicolon}
+
+
+\journal{IJAR}
+
+\begin{document}
+
+\begin{frontmatter}
+\title{Answer to Reviewers' Comments on our Manuscript ``Bayesian Nonparametric System Reliability\\ using Sets of Priors''}
+
+\author[ein]{Gero Walter}
+\ead{g.m.walter@tue.nl}
+\author[oxf]{Louis J.M. Aslett}
+\ead{louis.aslett@stats.ox.ac.uk}
+\author[dur]{Frank P.A. Coolen}
+\ead{frank.coolen@durham.ac.uk}
+
+\address[ein]{School of Industrial Engineering, Eindhoven University of Technology, Eindhoven, NL}
+\address[oxf]{Department of Statistics, University of Oxford, Oxford, UK}
+\address[dur]{Department of Mathematical Sciences, Durham University, Durham, UK}
+
+\begin{abstract}
+The reviewers' comments reproduced here, with our answers interlaced. Our answers are printed in \emph{italic}.
+\end{abstract}
+\end{frontmatter}
+
+\section*{Reviewer 1}
+
+
+
+\section*{Reviewer 2}
+
+This paper introduces an extension of a non-parametric Bayesian method used in reliability assessment to include sets of priors in the assessment of posterior probabilities. The goal is to detect conflict between prior information and observed data, this conflict impacting the imprecision of the inferences. The used method is based on the use of survival signature combined with an assumption of component independence.
+
+The paper is very nicely written, with an incremental and illustrative introduction of various concepts. I think it is accessible to most readers with basic knowledge in reliability and in probability, and presents both worked out examples and software implementation tools. The theoretical results used to speed up computations, while not especially impressive and deep, are interesting and useful. I would therefore recommend to accept the paper, possibly after some minor changes integrating my (very) few comments.
+
+Specific comments:
+
+* My main (and only substantial) comment about the paper is that it starts by seeling advantages of the survival signature, which are then completely forgotten since all mathematical developments concern independent components. Also, it seems to me that some points are a bit "oversold", for instance while I agree that the dependence of identical component types or between component types can easily be integrated, some other kind of dependence are impossible to implement (for instance, dependencies related to the position of components within the system, which are quite likely to occur in practice). I would therefore like the authors to 1) perhaps also explain the limitations of the survival signature and 2) add some (small?) discussion about what becomes of the current problem when independence between all components do not hold anymore. More specifically:
+
+\medskip
+\emph{We think the reviewer does not fully acknowledge the central benefit of the survival signature, which is present also for independent components: Information on the system layout (which does not change over time) is fully separated from (time-dependent) component failure probabilities.}
+\medskip
+
+- top of P5: it would be fair to mention that dependencies related to component positions cannot easily be integrated to the signature (or at least I do not see how, if this is doable a reference/explanation should be provided.
+
+\medskip
+\emph{We added a paragraph at the end of Section 2 to address this point.}
+\medskip
+
+- P6, 38/40: from here independence is assumed in the rest of the paper. It would be fair to discuss what extensions to non-independent cases are easy/difficult to produce, otherwise the advantage previously put forward of survival signatures simply disappears when adopting the author proposal.
+ 
+\medskip
+\emph{The crucial advantage of the survival signature approach is used throughout the paper, namely that it ensures all aspects of the system design are taken into account. It is indeed assumed, from the location indicated on, that components of the same type have conditionally independent and identically distributed failure times, conditional on the parameters $p_t^k$. This is a pretty standard assumption in reliability theory and we feel it is appropriate in this paper. However, crucially the approach presented enables learning about the parameters $p_t^k$ and keeps a dependence between the failure times of the components of the same type in the system, as common in Bayesian predictive distributions for multiple future observations.}
+\medskip
+
+* Perhaps mention somewhere (P19 or somewhere after?) that the elicited prior somehow correspond to a p-box? During my reading, I was actually reading to which extent results concerning p-boxes in general could not be useful in this setting.
+
+* P19, L56: where $\to$ when
+
+\medskip
+\emph{Fixed, thanks.}
+\medskip
+
+* Figures 5,6,7: since T1,T2 always follow the same behaviour, perhaps put them only once?
+
+\medskip
+\emph{\textbf{*** not sure} I would just leave it as it is if there is no page limit.
+It helps people to see where the jumps in the system function all come from.}
+\medskip
+
+\end{document}
