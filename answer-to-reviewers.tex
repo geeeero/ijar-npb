@@ -110,12 +110,108 @@
 \address[dur]{Department of Mathematical Sciences, Durham University, Durham, UK}
 
 \begin{abstract}
-The reviewers' comments reproduced here, with our answers interlaced. Our answers are printed in \emph{italic}.
+The reviewers' comments are reproduced here, with our answers interlaced. Our answers are printed in \emph{italic}.
 \end{abstract}
 \end{frontmatter}
 
 \section*{Reviewer 1}
 
+This is a paper on reliability analysis within the framework of imprecise probabilities. The authors consider the optimization task required to estimate the bounds of the failure probability wrt an imprecise specification of the prior distributions of the components. I see good reasons to use IPs in this field and the contribution is not trivial. Moreover the paper is generally well written and easy to follow.
+
+For all these reasons I think the paper should be accepted.
+
+Yet, I see at least two big issues to be addressed before the paper being published.
+
+\medskip
+\textbf{Complexity issues}\\
+The authors derive an analytical expression (corresponding to a polynomial time solution algorithm) for the bounds of the 'signature'.
+
+Unfortunately, the derived formula only holds for particular values of the parameters, while a brute-force approach taking exponential time is required in the worst case.
+
+This is expected as the general task considered by the authors is probably NP-hard (e.g. it should be possible to map it somehow to an inference in a credal network, see for instance Maua' et al., JAIR 2014). Yet, I miss a deeper discussion about the values of the parameters of the problem for which a brute-force computation of $\tilde{n}$ in Eq. 10 can be avoided. The authors say that this is the case in the 'vast majority' of the time points, but this is a strong claim, which deserves a discussion.
+
+Of course, the discussion in S6.2 and the examples in S7 are doing something in this direction, but this is not enough.
+
+A theoretical or empirical analysis should be necessarily added to convince the reader about the practical applicability of the result.
+An idea might be a non-brute-force, approximate, approach (e.g., some sampling-based inner approximation). In the discrete case, such sampling can be drastically improved by sampling only on the extreme distribution (of the convex credal sets). This is less straightforward with continuous parameter, but it should be possible to do something even in this case (and I guess some paper by Alessio Benavoli can give direction about that).
+
+\medskip
+\emph{*** empirical analysis by Louis? give computation times for examples?\\
+*** by considering only the parametric Beta distributions, we are already working with the extreme points of the credal set}
+%in this continuous setting, the extreme points of the prior parameter set
+%are the four Beta priors corresponding to combinations of $\yzl_{k,t_j}$ and $\yzu_{k,t_j}$ with $\nzl_{k,t_j}$ and $\nzu_{k,t_j}$,
+%but the posterior parameter set is not convex
+%
+%most work by Alessio Benavoli concerns near-noninformative sets of priors, while we deal with ***
+\medskip
+
+\textbf{Existing work}\\
+Another point to be addressed by the authors in the final version is the existing work in the field. Some pointers about reliability analysis with IPs can be found in many papers by Christophe Simon (within the framework of evidence theory) and Didier Dubois (within the framework of possibilistic theory) as well as in the paper about the imprecise noisy-OR gate by Alessandro Antonucci (withing the framework of credal sets and networks). Some words should be also spent about the independence assumptions in the underlying model. It is true that the discussion here is very general, but the specific notion of independence might have a strong impact on the corresponding complexity of the inferences. Moreover, Gert de Cooman has some papers on the impact of the exchangeability assumption on imprecise probabilistic models. The relation with the current model also deserves some comment.
+
+\medskip
+\emph{***}
+\medskip
+
+\textbf{Presentation}\\
+- The core of the paper is (in my opinion) S6 and, more specifically, E10. I would give more emphasis to this result and also to LM3 which is crucial as well as TH2 (while TH1 is more a preparatory result. In the proofs of both Th 1 and Th 2 some results from [18] and [15] are cited. I would better shape them as preparatory lemmas (with no need of explicit proof, but with an explicit statement). This would be a chance to explicitly formalize the two notions of dominance considered here. I would also remove the first part of the proof of Th 2 by saying that it is totally analogous to that of Th 1.
+
+\medskip
+\emph{***}
+\medskip
+
+- The expression ''in an arbitrarily fine grid of time points'' in the introduction might sound a bit obscure
+
+\medskip
+\emph{***}
+\medskip
+
+- \verb+\overline{x}+ for arrays might be a bit confusive in a IP paper, why not to use \verb+\vec{}+ or \verb+\bm{}+?
+
+\medskip
+\emph{***}
+\medskip
+
+- The term 'natural extension' at page 6 should be clarified
+
+\medskip
+\emph{***}
+\medskip
+
+- Typo in ''$p_t^k$,s can''(page 6)
+
+\medskip
+\emph{***}
+\medskip
+
+- $n^{(n)}$ is weird (page 7)
+
+\medskip
+\emph{***}
+\medskip
+
+- Sec 4, why not to cite that the re-parametrization is based on the re-parametrization a' la Walley for the Dir distribution?
+
+\medskip
+\emph{***}
+\medskip
+
+- I would shape the example at the end of S4 in an example environment
+
+\medskip
+\emph{***}
+\medskip
+
+- I see the issues related to the improper priors in the vacuous case, yet in the discussion of this issue I miss a link with Walley's IDM (or IBM …).
+
+\medskip
+\emph{***}
+\medskip
+
+- Why bold R for the R software?
+
+\medskip
+\emph{***}
+\medskip
 
 
 \section*{Reviewer 2}
@@ -129,7 +225,10 @@ Specific comments:
 * My main (and only substantial) comment about the paper is that it starts by seeling advantages of the survival signature, which are then completely forgotten since all mathematical developments concern independent components. Also, it seems to me that some points are a bit "oversold", for instance while I agree that the dependence of identical component types or between component types can easily be integrated, some other kind of dependence are impossible to implement (for instance, dependencies related to the position of components within the system, which are quite likely to occur in practice). I would therefore like the authors to 1) perhaps also explain the limitations of the survival signature and 2) add some (small?) discussion about what becomes of the current problem when independence between all components do not hold anymore. More specifically:
 
 \medskip
-\emph{We think the reviewer does not fully acknowledge the central benefit of the survival signature, which is present also for independent components: Information on the system layout (which does not change over time) is fully separated from (time-dependent) component failure probabilities.}
+\emph{We think that here the reviewer does not fully acknowledge the central benefit of the survival signature,
+which is present also for independent components:
+%Information on the system layout (which does not change over time) is fully separated from (time-dependent) component failure probabilities.}
+It allows straightforward and efficient computation of the system survival by separating the (time-invariant) system structure from the time-dependent failure probabilities of components.}
 \medskip
 
 - top of P5: it would be fair to mention that dependencies related to component positions cannot easily be integrated to the signature (or at least I do not see how, if this is doable a reference/explanation should be provided.
@@ -146,6 +245,21 @@ Specific comments:
 
 * Perhaps mention somewhere (P19 or somewhere after?) that the elicited prior somehow correspond to a p-box? During my reading, I was actually reading to which extent results concerning p-boxes in general could not be useful in this setting.
 
+\medskip
+\emph{The sequence of $\yzl_{k,t_j}$ and $\yzu_{k,t_j}$ may seem indeed similar to a p-box.
+However, we do not model prior knowledge about the reliability function of component type $k$
+as the set of reliability functions bounded by $\yzl_{k,t_j}$ and $\yzu_{k,t_j}$.
+Instead, we assume a set of Beta priors at each time point $t_j$ with means bounded by $\yzl_{k,t_j}$ and $\yzu_{k,t_j}$
+and prior strengths bounded by $\nzl_{k,t_j}$ and $\nzu_{k,t_j}$.
+This set of Beta priors for each $t_j$ can well be seen as a parametric p-box.
+The parametric choice has the advantage that observed component lifetime data can be taken into account via the Generalized Bayes Rule update,
+and that posterior predictive probabilities $P(C^k_t = l_k \mid \yktz, \nktz, s^k_t)$ needed for computation of system survival
+are easily obtained as Beta-Binomial probabilities.
+One could indeed use any p-box in place of our set of Beta priors,
+but we doubt that it would be nearly as tractable as our approach.
+}
+\medskip
+
 * P19, L56: where $\to$ when
 
 \medskip
@@ -156,7 +270,7 @@ Specific comments:
 
 \medskip
 \emph{\textbf{*** not sure} I would just leave it as it is if there is no page limit.
-It helps people to see where the jumps in the system function all come from.}
+It helps people to see where the jumps in the system function all come from, without having to switch between figures.}
 \medskip
 
 \end{document}
