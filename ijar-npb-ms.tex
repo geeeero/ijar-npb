@@ -182,8 +182,6 @@ this phenomenon is known as \emph{prior-data conflict},
 see, e.g., \cite{2006:evans} or \cite{2015:bickel}.
 % which should be of concern at the system level.  
 
-*** add references to existing work on reliability with IP, including \cite{UC07} here or in par above?***
-
 Furthermore, the method is based on the survival signature \cite{2012:survsign},
 a recent development which naturally accommodates 
 heterogeneous component types laid out in any arbitrary manner.
@@ -213,6 +211,12 @@ keep the need for numerical optimization in our model to a minimum.
 %make the technique computationally tractable.
 %As will be seen in the sequel, the method remains computationally tractable.
 %\td{*** Some more words on the benefits?}
+
+In contrast to previous work on reliability with IP, our focus is on learning component reliabilities***
+
+*** add references to existing work on reliability with IP, including \cite{UC07} here ***
+
+\cite{2011:antonucci::noisyor}
 
 In Section \ref{sec:survsign} we review the survival 
 signature and in Section \ref{sec:nonparamapproach} we 
@@ -840,6 +844,10 @@ We therefore have
     \,, \label{eq:LwrSysPostA}
 \end{align}
 and similarly maximising for $\uRsys(\cdot)$.
+In doing so, we assume components of the same type $k$ to be exchangeable given $\PtZi{k}$
+\citep[see][\S 3.4 on extending exchangeability to imprecise probability]{itip},
+and components of different types to follow \emph{strong independence}
+\citep[see][\S 3.2.4]{itip}.
 
 Note that $\Phi(\cdot)$ is non-decreasing in each of its arguments $l_1,\ldots,l_K$,
 thus if there is first-order stochastic ordering on $P(C^k_t = l_k \mid \yktz, \nktz, s^k_t)$
