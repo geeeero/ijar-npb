@@ -205,18 +205,27 @@ When there is not enough data to overrule the prior,
 it is unclear whether to put more trust to prior assumptions or to the observations,
 and posterior inferences clearly reflect this state of uncertainty by larger ranges.
 
-While the use of imprecise probability methods can often lead to tractability issues,
+%While the use of imprecise probability methods can often lead to tractability issues,
+%new results on first-order stochastic dominance for the Beta-Binomial distribution
+%keep the need for numerical optimization in our model to a minimum.
+
+Our approach extends the literature on reliability with imprecise probability
+\citep[for an overview see][]{UC07}
+by integrating the learning of component reliabilities based on test data,
+in combination with the use of the survival signature.
+Approaches to system reliability based on generalizations of Bayesian networks
+like evidential networks \citep{2008:simon-weber-evsukoff}
+and credal networks \cite{2011:antonucci::noisyor}
+do usually not include test data in the model.
+Doing so is certainly possible in these frameworks, 
+but this would add further to the complexity of the Bayesian network representation,
+in which updating (i.e., calculating posterior reliabilities) for each time $t$
+is generally NP-hard \cite{2014:maua-decampos-benavoli-antonucci}.
+While determining the survival signature is also NP-hard,
+this has to be done only once in our approach.
+Furthermore,
 new results on first-order stochastic dominance for the Beta-Binomial distribution
 keep the need for numerical optimization in our model to a minimum.
-%make the technique computationally tractable.
-%As will be seen in the sequel, the method remains computationally tractable.
-%\td{*** Some more words on the benefits?}
-
-In contrast to previous work on reliability with IP, our focus is on learning component reliabilities***
-
-*** add references to existing work on reliability with IP, including \cite{UC07} here ***
-
-\cite{2011:antonucci::noisyor}
 
 In Section \ref{sec:survsign} we review the survival 
 signature and in Section \ref{sec:nonparamapproach} we 
