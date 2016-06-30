@@ -319,14 +319,14 @@ In Section~\ref{sec:survsign}, we describe ***
 In the mathematical theory of reliability, the main focus is on the functioning of a system given the functioning, or not, 
 of its components and the structure of the system. The mathematical concept which is central to this theory is the 
 \emph{structure function} \citep{BP75}. For a system with $m$ components, let state vector 
-$\underline{x} = (x_1,x_2,\ldots,x_m) \in \{0,1\}^m$, with $x_i=1$ if the $i$th component functions 
-and $x_i=0$ if not. The labelling of the components is arbitrary but must be fixed to define $\underline{x}$. 
-The structure function $\phi : \{0,1\}^m \rightarrow \{0,1\}$, defined for all possible $\underline{x}$, takes 
-the value 1 if the system functions and 0 if the system does not function for state vector $\underline{x}$. 
-Most practical systems are coherent, which means that $\phi(\underline{x})$ 
-is non-decreasing in any of the components of $\underline{x}$, so system functioning cannot be improved by worse performance 
+$\vec{x} = (x_1,x_2,\ldots,x_m) \in \{0,1\}^m$, with $x_i=1$ if the $i$th component functions 
+and $x_i=0$ if not. The labelling of the components is arbitrary but must be fixed to define $\vec{x}$. 
+The structure function $\phi : \{0,1\}^m \rightarrow \{0,1\}$, defined for all possible $\vec{x}$, takes 
+the value 1 if the system functions and 0 if the system does not function for state vector $\vec{x}$. 
+Most practical systems are coherent, which means that $\phi(\vec{x})$ 
+is non-decreasing in any of the components of $\vec{x}$, so system functioning cannot be improved by worse performance 
 of one or more of its components. The assumption of coherent systems is also convenient from the perspective of uncertainty
-quantification for system reliability. It is further logical to assume that $\phi(\underline{0})=0$ and $\phi(\underline{1})=1$, 
+quantification for system reliability. It is further logical to assume that $\phi(\vec{0})=0$ and $\phi(\vec{1})=1$, 
 so the system fails if all its components fail and it functions if all its components function. 
 
 For larger systems, working with the full structure function may be complicated, and one may particularly
@@ -346,8 +346,8 @@ Consider a system with $K\ge 1$ types of components, with $m_k$ components of ty
 $\sum_{k=1}^K m_k = m$. Assume that the random failure times of components of the same type are exchangeable \citep{DF74}.
 Due to the arbitrary ordering of the components in the state vector, components of the same type can be grouped together, 
 leading to a state vector that can be written as 
-$\underline{x} = (\underline{x}^1,\underline{x}^2,\ldots,\underline{x}^K)$, with 
-$\underline{x}^k = (x^k_1,x^k_2,\ldots,x^k_{m_k})$ the sub-vector representing the states of the components of type $k$. 
+$\vec{x} = (\vec{x}^1,\vec{x}^2,\ldots,\vec{x}^K)$, with 
+$\vec{x}^k = (x^k_1,x^k_2,\ldots,x^k_{m_k})$ the sub-vector representing the states of the components of type $k$. 
 
 The \emph{survival signature} for such a system, denoted by $\Phi(l_1,\ldots,l_K)$, with $l_k=0,1,\ldots,m_k$ 
 for $k=1,\ldots,K$, is defined as the probability for the event that the system functions given that \emph{precisely} $l_k$ of its 
@@ -367,15 +367,15 @@ where $C^k_t \in \{0, 1, \ldots, m_k\}$ denotes
 the random number of components of type $k$ functioning at time $t$. 
 
 For calculating the survival signature based on the structure function, observe that
-there are $\binom{m_k}{l_k}$ state vectors $\underline{x}^k$ with $\sum_{i=1}^{m_k} x^k_i = l_k$. Let $S^k_{l_k}$ 
+there are $\binom{m_k}{l_k}$ state vectors $\vec{x}^k$ with $\sum_{i=1}^{m_k} x^k_i = l_k$. Let $S^k_{l_k}$ 
 denote the set of these state vectors for components of type $k$ and let $S_{l_1,\ldots,l_K}$ denote the set of 
 all state vectors for the whole system for which $\sum_{i=1}^{m_k} x^k_i = l_k$, $k=1,\ldots,K$. Due to the 
 exchangeability assumption for the failure times of the $m_k$ components of type $k$, all the state vectors 
-$\underline{x}^k \in S^k_{l_k}$ are equally likely to occur, hence \citep{2012:survsign}
+$\vec{x}^k \in S^k_{l_k}$ are equally likely to occur, hence \citep{2012:survsign}
 \begin{align}
 \label{eq:surv-sig}
 \Phi(l_1,\ldots,l_K)
- &= \left[ \prod_{k=1}^K \binom{m_k}{l_k}^{-1} \right] \times \sum_{\underline{x} \in S_{l_1,\ldots,l_K}} \phi(\underline{x})\,.
+ &= \left[ \prod_{k=1}^K \binom{m_k}{l_k}^{-1} \right] \times \sum_{\vec{x} \in S_{l_1,\ldots,l_K}} \phi(\vec{x})\,.
 \end{align}
 %
 %Let $C^k_t \in \{0,1,\ldots,m_k\}$ denote the number of components of type $k$ in the system that function at time $t>0$.
@@ -454,7 +454,7 @@ f^k(t_j) &= P\big(T^k \in (t_j,t_{j+1}]\big) = p^k_{t_j} - p^k_{t_{j+1}}\,,\\
 h^k(t_j) &= P\big(T^k \in (t_j,t_{j+1}]\mid T^k > t_j\big) = \frac{f^k(t_j)}{R^k(t_j)}\,. % or R^k(t_{j-1}) ???
 \end{align*}
 The time grid $\cal T$ can be chosen to be appropriately dense for the application at hand,
-with the natural extension between grid points by taking $R^k(\cdot)$ to be the right continuous step function induced by the grid values,
+where a simple extension between grid points can be made by taking $R^k(\cdot)$ to be the right continuous step function induced by the grid values,
 $R^k(t) = p^k_{t_j}, t \in [t_j, t_{j+1})$,
 or by taking $p^k_{t_j}$ and $p^k_{t_{j+1}}$ as upper and lower bounds for $R^k(t)$, $t \in [t_j, t_{j+1})$.
 
@@ -464,7 +464,7 @@ is binomially distributed, $C^k_t = \sum_{i=1}^{m_k} \indic(T^k_i > t) \sim \bin
 %(maybe not relevant for this manuscript, but would it make sense to take Kaplan-Meier estimates for the $p^k_t$'s,
 %or the NPI bounds for Kaplan-Meier?)
 
-The $\ptk$'s can, in theory, be directly chosen to arbitrarily closely approximate any valid lifetime pdf on
+The sequence of $\ptk$'s can, in theory, be directly chosen to arbitrarily closely approximate any valid lifetime pdf on
 $[0,\infty)$, for example matching a bathtub curve for the corresponding hazard rate $h^k(t_j)$.
 Naturally, $p^k_{t_j} \ge p^k_{t_{j+1}}$ should hold (assuming no repair).
 However, such direct specification is non-trivial, neglects any inherent uncertainty in the particular choice, and cannot be 
