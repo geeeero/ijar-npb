@@ -507,7 +507,7 @@ In total, values for $2 \times |{\cal T}| \times K$ parameters must be chosen.
 The parametrisation of the Beta distribution used above is common,
 and allows $\alpha^k_t$ and $\beta^k_t$ to be interpreted as
 hypothetical numbers of functioning and failed components of type $k$ at time $t$, respectively.
-However, when we generalise to sets of priors in the sequel,
+However, as recognized by \citep[\S 5.3]{1991:walley}, when we generalise to sets of priors in the sequel,
 it is useful to consider a different parametrisation.
 
 For clarity of presentation we will temporarily drop the super- and subscript $k$ and $t$ indices for component type and time.
@@ -769,12 +769,17 @@ Furthermore, with sets of Beta priors it is also possible
 to express prior ignorance
 by letting $\yktzl \to 0$ and $\yktzu \to 1$
 for some or all $t \in {\cal T}$.
+Such models are called \emph{near-noninformative} or \emph{near-ignorance models} in the imprecise probability literature
+(see \citet[\S5.3.2]{1991:walley} for Beta priors,
+and \citet{2012:benavolizaffalon,2015:benavolizaffalon} for exponential family priors),
+as they provide vacuous bounds only for a certain class of inferences,
+and the choice for the prior strength parameter $\nktz$ influences posterior inferences.
 (Note that it is not advisable to choose $\yktzl = 0$ and $\yktzu = 1$,
 as this can lead to improper posterior predictive distributions.
 For example, at any $t < \min(\vec{t}^k)$,
 we would have $\yktnu = 1$, leading to one argument of the Beta function
 in the denominator of \eqref{eq:postpredCny} being zero.)
-These limits for $\yktz$ imply we are only prepared to give trivial bounds for the functioning probability
+The limits $\yktzl \to 0$ and $\yktzu \to 1$ imply we are only prepared to give trivial bounds for the functioning probability
 and do not wish to commit to any specific knowledge about $p^k_t$ \emph{a priori}.
 This provides a more natural choice of `noninformative' prior over $[0,1]$ than the usual choice of
 a Beta prior with $\alpha^k_t = \beta^k_t = 1$ (or $\nktz = 2$, $\yktz = 0.5$).
@@ -1067,11 +1072,10 @@ and then to further refine the obtained bounds as deemed necessary by the expert
 
 \section{Practical Usage and Examples}
 \label{sec:examples}
-%***code published in Louis' \textbf{R} package \texttt{ReliabilityTheory},
 
 \subsection{Software}
 
-The methods of this paper have been implemented in the \textbf{R}
+The methods of this paper have been implemented in the \textsf{R}
 \citep{R} package \texttt{ReliabilityTheory} \citep{2015:aslett-RT},
 providing an easy to use interface for reliability practitioners.  The
 primary function, which computes the upper and lower posterior
@@ -1465,8 +1469,8 @@ generalization to imprecise probabilities possible.
 
 The authors are grateful for support of their work from two anonymous reviewers and for their comments which led to improved presentation.
 
-Gero Walter was supported by the DINALOG project
-``Coordinated Advanced Maintenance and Logistics Planning for the Process Industries'' (CAMPI).
+Gero Walter was supported by the DINALOG project CAMPI
+(``Coordinated Advanced Maintenance and Logistics Planning for the Process Industries'').
 
 Louis Aslett was supported by the i-like project (EPSRC grant reference number EP/K014463/1).
 
@@ -1741,7 +1745,7 @@ l}{\eu - l} \qquad \forall\ l \in \{0,\dots,m\}
 \label{ap:software}
 
 Functions which make it easy to use the methods of this paper
-have been added to the \textbf{R} package \texttt{ReliabilityTheory} \citep{2015:aslett-RT}.
+have been added to the \textsf{R} package \texttt{ReliabilityTheory} \citep{2015:aslett-RT}.
 There are two functions of particular note: \texttt{computeSystemSurvivalSignature}
 and, implementing the result from Appendix~\ref{ap:proofs} above, \texttt{nonParBayesSystemInferencePriorSets}.
 

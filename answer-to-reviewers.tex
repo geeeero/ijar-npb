@@ -136,8 +136,11 @@ A theoretical or empirical analysis should be necessarily added to convince the 
 An idea might be a non-brute-force, approximate, approach (e.g., some sampling-based inner approximation). In the discrete case, such sampling can be drastically improved by sampling only on the extreme distribution (of the convex credal sets). This is less straightforward with continuous parameter, but it should be possible to do something even in this case (and I guess some paper by Alessio Benavoli can give direction about that).
 
 \medskip
-\emph{*** empirical analysis by Louis? give computation times for examples?\\
-*** by considering only the parametric Beta distributions, we are already working with the extreme points of the credal set}
+\emph{***We have added some first considerations on the question of how often we have to resort to numerical optimization in Appendix~C,
+and now also give computation times for our examples in Section~7.2.}\\
+
+\emph{***On the last note, by considering only the parametric Beta distributions,
+we are already working with the extreme points of the credal sets induced by $\PktZ$.}
 %in this continuous setting, the extreme points of the prior parameter set
 %are the four Beta priors corresponding to combinations of $\yzl_{k,t_j}$ and $\yzu_{k,t_j}$ with $\nzl_{k,t_j}$ and $\nzu_{k,t_j}$,
 %but the posterior parameter set is not convex
@@ -175,7 +178,7 @@ and do not see the need to phrase this otherwise.}
 - \verb+\overline{x}+ for arrays might be a bit confusive in a IP paper, why not to use \verb+\vec{}+ or \verb+\bm{}+?
 
 \medskip
-\emph{We changed the notation in Section~2 to use $\vec{x}$ in place of $\underline{x}$ for state vectors.}
+\emph{Agreed, we changed the notation in Section~2 to use $\vec{x}$ in place of $\underline{x}$ for state vectors.}
 \medskip
 
 - The term 'natural extension' at page 6 should be clarified
@@ -200,25 +203,30 @@ we changed the wording to `simple extension' here.}
 - Sec 4, why not to cite that the re-parametrization is based on the re-parametrization a' la Walley for the Dir distribution?
 
 \medskip
-\emph{***Walley uses this parametrization for the IDM / IBM, but it has been known before that as natural or canonical parametrization, ***}
+\emph{Agreed. This parametrization for conjugate priors in exponential families has been known for a long time
+(see, e.g., Diaconis \& Ylvisaker 1979),
+but Walley (1991, \S 5.3) showed its usefulness for the imprecise Beta model, and then for the IDM.
+}
 \medskip
 
 - I would shape the example at the end of S4 in an example environment
 
 \medskip
-\emph{***}
+\emph{As we have our main examples in Section~7 in a separate subsection,
+putting the example at the end of Section~4 would be awkward as
+it would remain be the sole example in an example environment.}
 \medskip
 
 - I see the issues related to the improper priors in the vacuous case, yet in the discussion of this issue I miss a link with Walley's IDM (or IBM \ldots).
 
 \medskip
-\emph{***}
+\emph{Agreed, we now refer to the literature on near-noninformative sets of priors (second-to-last paragraph of Section~5).}
 \medskip
 
 - Why bold R for the R software?
 
 \medskip
-\emph{***}
+\emph{Agreed, we now use} \verb+\textsf{R}+ \emph{which seems to be the standard.}
 \medskip
 
 
@@ -242,7 +250,7 @@ It allows straightforward and efficient computation of the system survival by se
 - top of P5: it would be fair to mention that dependencies related to component positions cannot easily be integrated to the signature (or at least I do not see how, if this is doable a reference/explanation should be provided.
 
 \medskip
-\emph{We added a paragraph at the end of Section 2 to address this point.}
+\emph{We added a paragraph at the end of Section~2 to address this point.}
 \medskip
 
 - P6, 38/40: from here independence is assumed in the rest of the paper. It would be fair to discuss what extensions to non-independent cases are easy/difficult to produce, otherwise the advantage previously put forward of survival signatures simply disappears when adopting the author proposal.
@@ -263,9 +271,8 @@ This set of Beta priors for each $t_j$ can well be seen as a parametric p-box.
 The parametric choice has the advantage that observed component lifetime data can be taken into account via the Generalized Bayes Rule update,
 and that posterior predictive probabilities $P(C^k_t = l_k \mid \yktz, \nktz, s^k_t)$ needed for computation of system survival
 are easily obtained as Beta-Binomial probabilities.
-One could indeed use any p-box in place of our set of Beta priors,
-but we doubt that it would be nearly as tractable as our approach.
-}
+One could indeed use any p-box in place of our set of Beta priors for each $t_j$,
+but we doubt that it would be nearly as tractable as our approach.}
 \medskip
 
 * P19, L56: where $\to$ when
@@ -277,8 +284,10 @@ but we doubt that it would be nearly as tractable as our approach.
 * Figures 5,6,7: since T1,T2 always follow the same behaviour, perhaps put them only once?
 
 \medskip
-\emph{\textbf{*** not sure} I would just leave it as it is if there is no page limit.
-It helps people to see where the jumps in the system function all come from, without having to switch between figures.}
+\emph{We decided to leave the figures as they are, to allow them to be interpreted on their own,
+without the need to switch between different figures.
+Specifically, each complete figure allows to relate any jump in the system reliability function bounds
+to the corresponding jump in either of the component reliability function bounds.}
 \medskip
 
 \end{document}
