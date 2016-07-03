@@ -317,6 +317,7 @@ ggplot() +
   geom_line(data=P, aes(x=t, y=popt, lty=lab))
 dev.off()
 
+library(dplyr)
 mean(c(mean(t(M %>% filter(lab=="Lower") %>% select(popt))),
        mean(t(H %>% filter(lab=="Lower") %>% select(popt))),
        mean(t(C %>% filter(lab=="Lower") %>% select(popt))),
