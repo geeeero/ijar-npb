@@ -941,10 +941,10 @@ minimisation/maximisation involved in finding the sets of system
 reliability functions compared to either numerical optimisation or
 an exhaustive grid search (which would get exponentially slower in 
 the number of different components).
-
+%
 Appendix \ref{ap:needtoopt} provides a detailed discussion of exactly how often these bounds hold and how often one must resort to numerical optimisation.
 
-Thus,
+Thus, due to Theorems~\ref{thm:y}, \ref{thm:n} and Lemma~\ref{lem:n}, \eqref{eq:LwrSysPostA} transforms to
 %For $\lRsys(\cdot)$, the minimum is achieved at
 %$\nktzu$ if $\yktzl(n_k+m_k-1)-s^k_t-m_k < 0$ and is achieved at 
 %$\nktzl$ if $\yktzl(n_k+m_k-1)-s^k_t-m_k > 0$.
@@ -1297,7 +1297,8 @@ The system layout is depicted in Figure~\ref{fig:brakesystem},
 together with prior and posterior sets of reliability functions for the four component types and the complete system.
 Observed lifetimes from test data are indicated by tick marks in each of the four component type panels,
 where $n_\text{M}=5$, $n_\text{H}=10$, $n_\text{C}=15$, and $n_\text{P}=20$.
-We assume $[\ntzl{\text{M}},\ntzu{\text{M}}] = [1,8]\ \forall t$,
+We consider $301$ evenly spaced time points $t$ on $[0, 10]$,
+assume $[\ntzl{\text{M}},\ntzu{\text{M}}] = [1,8]\ \forall t$,
 and $[\nktzl, \nktzu] = [1,2]$ for $k \in \{\text{H, C, P}\}$ and all $t$.
 Prior functioning probability bounds for M are based on
 a Weibull cdf with shape $2.5$ and scales $6$ and $8$ for the lower and upper bound, respectively.
@@ -1307,7 +1308,7 @@ derived from an expert statement of $\ytz{\text{P}} \in [0.5, 0.65]$ for $t=5$ o
 For H, near-noninformative prior functioning probability bounds have been selected;
 with the upper bound for P being approximately one for $t \le 5$ as well,
 the prior upper system reliability bound for $t \le 5$ is close to one, too,
-since the system can function on H and one of P1 -- P4 alone.
+since the system can function on H and one of P3 and P4 alone.
 Note that the posterior functioning probability interval for M
 is wide not only due to the limited number of observations,
 but also because $\ntzu{\text{M}} = 8$ and the prior-data conflict reaction.
@@ -1388,7 +1389,9 @@ expert attention --- thus the technique avoids wasted time
 addressing prior-data conflict in components which may not 
 be relevant when propagated to the uncertainty in the whole system.
 
-In this example, the theory presented in Section \ref{sec:setsofrel} enabled avoiding numerical optimisation in 91.9\% of cases for $\lRsys(\cdot)$ and in 95.7\% of cases for $\uRsys(\cdot)$.  Further detail is in Appendix \ref{ap:needtoopt}.
+In this example, the theory presented in Section \ref{sec:setsofrel} enabled avoiding numerical optimisation
+for 91.9\% and 95.7\% of the $301$ considered time points for $\lRsys(\cdot)$ and $\uRsys(\cdot)$, respectively.
+Further detail is in Appendix \ref{ap:needtoopt}.
 
 %***calculate and show $\Rsys(t)$ plots for a range of examples (keep system layout fixed?):
 %informative prior set for some component types, different degree of imprecision,
@@ -1749,7 +1752,7 @@ l}{\eu - l} \qquad \forall\ l \in \{0,\dots,m\}
 
 The above theory substantially reduces the amount that numerical optimisation must be used.  Herein, we examine more carefully precisely how often the theory cannot be applied resulting in numerical optimisation being used.
 
-Given some unknown failure probability $p$, which gives rise to the observed data $s$, the probability that Theorem 1 does not apply is
+Given some unknown functioning probability $p$, which gives rise to the observed data $s$, the probability that Theorem 1 does not apply is
 \begin{align*}
   &P(y(N+m-1)-m+1 < s < y(N+m-1)) \\
   &\qquad \qquad \qquad \qquad = \sum_{i = \lceil y(N+m-1)-m+1 \rceil}^{\lfloor y(N+m-1) \rfloor} \binom{N}{i} p^i (1-p)^{N-i}
@@ -1778,13 +1781,13 @@ With the prior value $y$ (upper or lower) fixed, the above expressions depend on
 
 \begin{figure}
 \includegraphics[width=\textwidth]{need-to-opt-3}
-\caption{Plots of the probability that numerical optimisation is required when $y=0.4$, $N=100$, $\nl=1$ and $\nu=5$ for differing numbers of component in the system, $m$, as a function of the unknown failure probability, $p$.}
+\caption{Plots of the probability that numerical optimisation is required when $y=0.4$, $N=100$, $\nl=1$ and $\nu=5$ for differing numbers of components in the system, $m$, as a function of the unknown failure probability, $p$.}
 \label{fig:need-to-opt-3}
 \end{figure}
 
 Thus, Figures \ref{fig:need-to-opt-1}, \ref{fig:need-to-opt-2} and \ref{fig:need-to-opt-3} show under long term repeated use of this technique how often optimisation would be required.
 
-The worst case scenario is that the prior, $y$, is exactly equal to the true unknown probability of failure, $p$.  Regardless of $y$, optimisation is required less frequently with larger test dataset sizes (increasing $N$), but offset by increasing numbers of the same component in a system (increasing $m$).  Not shown is that $\nl$ and $\nu$ clearly do not affect the probability that Theorem 2 does not apply, but also the impact on Lemma 3 is negligible.
+The worst case scenario is that the prior, $y$, is exactly equal to the true unknown probability of failure, $p$.  Regardless of $y$, optimisation is required less frequently with larger test dataset sizes (increasing $N$), but offset by increasing numbers of components of the same type in a system (increasing $m$).  Not shown is that $\nl$ and $\nu$ clearly do not affect the probability that Theorem 2 does not apply, but also the impact on Lemma 3 is negligible.
 
 \subsection{Worst case scenario}
 
@@ -1804,13 +1807,13 @@ Especially given the upper and lower choices of $y$, it may be reasonable to sup
 \label{fig:need-to-opt-67}
 \end{figure}
 
-Note that all these analyses are for evaluation of a single fixed time point at which $\lRsys(\cdot)$ or $\uRsys(\cdot)$ computed.  Of relevance to the overall compute time is the behaviour over time, so that is seems unlikely the worst case scenario will be occur for long runs of the times under analysis.
+Note that all these analyses are for evaluation of a single fixed time point at which $\lRsys(\cdot)$ or $\uRsys(\cdot)$ is computed.  Of relevance to the overall compute time is the behaviour over time, so that seems unlikely that the worst case scenario will occur for long runs of the times under analysis.
 
 \subsection{Theoretical analysis for brake system example}
 
 By way of example, a temporal analysis of the constrained worst case analysis is now presented for the real example in Section \ref{sec:brakeex}.
 
-Figure \ref{fig:need-to-opt-8} shows the changing worst case probability (subject to $|y-p|>0.1$) that optimisation will be required over time for the actual choice of prior and the values of $m, N, \nu$ and $\nl$ in the brake example from the main body of the paper.  Note in particular that when $m=1$, Lemma 3 is always applies and optimisation is never required.  This is true for all values of $N$ and $y$.
+Figure \ref{fig:need-to-opt-8} shows the changing worst case probability (subject to $|y-p|>0.1$) that optimisation will be required over time for the actual choice of prior and the values of $m, N, \nu$ and $\nl$ in the brake example from the main body of the paper.  Note in particular that when $m=1$, Lemma 3 *** always applies and optimisation is never required.  This is true for all values of $N$ and $y$.
 
 \begin{figure}
 \includegraphics[width=\textwidth]{need-to-opt-8}
