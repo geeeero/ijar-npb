@@ -1751,7 +1751,7 @@ l}{\eu - l} \qquad \forall\ l \in \{0,\dots,m\}
 \section{Theory versus optimisation}
 \label{ap:needtoopt}
 
-The above theory substantially reduces the amount that numerical optimisation must be used.  Herein, we examine more carefully precisely how often the theory cannot be applied resulting in numerical optimisation being used.
+The above theory substantially reduces the amount that numerical optimisation must be used.  Herein, we examine more carefully precisely how often the theory cannot be applied, resulting in numerical optimisation being used.
 
 Given some unknown functioning probability $p$, which gives rise to the observed data $s$, the probability that Theorem~2 does not apply is
 \begin{align*}
@@ -1814,14 +1814,15 @@ Note that all these analyses are for evaluation of a single fixed time point at 
 \subsection{Theoretical analysis for brake system example}
 \label{ap:needtoopt-brake}
 
-By way of example, a temporal analysis of the constrained worst case analysis is now presented for the real example in Section~\ref{sec:brakeex}.
+Such temporal aspects are now considered by analysing the brake system example from Section~\ref{sec:brakeex}.
+%By way of example, a temporal analysis of the constrained worst case analysis is now presented for the example in Section~\ref{sec:brakeex}.
 %
 %Figure \ref{fig:need-to-opt-8} shows the changing worst case probability (subject to $|y-p|>0.1$) that optimisation will be required over time for the actual choice of prior and the values of $m, N, \nu$ and $\nl$ in the brake example from the main body of the paper.  Note in particular that when $m=1$, Lemma 3 always applies for $y \in (0,1)$ and so optimisation is never required.  This is true for all values of $N$ and $y$.
-As noted in Section~\ref{sec:brakeex}, the grid contained 301 time points and the system has 4 types of components,
+As noted in Section~\ref{sec:brakeex}, the grid contains 301 time points and the system has 4 types of components,
 meaning stochastic dominance must be verified via theory or optimisation $1,204$ times for each of $\lRsys(\cdot)$ and $\uRsys(\cdot)$.
 
 Figure~\ref{fig:need-to-opt-8} shows the worst case probabilities (subject to $|y-p|>0.1$)
-as they change over time in the brake example from the main body of the paper.
+as they change over time in the brake system example. %from the main body of the paper.
 Displayed are the worst case probabilities that optimisation will be required for the choice of prior and the values of $m$ and $N$
 as in Section~\ref{sec:brakeex}, but without using the test data (which define $s$).
 Note in particular that when $m=1$ (as is the case for component types M and H),
