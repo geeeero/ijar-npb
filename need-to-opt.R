@@ -2,6 +2,7 @@ library(ggplot2)
 
 p <- seq(0, 1, length.out = 100)
 
+# probaliity that theorem 2 does not apply
 prob.s <- function(y, p, N, m) {
   if(p<0)
     return(NA)
@@ -11,6 +12,7 @@ prob.s <- function(y, p, N, m) {
 }
 prob <- Vectorize(prob.s, "p")
 
+# probability that lemma 3 does not apply
 prob2.s <- function(y, p, N, m, n.u, n.l) {
   if(p<0)
     return(NA)
@@ -118,8 +120,8 @@ ggplot(rbind(d1, d2, d3)) +
 dev.off()
 
 # Extra function defs
-prob.p <- Vectorize(prob.s, c("y","p"))
-prob2.p <- Vectorize(prob2.s, c("y", "p"))
+prob.p <- Vectorize(prob.s, c("y","p")) # Theorem 2
+prob2.p <- Vectorize(prob2.s, c("y", "p")) # Lemma 3
 
 # Plot 4
 y <- seq(0, 1, length.out = 51)
@@ -129,27 +131,26 @@ N <- 100; m <- 3; n.l <- 1; n.u <- 5
 N <- 50
 d1 <- data.frame(p=rep(y, 2),
                  popt=c(prob.p(y, y, N, m), prob2.p(y, y, N, m, n.u, n.l)),
-                 lab=rep(c("Theorem 2", "Lemma 3"), each=length(y)),
+                 lab=factor(rep(c("Theorem 2", "Lemma 3"), each=length(y)), levels=c("Theorem 2", "Lemma 3")),
                  N="10")
 N <- 100
 d2 <- data.frame(p=rep(y, 2),
                  popt=c(prob.p(y, y, N, m), prob2.p(y, y, N, m, n.u, n.l)),
-                 lab=rep(c("Theorem 2", "Lemma 3"), each=length(y)),
+                 lab=factor(rep(c("Theorem 2", "Lemma 3"), each=length(y)), levels=c("Theorem 2", "Lemma 3")),
                  N="100")
 N <- 1000
 d3 <- data.frame(p=rep(y, 2),
                  popt=c(prob.p(y, y, N, m), prob2.p(y, y, N, m, n.u, n.l)),
-                 lab=rep(c("Theorem 2", "Lemma 3"), each=length(y)),
+                 lab=factor(rep(c("Theorem 2", "Lemma 3"), each=length(y)), levels=c("Theorem 2", "Lemma 3")),
                  N="1000")
-
 
 pdf("need-to-opt-4.pdf", width=3.95, height=3)
 ggplot() +
   ylim(0, 1) + xlab("y") + ylab("Worst case prob need to optimise") + theme_bw() +
-  scale_linetype_discrete(name="Theory", breaks=c("Theorem 2", "Lemma 3")) +
-  geom_line(data=d1, aes(x=p, y=popt, lty=lab, colour=N)) +
-  geom_line(data=d2, aes(x=p, y=popt, lty=lab, colour=N)) +
-  geom_line(data=d3, aes(x=p, y=popt, lty=lab, colour=N))
+  scale_colour_manual(name="Theory", values=c("#b2df8a", "#1f78b4")) +
+  geom_line(data=d1, aes(x=p, y=popt, lty=N, colour=lab), lwd=0.75) +
+  geom_line(data=d2, aes(x=p, y=popt, lty=N, colour=lab), lwd=0.75) +
+  geom_line(data=d3, aes(x=p, y=popt, lty=N, colour=lab), lwd=0.75)
 dev.off()
 
 # Plot 5
@@ -160,28 +161,27 @@ N <- 100; m <- 3; n.l <- 1; n.u <- 5
 m <- 2
 d1 <- data.frame(p=rep(y, 2),
                  popt=c(prob.p(y, y, N, m), prob2.p(y, y, N, m, n.u, n.l)),
-                 lab=rep(c("Theorem 2", "Lemma 3"), each=length(y)),
+                 lab=factor(rep(c("Theorem 2", "Lemma 3"), each=length(y)), levels=c("Theorem 2", "Lemma 3")),
                  m="2")
 m <- 5
 d2 <- data.frame(p=rep(y, 2),
                  popt=c(prob.p(y, y, N, m), prob2.p(y, y, N, m, n.u, n.l)),
-                 lab=rep(c("Theorem 2", "Lemma 3"), each=length(y)),
+                 lab=factor(rep(c("Theorem 2", "Lemma 3"), each=length(y)), levels=c("Theorem 2", "Lemma 3")),
                  m="5")
 m <- 10
 d3 <- data.frame(p=rep(y, 2),
                  popt=c(prob.p(y, y, N, m), prob2.p(y, y, N, m, n.u, n.l)),
-                 lab=rep(c("Theorem 2", "Lemma 3"), each=length(y)),
+                 lab=factor(rep(c("Theorem 2", "Lemma 3"), each=length(y)), levels=c("Theorem 2", "Lemma 3")),
                  m="10")
-
 
 pdf("need-to-opt-5.pdf", width=3.95, height=3)
 ggplot() +
   ylim(0, 1) + xlab("y") + ylab("Worst case prob need to optimise") + theme_bw() +
-  scale_linetype_discrete(name="Theory", breaks=c("Theorem 2", "Lemma 3")) +
-  scale_colour_discrete(breaks=c("2", "5", "10")) +
-  geom_line(data=d1, aes(x=p, y=popt, lty=lab, colour=m)) +
-  geom_line(data=d2, aes(x=p, y=popt, lty=lab, colour=m)) +
-  geom_line(data=d3, aes(x=p, y=popt, lty=lab, colour=m))
+  scale_colour_manual(name="Theory", values=c("#b2df8a", "#1f78b4")) +
+  scale_linetype_discrete(breaks=c("2", "5", "10")) +
+  geom_line(data=d1, aes(x=p, y=popt, lty=m, colour=lab), lwd=0.75) +
+  geom_line(data=d2, aes(x=p, y=popt, lty=m, colour=lab), lwd=0.75) +
+  geom_line(data=d3, aes(x=p, y=popt, lty=m, colour=lab), lwd=0.75)
 dev.off()
 
 # Plot 6
@@ -189,33 +189,34 @@ y <- seq(0, 1, length.out = 51)
 
 N <- 100; m <- 3; n.l <- 1; n.u <- 5
 
+ypdiff <- 0.1
+
 N <- 50
 d1 <- data.frame(p=rep(y, 2),
-                 popt=c(pmax(prob.p(y, y-0.1, N, m), prob.p(y, y+0.1, N, m), na.rm = TRUE),
-                        pmax(prob2.p(y, y-0.1, N, m, n.u, n.l), prob2.p(y, y+0.1, N, m, n.u, n.l), na.rm = TRUE)),
-                 lab=rep(c("Theorem 2", "Lemma 3"), each=length(y)),
+                 popt=c(pmax(prob.p(y, y-ypdiff, N, m), prob.p(y, y+ypdiff, N, m), na.rm = TRUE),
+                        pmax(prob2.p(y, y-ypdiff, N, m, n.u, n.l), prob2.p(y, y+ypdiff, N, m, n.u, n.l), na.rm = TRUE)),
+                 lab=factor(rep(c("Theorem 2", "Lemma 3"), each=length(y)), levels=c("Theorem 2", "Lemma 3")),
                  N="10")
 N <- 100
 d2 <- data.frame(p=rep(y, 2),
-                 popt=c(pmax(prob.p(y, y-0.1, N, m), prob.p(y, y+0.1, N, m), na.rm = TRUE),
-                        pmax(prob2.p(y, y-0.1, N, m, n.u, n.l), prob2.p(y, y+0.1, N, m, n.u, n.l), na.rm = TRUE)),
-                 lab=rep(c("Theorem 2", "Lemma 3"), each=length(y)),
+                 popt=c(pmax(prob.p(y, y-ypdiff, N, m), prob.p(y, y+ypdiff, N, m), na.rm = TRUE),
+                        pmax(prob2.p(y, y-ypdiff, N, m, n.u, n.l), prob2.p(y, y+ypdiff, N, m, n.u, n.l), na.rm = TRUE)),
+                 lab=factor(rep(c("Theorem 2", "Lemma 3"), each=length(y)), levels=c("Theorem 2", "Lemma 3")),
                  N="100")
 N <- 1000
 d3 <- data.frame(p=rep(y, 2),
-                 popt=c(pmax(prob.p(y, y-0.1, N, m), prob.p(y, y+0.1, N, m), na.rm = TRUE),
-                        pmax(prob2.p(y, y-0.1, N, m, n.u, n.l), prob2.p(y, y+0.1, N, m, n.u, n.l), na.rm = TRUE)),
-                 lab=rep(c("Theorem 2", "Lemma 3"), each=length(y)),
+                 popt=c(pmax(prob.p(y, y-ypdiff, N, m), prob.p(y, y+ypdiff, N, m), na.rm = TRUE),
+                        pmax(prob2.p(y, y-ypdiff, N, m, n.u, n.l), prob2.p(y, y+ypdiff, N, m, n.u, n.l), na.rm = TRUE)),
+                 lab=factor(rep(c("Theorem 2", "Lemma 3"), each=length(y)), levels=c("Theorem 2", "Lemma 3")),
                  N="1000")
-
 
 pdf("need-to-opt-6.pdf", width=3.95, height=3)
 ggplot() +
   ylim(0, 1) + xlab("y") + ylab("Worst case prob need to optimise") + theme_bw() +
-  scale_linetype_discrete(name="Theory", breaks=c("Theorem 2", "Lemma 3")) +
-  geom_line(data=d1, aes(x=p, y=popt, lty=lab, colour=N)) +
-  geom_line(data=d2, aes(x=p, y=popt, lty=lab, colour=N)) +
-  geom_line(data=d3, aes(x=p, y=popt, lty=lab, colour=N))
+  scale_colour_manual(name="Theory", values=c("#b2df8a", "#1f78b4")) +
+  geom_line(data=d1, aes(x=p, y=popt, lty=N, colour=lab), lwd=0.75) +
+  geom_line(data=d2, aes(x=p, y=popt, lty=N, colour=lab), lwd=0.75) +
+  geom_line(data=d3, aes(x=p, y=popt, lty=N, colour=lab), lwd=0.75)
 dev.off()
 
 # Plot 7
@@ -223,34 +224,35 @@ y <- seq(0, 1, length.out = 51)
 
 N <- 100; m <- 3; n.l <- 1; n.u <- 5
 
+ypdiff <- 0.1
+
 m <- 2
 d1 <- data.frame(p=rep(y, 2),
-                 popt=c(pmax(prob.p(y, y-0.1, N, m), prob.p(y, y+0.1, N, m), na.rm = TRUE),
-                        pmax(prob2.p(y, y-0.1, N, m, n.u, n.l), prob2.p(y, y+0.1, N, m, n.u, n.l), na.rm = TRUE)),
-                 lab=rep(c("Theorem 2", "Lemma 3"), each=length(y)),
+                 popt=c(pmax(prob.p(y, y-ypdiff, N, m), prob.p(y, y+ypdiff, N, m), na.rm = TRUE),
+                        pmax(prob2.p(y, y-ypdiff, N, m, n.u, n.l), prob2.p(y, y+ypdiff, N, m, n.u, n.l), na.rm = TRUE)),
+                 lab=factor(rep(c("Theorem 2", "Lemma 3"), each=length(y)), levels=c("Theorem 2", "Lemma 3")),
                  m="2")
 m <- 5
 d2 <- data.frame(p=rep(y, 2),
-                 popt=c(pmax(prob.p(y, y-0.1, N, m), prob.p(y, y+0.1, N, m), na.rm = TRUE),
-                        pmax(prob2.p(y, y-0.1, N, m, n.u, n.l), prob2.p(y, y+0.1, N, m, n.u, n.l), na.rm = TRUE)),
-                 lab=rep(c("Theorem 2", "Lemma 3"), each=length(y)),
+                 popt=c(pmax(prob.p(y, y-ypdiff, N, m), prob.p(y, y+ypdiff, N, m), na.rm = TRUE),
+                        pmax(prob2.p(y, y-ypdiff, N, m, n.u, n.l), prob2.p(y, y+ypdiff, N, m, n.u, n.l), na.rm = TRUE)),
+                 lab=factor(rep(c("Theorem 2", "Lemma 3"), each=length(y)), levels=c("Theorem 2", "Lemma 3")),
                  m="5")
 m <- 10
 d3 <- data.frame(p=rep(y, 2),
-                 popt=c(pmax(prob.p(y, y-0.1, N, m), prob.p(y, y+0.1, N, m), na.rm = TRUE),
-                        pmax(prob2.p(y, y-0.1, N, m, n.u, n.l), prob2.p(y, y+0.1, N, m, n.u, n.l), na.rm = TRUE)),
-                 lab=rep(c("Theorem 2", "Lemma 3"), each=length(y)),
+                 popt=c(pmax(prob.p(y, y-ypdiff, N, m), prob.p(y, y+ypdiff, N, m), na.rm = TRUE),
+                        pmax(prob2.p(y, y-ypdiff, N, m, n.u, n.l), prob2.p(y, y+ypdiff, N, m, n.u, n.l), na.rm = TRUE)),
+                 lab=factor(rep(c("Theorem 2", "Lemma 3"), each=length(y)), levels=c("Theorem 2", "Lemma 3")),
                  m="10")
-
 
 pdf("need-to-opt-7.pdf", width=3.95, height=3)
 ggplot() +
   ylim(0, 1) + xlab("y") + ylab("Worst case prob need to optimise") + theme_bw() +
-  scale_linetype_discrete(name="Theory", breaks=c("Theorem 2", "Lemma 3")) +
-  scale_colour_discrete(breaks=c("2", "5", "10")) +
-  geom_line(data=d1, aes(x=p, y=popt, lty=lab, colour=m)) +
-  geom_line(data=d2, aes(x=p, y=popt, lty=lab, colour=m)) +
-  geom_line(data=d3, aes(x=p, y=popt, lty=lab, colour=m))
+  scale_colour_manual(name="Theory", values=c("#b2df8a", "#1f78b4")) +
+  scale_linetype_discrete(breaks=c("2", "5", "10")) +
+  geom_line(data=d1, aes(x=p, y=popt, lty=m, colour=lab), lwd=0.75) +
+  geom_line(data=d2, aes(x=p, y=popt, lty=m, colour=lab), lwd=0.75) +
+  geom_line(data=d3, aes(x=p, y=popt, lty=m, colour=lab), lwd=0.75)
 dev.off()
 
 #### Brake example ####

@@ -232,7 +232,7 @@ signature and in Section \ref{sec:nonparamapproach} we
 review the nonparametric approach to Bayesian reliability analysis
 upon which our work builds 
 \cite{2015:bayessurvsign}.  Section \ref{sec:reparam} details
-the reparameterisation of that approach which enables the natural
+the reparametrisation of that approach which enables the natural
 formulation of the system reliability bounds, leading to
 nice closed form results in some later theory.
 Section \ref{sec:setsofbetapriors} lays the ground work to incorporate imprecise probability,
@@ -1391,7 +1391,7 @@ be relevant when propagated to the uncertainty in the whole system.
 
 In this example, the theory presented in Section \ref{sec:setsofrel} enabled avoiding numerical optimisation
 in 91.9\% of cases for $\lRsys(\cdot)$ and in 95.7\% of cases for $\uRsys(\cdot)$.
-Further detail is in Appendix \ref{ap:needtoopt}.
+Further detail is in Appendix \ref{ap:needtoopt-brake}.
 
 %***calculate and show $\Rsys(t)$ plots for a range of examples (keep system layout fixed?):
 %informative prior set for some component types, different degree of imprecision,
@@ -1752,12 +1752,12 @@ l}{\eu - l} \qquad \forall\ l \in \{0,\dots,m\}
 
 The above theory substantially reduces the amount that numerical optimisation must be used.  Herein, we examine more carefully precisely how often the theory cannot be applied resulting in numerical optimisation being used.
 
-Given some unknown functioning probability $p$, which gives rise to the observed data $s$, the probability that Theorem 1 does not apply is
+Given some unknown functioning probability $p$, which gives rise to the observed data $s$, the probability that Theorem~2 does not apply is
 \begin{align*}
   &P(y(N+m-1)-m+1 < s < y(N+m-1)) \\
   &\qquad \qquad \qquad \qquad = \sum_{i = \lceil y(N+m-1)-m+1 \rceil}^{\lfloor y(N+m-1) \rfloor} \binom{N}{i} p^i (1-p)^{N-i}
 \end{align*}
-Likewise the probability that Lemma 3 does not apply is
+Likewise the probability that Lemma~3 does not apply is
 \begin{align*}
   &P(\mathcal{L}_{\nu,\nl}(0) \lesseqgtr 1 \cap \mathcal{L}_{\nu,\nl}(m) \gtreqless 1) = \sum_{s \in \mathcal{S}} \binom{N}{s} p^s (1-p)^{N-s} \\
   &\qquad\mbox{where}\quad \mathcal{S} = \left\{ s : \frac{p(0 \mid y, \nu, m, s, N)}{p(0 \mid y, \nl, m, s, N)} \lesseqgtr 1 \cap \frac{p(m \mid y, \nu, m, s, N)}{p(m \mid y, \nl, m, s, N)} \gtreqless 1 \right\}
@@ -1807,13 +1807,24 @@ Especially given the upper and lower choices of $y$, it may be reasonable to sup
 \label{fig:need-to-opt-67}
 \end{figure}
 
-Note that all these analyses are for evaluation of a single fixed time point at which $\lRsys(\cdot)$ or $\uRsys(\cdot)$ is computed.  Of relevance to the overall compute time is the behaviour over time, so that seems unlikely that the worst case scenario will occur for long runs of the times under analysis.
+Note that all these analyses are for evaluation of a single fixed time point at which $\lRsys(\cdot)$ or $\uRsys(\cdot)$ is computed.  Of relevance to the overall compute time is the behaviour over time, and it seems unlikely that the worst case scenario will occur for long runs of the times under analysis.
 
 \subsection{Theoretical analysis for brake system example}
+\label{ap:needtoopt-brake}
 
-By way of example, a temporal analysis of the constrained worst case analysis is now presented for the real example in Section \ref{sec:brakeex}.
+By way of example, a temporal analysis of the constrained worst case analysis is now presented for the real example in Section~\ref{sec:brakeex}.
+%
+%Figure \ref{fig:need-to-opt-8} shows the changing worst case probability (subject to $|y-p|>0.1$) that optimisation will be required over time for the actual choice of prior and the values of $m, N, \nu$ and $\nl$ in the brake example from the main body of the paper.  Note in particular that when $m=1$, Lemma 3 always applies for $y \in (0,1)$ and so optimisation is never required.  This is true for all values of $N$ and $y$.
+As noted in Section~\ref{sec:brakeex}, the grid contained 301 time points and the system has 4 types of components,
+meaning stochastic dominance must be verified via theory or optimisation $1,204$ times for each of $\lRsys(\cdot)$ and $\uRsys(\cdot)$.
 
-Figure \ref{fig:need-to-opt-8} shows the changing worst case probability (subject to $|y-p|>0.1$) that optimisation will be required over time for the actual choice of prior and the values of $m, N, \nu$ and $\nl$ in the brake example from the main body of the paper.  Note in particular that when $m=1$, Lemma 3 always applies for $y \in (0,1)$ and so optimisation is never required.  This is true for all values of $N$ and $y$.
+Figure~\ref{fig:need-to-opt-8} shows the worst case probabilities (subject to $|y-p|>0.1$)
+as they change over time in the brake example from the main body of the paper.
+Displayed are the worst case probabilities that optimisation will be required for the choice of prior and the values of $m$ and $N$
+as in Section~\ref{sec:brakeex}, but without using the test data (which define $s$).
+Note in particular that when $m=1$ (as is the case for component types M and H),
+Lemma 3 always applies for $y \in (0,1)$ and so optimisation is never required.
+This is true for all values of $N$ and $y$.
 
 \begin{figure}
 \includegraphics[width=\textwidth]{need-to-opt-8}
@@ -1821,7 +1832,9 @@ Figure \ref{fig:need-to-opt-8} shows the changing worst case probability (subjec
 \label{fig:need-to-opt-8}
 \end{figure}
 
-As explained in section \ref{sec:brakeex}, the grid contained 301 time points and the system has 4 types of component, meaning a stochastic dominance must be verified via theory or optimisation $1,204$ times for each of $\lRsys(\cdot)$ and $\uRsys(\cdot)$.  In total, theory could not determine stochastic dominance in 98 (or 8.1\%) of cases for $\lRsys(\cdot)$, while it was in 52 (or 4.3\%) of cases for $\uRsys(\cdot)$.
+For the test data as used in Section~\ref{sec:brakeex},
+theory could not determine stochastic dominance in 98 (or 8.1\%) of cases for $\lRsys(\cdot)$,
+while it was in 52 (or 4.3\%) of cases for $\uRsys(\cdot)$.
 
 \section{Software details}
 \label{ap:software}
