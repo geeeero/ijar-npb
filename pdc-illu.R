@@ -156,6 +156,7 @@ dev.off()
 betapdfcdf      <- betapdfcdf    + theme(plot.margin = unit(c(0,0.5,0,-0.75), "lines")) + theme_bw()
 pdcillupmfcmf   <- pdcillupmfcmf + theme(plot.margin = unit(c(0,0,  0,-0.75), "lines"),
                                     legend.margin = unit(-0.5, "cm")) + theme_bw()
+#cairo_ps("singleprior-pdc2.eps", width=8, height=5)
 pdf("singleprior-pdc2.pdf", width=8, height=5)
 grid.arrange(betapdfcdf, pdcillupmfcmf, nrow=1, ncol=2, widths=c(1,1.2))
 dev.off()
@@ -337,6 +338,7 @@ betaset1  <- betaset1 + theme_bw() + theme(plot.margin = unit(c(0,0.5,0,-0.0), "
   guides(linetype="none", fill="none", group="none", colour="none")
 bebinset1 <- bebinset1 + theme_bw() + theme(plot.margin = unit(c(0,0,  0,-0.0), "lines"),
                                          legend.margin = unit(-0.0, "cm"))
+#cairo_ps("betaset-binomset1.eps", width=8, height=5)
 pdf("betaset-binomset1.pdf", width=8, height=5)
 grid.arrange(betaset1, bebinset1, nrow=1, ncol=2, widths=c(1,1.2))
 dev.off()
@@ -381,15 +383,16 @@ paramset2 <- paramset2 + xlab(expression(n^(0))) + ylab(expression(y^(0)))
 paramset2
 
 # plot with parameter sets only
-pdf("paramsets.pdf", width=6, height=5)
-paramset2 + theme(plot.margin = unit(c(0,0.5,0,-0.25), "lines"), legend.margin = unit(-0.5, "cm"))
-dev.off()
+#pdf("paramsets.pdf", width=6, height=5)
+#paramset2 + theme(plot.margin = unit(c(0,0.5,0,-0.25), "lines"), legend.margin = unit(-0.5, "cm"))
+#dev.off()
 
 # in two separate facets
 paramset3 <- ggplot(paramsetdf) + geom_ribbon(aes(x=n0, ymin=Lower, ymax=Upper, group=Item2, colour=Item2, fill=Item2), alpha=0.3)
 paramset3 <- paramset3 + scale_fill_manual(values = c("#b2df8a", "#1f78b4")) + scale_colour_manual(values = c("#b2df8a", "#1f78b4"))
 paramset3 <- paramset3 + facet_grid(. ~ Facet) + xlab(expression(n^(0))) + ylab(expression(y^(0)))
 
+#cairo_ps("paramsets.eps", width=6, height=2.5)
 pdf("paramsets.pdf", width=6, height=2.5) # plot.margin: t r b f
 paramset3 + theme(plot.margin = unit(c(0,0.5,0,0), "lines"), legend.margin = unit(-0.0, "cm")) + theme_bw()  + rightlegend
 dev.off()
